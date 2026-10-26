@@ -25,7 +25,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       key: 'pos',
       label: 'Kasir',
       icon: <ShoppingCart size={18} />,
-      roles: ['kasir'],
+      roles: ['kasir', 'kepala_toko', 'owner'],
     },
     {
       key: 'shift_saya',
@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       key: 'stok',
       label: 'Stok Cabang',
       icon: <Package size={18} />,
-      roles: ['kepala_toko', 'owner'],
+      roles: ['kasir', 'kepala_toko', 'owner'],
     },
     {
       key: 'shift',
@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       key: 'produk',
       label: 'Katalog Produk',
       icon: <Coffee size={18} />,
-      roles: ['kepala_toko', 'owner'],
+      roles: ['kasir', 'kepala_toko', 'owner'],
     },
     {
       key: 'laporan',

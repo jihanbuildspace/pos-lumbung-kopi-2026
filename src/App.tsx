@@ -107,12 +107,12 @@ const MainLayout: React.FC = () => {
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
         <main style={{ flex: 1, overflowY: 'auto', backgroundColor: '#f8fafc' }}>
-          {activeTab === 'pos' && profile.peran === 'kasir' && <POSView onOpenShiftModal={handleOpenBukaShift} />}
+          {activeTab === 'pos' && <POSView onOpenShiftModal={handleOpenBukaShift} />}
           {activeTab === 'transaksi' && <TransaksiView onViewReceipt={handleViewReceiptFromList} />}
-          {activeTab === 'stok' && (profile.peran === 'kepala_toko' || profile.peran === 'owner') && <StokView />}
+          {activeTab === 'stok' && <StokView />}
           {activeTab === 'shift_saya' && profile.peran === 'kasir' && <ShiftManagementView />}
           {activeTab === 'shift' && (profile.peran === 'kepala_toko' || profile.peran === 'owner') && <ShiftManagementView />}
-          {activeTab === 'produk' && (profile.peran === 'kepala_toko' || profile.peran === 'owner') && <ProdukView />}
+          {activeTab === 'produk' && <ProdukView />}
           {activeTab === 'laporan' && (profile.peran === 'kepala_toko' || profile.peran === 'owner') && <LaporanView />}
           {activeTab === 'pengaturan' && profile.peran === 'owner' && <PengaturanView />}
         </main>

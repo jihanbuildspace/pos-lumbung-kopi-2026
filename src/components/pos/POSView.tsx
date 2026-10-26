@@ -59,37 +59,60 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
         .order('kategori')
         .order('nama');
 
-      if (prodErr || !prodData) {
-        console.error('Error fetching products:', prodErr);
-        return;
-      }
+      const targetCabangId = cabang?.id || '030cfd87-60a3-51b0-9cdf-c083b46a32cd';
 
-      // Fetch stock for current branch
-      if (cabang?.id) {
-        const { data: stockData } = await supabase
-          .from('stok_cabang')
-          .select('produk_id, jumlah, stok_minimum')
-          .eq('cabang_id', cabang.id);
+      // If Supabase returned empty products or errored, use SEED_PRODUCTS fallback
+      if (prodErr || !prodData || prodData.length === 0) {
+        console.warn('Supabase produk kosong/gagal, menggunakan data cadangan (SEED_PRODUCTS)');
+        // Try fetching stock from DB if available
+        let stockMap = new Map();
+        try {
+          const { data: stockData } = await supabase
+            .from('stok_cabang')
+            .select('produk_id, jumlah, stok_minimum')
+            .eq('cabang_id', targetCabangId);
+          stockData?.forEach((s) => {
+            stockMap.set(s.produk_id, { jumlah: s.jumlah, stok_minimum: s.stok_minimum });
+          });
+        } catch {
+          // ignore
+        }
 
-        const stockMap = new Map();
-        stockData?.forEach((s) => {
-          stockMap.set(s.produk_id, { jumlah: s.jumlah, stok_minimum: s.stok_minimum });
-        });
-
-        const merged = prodData.map((p) => {
+        const merged = SEED_PRODUCTS.map((p) => {
           const s = stockMap.get(p.id);
           return {
             ...p,
-            stok_saat_ini: s ? s.jumlah : 0,
-            stok_minimum: s ? s.stok_minimum : 0,
+            stok_saat_ini: s ? s.jumlah : (p.stok_saat_ini ?? (p.lacak_stok ? 20 : 999)),
+            stok_minimum: s ? s.stok_minimum : (p.stok_minimum ?? 5),
           };
         });
-        setProducts(merged);
-      } else {
-        setProducts(prodData);
+        setProducts(merged as any);
+        return;
       }
+
+      // If Supabase has live products, merge with branch stock
+      const { data: stockData } = await supabase
+        .from('stok_cabang')
+        .select('produk_id, jumlah, stok_minimum')
+        .eq('cabang_id', targetCabangId);
+
+      const stockMap = new Map();
+      stockData?.forEach((s) => {
+        stockMap.set(s.produk_id, { jumlah: s.jumlah, stok_minimum: s.stok_minimum });
+      });
+
+      const merged = prodData.map((p) => {
+        const s = stockMap.get(p.id);
+        return {
+          ...p,
+          stok_saat_ini: s ? s.jumlah : (p.stok_saat_ini ?? (p.lacak_stok ? 20 : 999)),
+          stok_minimum: s ? s.stok_minimum : (p.stok_minimum ?? 5),
+        };
+      });
+      setProducts(merged);
     } catch (err) {
-      console.error('fetchProductsAndStock error:', err);
+      console.error('fetchProductsAndStock error, fallback ke SEED_PRODUCTS:', err);
+      setProducts(SEED_PRODUCTS as any);
     } finally {
       setLoading(false);
     }
