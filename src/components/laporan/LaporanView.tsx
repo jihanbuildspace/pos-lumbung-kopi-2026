@@ -758,7 +758,7 @@ export const LaporanView: React.FC = () => {
                       }}
                       title="Klik untuk mengatur Gemini API Key"
                     >
-                      <span>{isGeminiActive ? '● Gemini 1.5 Flash' : '⚙️ Atur API Key'}</span>
+                      <span>{isGeminiActive ? '● Gemini 3.5 Flash' : '⚙️ Atur API Key'}</span>
                     </button>
                   </div>
                 </div>
