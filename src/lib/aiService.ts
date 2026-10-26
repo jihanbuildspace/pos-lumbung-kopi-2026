@@ -13,8 +13,30 @@ interface BusinessContext {
   userName?: string;
 }
 
+export function getGeminiApiKey(): string {
+  if (typeof window !== 'undefined') {
+    const fromStorage = localStorage.getItem('pos_gemini_api_key');
+    if (fromStorage && fromStorage.trim()) return fromStorage.trim();
+  }
+  return (import.meta.env.VITE_GEMINI_API_KEY as string) || '';
+}
+
+export function saveGeminiApiKey(key: string): void {
+  if (typeof window !== 'undefined') {
+    if (key && key.trim()) {
+      localStorage.setItem('pos_gemini_api_key', key.trim());
+    } else {
+      localStorage.removeItem('pos_gemini_api_key');
+    }
+  }
+}
+
+export function hasGeminiApiKey(): boolean {
+  return Boolean(getGeminiApiKey());
+}
+
 export async function askLumbungAI(question: string, context: BusinessContext): Promise<string> {
-  const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const geminiKey = getGeminiApiKey();
   const ownerName = context.userName || 'Owner';
 
   const prompt = `Anda adalah Lumbung AI, konsultan bisnis dan analis operasional senior untuk jaringan kedai 'Lumbung Kopi dan Roti' (3 cabang: Tebet, Bintaro, Depok).
@@ -54,6 +76,9 @@ ATURAN FORMAT PENTING:
           // Bersihkan sisa tanda bintang/markdown
           return text.replace(/\*{2,}/g, '').replace(/\*/g, '').trim();
         }
+      } else {
+        const errText = await res.text();
+        console.warn('Gemini API returned error status:', res.status, errText);
       }
     } catch (e) {
       console.warn('Gemini API call failed, falling back to local AI analysis:', e);

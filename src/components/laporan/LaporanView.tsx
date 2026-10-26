@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { exportReportToExcel } from '../../lib/exportUtils';
-import { askLumbungAI } from '../../lib/aiService';
+import { askLumbungAI, getGeminiApiKey, saveGeminiApiKey, hasGeminiApiKey } from '../../lib/aiService';
 import { SEED_TRANSAKSI, SEED_SHIFTS, SEED_HARGA_MODAL } from '../../lib/seedTransactions';
 import {
   TrendingUp,
@@ -19,7 +19,9 @@ import {
   MessageSquare,
   X,
   Send,
-  Bot
+  Bot,
+  Key,
+  Settings
 } from 'lucide-react';
 
 export const LaporanView: React.FC = () => {
@@ -41,6 +43,9 @@ export const LaporanView: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<{ sender: 'user' | 'ai'; text: string }[]>([]);
   const [inputQuestion, setInputQuestion] = useState<string>('');
   const [aiThinking, setAiThinking] = useState<boolean>(false);
+  const [showApiKeySetting, setShowApiKeySetting] = useState<boolean>(false);
+  const [geminiApiKeyInput, setGeminiApiKeyInput] = useState<string>(getGeminiApiKey());
+  const [isGeminiActive, setIsGeminiActive] = useState<boolean>(hasGeminiApiKey());
 
   useEffect(() => {
     if (chatMessages.length === 0) {
@@ -734,13 +739,100 @@ export const LaporanView: React.FC = () => {
                 </div>
                 <div>
                   <h3 style={{ fontSize: '15px', fontWeight: 700 }}>Ask Lumbung AI</h3>
-                  <p style={{ fontSize: '11px', color: '#fde68a' }}>Konsultan Bisnis &amp; Audit Toko ({activeBranchName})</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                    <p style={{ fontSize: '11px', color: '#fde68a' }}>Konsultan Bisnis &amp; Audit Toko ({activeBranchName})</p>
+                    <button
+                      onClick={() => setShowApiKeySetting(!showApiKeySetting)}
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        backgroundColor: isGeminiActive ? '#10b981' : '#f59e0b',
+                        color: '#ffffff',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                      title="Klik untuk mengatur Gemini API Key"
+                    >
+                      <span>{isGeminiActive ? '● Gemini 1.5 Flash' : '⚙️ Atur API Key'}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
               <button onClick={() => setShowAIChat(false)} style={{ color: '#cbd5e1', padding: '4px' }}>
                 <X size={20} />
               </button>
             </div>
+
+            {/* Collapsible Gemini API Key Settings Drawer */}
+            {showApiKeySetting && (
+              <div style={{
+                padding: '12px 18px',
+                backgroundColor: '#fffbeb',
+                borderBottom: '1px solid #fde68a',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#92400e' }}>
+                    Google Gemini API Key (Untuk Analisa AI Real-Time):
+                  </label>
+                  <a
+                    href="https://aistudio.google.com/app/apikey"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ fontSize: '11px', color: '#b45309', textDecoration: 'underline', fontWeight: 600 }}
+                  >
+                    Dapatkan API Key Gratis ↗
+                  </a>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="password"
+                    placeholder="Masukkan Gemini API Key (contoh: AIzaSy...)"
+                    value={geminiApiKeyInput}
+                    onChange={(e) => setGeminiApiKeyInput(e.target.value)}
+                    style={{
+                      flex: 1,
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      border: '1px solid #cbd5e1',
+                      fontSize: '12px',
+                      outline: 'none',
+                      backgroundColor: '#ffffff',
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      saveGeminiApiKey(geminiApiKeyInput);
+                      setIsGeminiActive(hasGeminiApiKey());
+                      setShowApiKeySetting(false);
+                      alert(geminiApiKeyInput.trim() ? '✅ Gemini API Key berhasil disimpan & diaktifkan!' : 'Gemini API Key dihapus, sistem beralih ke mode cerdas bawaan.');
+                    }}
+                    style={{
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      backgroundColor: '#78350f',
+                      color: '#ffffff',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Simpan
+                  </button>
+                </div>
+                <p style={{ fontSize: '11px', color: '#78350f', margin: 0 }}>
+                  Kunci API ini disimpan aman di browser Anda dan langsung aktif tanpa perlu deploy ulang.
+                </p>
+              </div>
+            )}
 
             {/* Quick Prompt Pills */}
             <div style={{
