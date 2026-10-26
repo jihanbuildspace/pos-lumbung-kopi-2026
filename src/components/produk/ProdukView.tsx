@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import type { Produk } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Search, Coffee, Tag, ShieldCheck, RefreshCw } from 'lucide-react';
-import { getProductImageUrl } from '../../lib/productImages';
 
 export const ProdukView: React.FC = () => {
   const { profile } = useAuth();
@@ -202,22 +201,8 @@ export const ProdukView: React.FC = () => {
                     <td style={{ padding: '12px 16px', fontFamily: 'monospace', fontWeight: 700, color: '#b45309' }}>
                       {p.sku}
                     </td>
-                    <td style={{ padding: '10px 16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img
-                          src={getProductImageUrl(p.sku, p.kategori)}
-                          alt={p.nama}
-                          style={{
-                            width: '36px',
-                            height: '36px',
-                            borderRadius: '8px',
-                            objectFit: 'cover',
-                            border: '1px solid #e2e8f0',
-                            flexShrink: 0,
-                          }}
-                        />
-                        <span style={{ fontWeight: 800, color: '#0f172a' }}>{p.nama}</span>
-                      </div>
+                    <td style={{ padding: '12px 16px', fontWeight: 800, color: '#0f172a' }}>
+                      {p.nama}
                     </td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{

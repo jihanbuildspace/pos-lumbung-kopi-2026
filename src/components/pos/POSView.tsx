@@ -7,7 +7,6 @@ import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User, CheckCircle2, ExternalLink, Zap, ShieldCheck, X, Clock, Coffee, Sparkles } from 'lucide-react';
 import { createMayarQRIS, type MayarPaymentResponse } from '../../lib/mayarService';
 import { broadcastCustomerDisplay } from '../../lib/customerDisplayService';
-import { getProductImageUrl } from '../../lib/productImages';
 
 interface POSViewProps {
   onOpenShiftModal: () => void;
@@ -288,6 +287,56 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
       await handleCheckoutSubmit();
     }, 700);
   };
+  const getCategoryStyle = (kategori?: string) => {
+    switch (kategori) {
+      case 'kopi':
+        return {
+          bgGradient: 'linear-gradient(135deg, #2d1305 0%, #4d1c06 50%, #78350f 100%)',
+          accentColor: '#f59e0b',
+          lightBg: '#fef3c7',
+          textColor: '#92400e',
+          icon: '☕',
+          tag: 'KOPI ESPRESSO',
+        };
+      case 'non_kopi':
+        return {
+          bgGradient: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)',
+          accentColor: '#34d399',
+          lightBg: '#ecfdf5',
+          textColor: '#065f46',
+          icon: '🍵',
+          tag: 'NON KOPI & TEH',
+        };
+      case 'roti':
+        return {
+          bgGradient: 'linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #c2410c 100%)',
+          accentColor: '#fb923c',
+          lightBg: '#fff7ed',
+          textColor: '#9a3412',
+          icon: '🥐',
+          tag: 'ROTI & BAKERY',
+        };
+      case 'snack':
+        return {
+          bgGradient: 'linear-gradient(135deg, #713f12 0%, #854d0e 50%, #b45309 100%)',
+          accentColor: '#fde047',
+          lightBg: '#fefce8',
+          textColor: '#854d0e',
+          icon: '🍪',
+          tag: 'SNACK & CAKE',
+        };
+      case 'kemasan':
+      default:
+        return {
+          bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+          accentColor: '#94a3b8',
+          lightBg: '#f8fafc',
+          textColor: '#334155',
+          icon: '📦',
+          tag: 'PRODUK KEMASAN',
+        };
+    }
+  };
 
   return (
     <div style={{
@@ -536,14 +585,14 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               {filteredProducts.map((p) => {
                 const isOutOfStock = p.lacak_stok && (p.stok_saat_ini ?? 0) <= 0;
                 const isLowStock = p.lacak_stok && (p.stok_saat_ini ?? 0) <= (p.stok_minimum ?? 0) && (p.stok_saat_ini ?? 0) > 0;
-                const imageUrl = getProductImageUrl(p.sku, p.kategori);
+                const catStyle = getCategoryStyle(p.kategori);
 
                 return (
                   <button
                     key={p.id}
                     disabled={isOutOfStock || !activeShift}
                     onClick={() => addToCart(p)}
-                    className={!isOutOfStock && activeShift ? "hover-lift" : ""}
+                    className={!isOutOfStock && activeShift ? "hover-lift hover-glow" : ""}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -552,7 +601,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                       border: '1.5px solid',
                       borderColor: isLowStock ? '#fed7aa' : '#e2e8f0',
                       textAlign: 'left',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
                       transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                       opacity: isOutOfStock || !activeShift ? 0.55 : 1,
                       cursor: isOutOfStock || !activeShift ? 'not-allowed' : 'pointer',
@@ -560,63 +609,71 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                       padding: 0,
                     }}
                   >
-                    {/* Hero Food & Drink Image Header */}
+                    {/* Pure UI Stylized Card Header with Category Gradient & Glass Badges */}
                     <div style={{
+                      padding: '12px 14px',
+                      background: catStyle.bgGradient,
                       position: 'relative',
-                      width: '100%',
-                      height: '135px',
                       overflow: 'hidden',
-                      backgroundColor: '#f1f5f9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                     }}>
-                      <img
-                        src={imageUrl}
-                        alt={p.nama}
-                        loading="lazy"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.08)';
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      />
-                      {/* Ambient Shadow Overlay */}
+                      {/* Subtle ambient light orb */}
                       <div style={{
                         position: 'absolute',
-                        inset: 0,
-                        background: 'linear-gradient(to top, rgba(15, 23, 42, 0.5) 0%, transparent 60%)',
+                        top: '-15px',
+                        right: '-15px',
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%)',
                         pointerEvents: 'none',
                       }} />
 
-                      {/* Floating Glass SKU Tag */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '8px',
-                        left: '8px',
-                        fontSize: '9.5px',
-                        fontWeight: 900,
-                        color: '#fef3c7',
-                        backgroundColor: 'rgba(15, 23, 42, 0.75)',
-                        backdropFilter: 'blur(6px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        padding: '2px 7px',
-                        borderRadius: '6px',
-                        letterSpacing: '0.5px',
-                      }}>
-                        {p.sku}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 1 }}>
+                        {/* Category Icon Glass Badge */}
+                        <div style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '10px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(255, 255, 255, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '15px',
+                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
+                        }}>
+                          {catStyle.icon}
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{
+                            fontSize: '9.5px',
+                            fontWeight: 900,
+                            color: '#fef3c7',
+                            letterSpacing: '0.5px',
+                            fontFamily: 'monospace',
+                          }}>
+                            {p.sku}
+                          </span>
+                          <span style={{
+                            fontSize: '8px',
+                            fontWeight: 800,
+                            color: 'rgba(255, 255, 255, 0.75)',
+                            letterSpacing: '0.4px',
+                            textTransform: 'uppercase',
+                          }}>
+                            {catStyle.tag}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Floating Glass Stock Pill */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '8px',
-                        right: '8px',
-                      }}>
+                      {/* Stock Status Pill */}
+                      <div style={{ zIndex: 1 }}>
                         {!p.lacak_stok ? (
                           <span style={{
                             fontSize: '9.5px',
@@ -624,13 +681,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             fontWeight: 800,
                             backgroundColor: 'rgba(5, 150, 105, 0.88)',
                             backdropFilter: 'blur(6px)',
-                            border: '1px solid rgba(167, 243, 208, 0.4)',
-                            padding: '2px 8px',
-                            borderRadius: '6px',
+                            border: '1px solid rgba(167, 243, 208, 0.45)',
+                            padding: '3px 8px',
+                            borderRadius: '20px',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '3px',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                           }}>
                             ✨ Racikan
                           </span>
@@ -641,10 +697,9 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             fontWeight: 900,
                             backgroundColor: 'rgba(220, 38, 38, 0.92)',
                             backdropFilter: 'blur(6px)',
-                            border: '1px solid rgba(254, 202, 202, 0.4)',
-                            padding: '2px 8px',
-                            borderRadius: '6px',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                            border: '1px solid rgba(254, 202, 202, 0.45)',
+                            padding: '3px 8px',
+                            borderRadius: '20px',
                           }}>
                             Habis
                           </span>
@@ -652,9 +707,9 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                           <span style={{
                             fontSize: '9.5px',
                             fontWeight: 800,
-                            padding: '2px 8px',
-                            borderRadius: '6px',
-                            backgroundColor: isLowStock ? 'rgba(225, 29, 72, 0.92)' : 'rgba(15, 23, 42, 0.75)',
+                            padding: '3px 8px',
+                            borderRadius: '20px',
+                            backgroundColor: isLowStock ? 'rgba(225, 29, 72, 0.92)' : 'rgba(15, 23, 42, 0.55)',
                             backdropFilter: 'blur(6px)',
                             color: isLowStock ? '#ffe4e6' : '#ffffff',
                             border: '1px solid',
@@ -662,7 +717,6 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '3px',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                           }}>
                             {isLowStock ? `⚠️ Sisa ${p.stok_saat_ini}!` : `Stok: ${p.stok_saat_ini}`}
                           </span>
@@ -672,25 +726,28 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
                     {/* Card Content & Action Bar */}
                     <div style={{
-                      padding: '14px 16px',
+                      padding: '16px',
                       display: 'flex',
                       flexDirection: 'column',
                       flex: 1,
                       justifyContent: 'space-between',
+                      gap: '12px',
                     }}>
-                      <h4 style={{
-                        fontSize: '14px',
-                        fontWeight: 800,
-                        color: '#0f172a',
-                        lineHeight: 1.3,
-                        margin: 0,
-                        minHeight: '36px',
-                      }}>
-                        {p.nama}
-                      </h4>
+                      <div>
+                        <h4 style={{
+                          fontSize: '14.5px',
+                          fontWeight: 800,
+                          color: '#0f172a',
+                          lineHeight: 1.35,
+                          margin: 0,
+                          minHeight: '38px',
+                        }}>
+                          {p.nama}
+                        </h4>
+                      </div>
 
                       <div style={{
-                        marginTop: '12px',
+                        marginTop: '10px',
                         paddingTop: '10px',
                         borderTop: '1px solid #f1f5f9',
                         display: 'flex',
@@ -698,15 +755,15 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                         alignItems: 'center',
                       }}>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga</span>
-                          <span style={{ fontSize: '15px', fontWeight: 900, color: '#78350f' }}>
+                          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga Jual</span>
+                          <span style={{ fontSize: '16px', fontWeight: 900, color: '#78350f', letterSpacing: '-0.3px' }}>
                             Rp{p.harga_jual.toLocaleString('id-ID')}
                           </span>
                         </div>
 
                         <div style={{
-                          width: '32px',
-                          height: '32px',
+                          width: '34px',
+                          height: '34px',
                           borderRadius: '10px',
                           background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
                           color: '#fef3c7',
@@ -715,9 +772,9 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                           alignItems: 'center',
                           justifyContent: 'center',
                           boxShadow: '0 3px 8px rgba(180, 83, 9, 0.3)',
-                          transition: 'transform 0.15s ease',
+                          transition: 'all 0.15s ease',
                         }}>
-                          <Plus size={16} strokeWidth={2.5} />
+                          <Plus size={17} strokeWidth={2.5} />
                         </div>
                       </div>
                     </div>
@@ -991,7 +1048,9 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               </p>
             </div>
           ) : (
-            cart.map((item) => (
+            cart.map((item) => {
+              const itemCatStyle = getCategoryStyle(item.produk.kategori);
+              return (
               <div
                 key={item.produk.id}
                 style={{
@@ -1007,21 +1066,23 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                 }}
               >
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <img
-                    src={getProductImageUrl(item.produk.sku, item.produk.kategori)}
-                    alt={item.produk.nama}
-                    style={{
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '8px',
-                      objectFit: 'cover',
-                      flexShrink: 0,
-                      border: '1px solid #e2e8f0',
-                    }}
-                  />
+                  <div style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '10px',
+                    background: itemCatStyle.bgGradient,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '16px',
+                    flexShrink: 0,
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
+                  }}>
+                    {itemCatStyle.icon}
+                  </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h5 style={{
-                      fontSize: '12.5px',
+                      fontSize: '13px',
                       fontWeight: 800,
                       color: '#0f172a',
                       margin: 0,
@@ -1097,7 +1158,8 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   </button>
                 </div>
               </div>
-            ))
+            );
+            })
           )}
         </div>
 
