@@ -172,7 +172,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
             {/* Payment Details */}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Metode Bayar:</span>
-              <span style={{ fontWeight: 'bold', textTransform: 'uppercase' }}>{transaksi.metode_bayar || 'TUNAI'}</span>
+              <span style={{ fontWeight: 'bold', textTransform: 'uppercase' }}>
+                {transaksi.metode_bayar === 'qris' ? 'QRIS (Mayar.id)' : (transaksi.metode_bayar || 'TUNAI')}
+              </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span>Bayar:</span>

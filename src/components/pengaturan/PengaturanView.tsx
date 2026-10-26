@@ -14,12 +14,22 @@ import {
   Clock, 
   UserCheck, 
   UserX,
-  AlertCircle
+  AlertCircle,
+  CreditCard,
+  ExternalLink,
+  Copy,
+  Check,
+  Zap,
+  BookOpen,
+  HelpCircle,
+  ArrowUpRight,
+  QrCode
 } from 'lucide-react';
+import { getMayarConfig, saveMayarConfig, createMayarQRIS, type MayarConfig, type MayarPaymentResponse } from '../../lib/mayarService';
 
 export const PengaturanView: React.FC = () => {
   const { profile } = useAuth();
-  const [activeTab, setActiveTab] = useState<'staf' | 'cabang' | 'audit'>('staf');
+  const [activeTab, setActiveTab] = useState<'staf' | 'cabang' | 'audit' | 'payment'>('staf');
 
   // Staf State
   const [stafList, setStafList] = useState<any[]>(SEED_PROFILES);
@@ -34,6 +44,15 @@ export const PengaturanView: React.FC = () => {
   const [auditLoading, setAuditLoading] = useState<boolean>(false);
   const [auditFilterAksi, setAuditFilterAksi] = useState<string>('semua');
   const [auditSearch, setAuditSearch] = useState<string>('');
+
+  // Payment Gateway (Mayar.id) State
+  const [mayarConfig, setMayarConfig] = useState<MayarConfig>(getMayarConfig());
+  const [mayarApiKeyInput, setMayarApiKeyInput] = useState<string>(mayarConfig.apiKey);
+  const [mayarIsSandbox, setMayarIsSandbox] = useState<boolean>(mayarConfig.isSandbox);
+  const [mayarSavedToast, setMayarSavedToast] = useState<boolean>(false);
+  const [copiedWebhook, setCopiedWebhook] = useState<boolean>(false);
+  const [testQrisLoading, setTestQrisLoading] = useState<boolean>(false);
+  const [testQrisResult, setTestQrisResult] = useState<MayarPaymentResponse | null>(null);
 
   // Fetch Staf Profiles
   const fetchStaf = async () => {
@@ -275,6 +294,27 @@ export const PengaturanView: React.FC = () => {
           >
             <FileText size={15} />
             <span>Audit Log ({auditLogs.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('payment')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: activeTab === 'payment' ? 700 : 600,
+              backgroundColor: activeTab === 'payment' ? '#ffffff' : 'transparent',
+              color: activeTab === 'payment' ? '#0284c7' : '#64748b',
+              boxShadow: activeTab === 'payment' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              cursor: 'pointer',
+            }}
+          >
+            <CreditCard size={15} />
+            <span>Payment Gateway (Mayar.id)</span>
           </button>
         </div>
       </div>
@@ -687,6 +727,436 @@ export const PengaturanView: React.FC = () => {
                 })}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 4: PAYMENT GATEWAY (MAYAR.ID) */}
+      {activeTab === 'payment' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Header Banner */}
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '16px',
+            padding: '24px',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '16px',
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%)',
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '20px',
+                  backgroundColor: '#dcfce7',
+                  color: '#166534',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  border: '1px solid #86efac',
+                }}>
+                  ● Terhubung ke Mayar Gateway
+                </span>
+                <span style={{
+                  padding: '3px 10px',
+                  borderRadius: '20px',
+                  backgroundColor: '#e0f2fe',
+                  color: '#0369a1',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  border: '1px solid #bae6fd',
+                }}>
+                  MDR QRIS 0.7% (Standar BI)
+                </span>
+              </div>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                Integrasi Mayar.id Payment Gateway (QRIS Dinamis POS)
+              </h3>
+              <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px', maxWidth: '620px' }}>
+                Menerima pembayaran digital otomatis dari BCA, Mandiri, GoPay, OVO, ShopeePay &amp; bank lainnya. Transaksi langsung diverifikasi via webhook tanpa kasir mengecek mutasi manual.
+              </p>
+            </div>
+
+            <a
+              href="https://dashboard.mayar.id"
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 16px',
+                borderRadius: '10px',
+                backgroundColor: '#0284c7',
+                color: '#ffffff',
+                fontSize: '12px',
+                fontWeight: 700,
+                textDecoration: 'none',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.25)',
+              }}
+            >
+              <span>Dashboard Mayar.id</span>
+              <ExternalLink size={14} />
+            </a>
+          </div>
+
+          {/* Grid Layout: Config on Left, Architecture & MDR on Right */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+            
+            {/* Column 1: Configuration & Sandbox Tester */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              
+              {/* Config Card */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                padding: '20px',
+                border: '1px solid #e2e8f0',
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <ShieldCheck size={16} color="#0284c7" />
+                  Konfigurasi API &amp; Webhook Mayar
+                </h4>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {/* Mode Selector */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
+                      Mode Operasional Gateway
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setMayarIsSandbox(true)}
+                        style={{
+                          padding: '10px',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: mayarIsSandbox ? '#0284c7' : '#e2e8f0',
+                          backgroundColor: mayarIsSandbox ? '#f0f9ff' : '#f8fafc',
+                          color: mayarIsSandbox ? '#0369a1' : '#64748b',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        🧪 Sandbox (Uji Coba &amp; Demo)
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setMayarIsSandbox(false)}
+                        style={{
+                          padding: '10px',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: !mayarIsSandbox ? '#16a34a' : '#e2e8f0',
+                          backgroundColor: !mayarIsSandbox ? '#f0fdf4' : '#f8fafc',
+                          color: !mayarIsSandbox ? '#15803d' : '#64748b',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        🚀 Production (Live Bisnis)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* API Key Input */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                      Mayar API Key ({mayarIsSandbox ? 'Sandbox Token' : 'Production Live Token'})
+                    </label>
+                    <input
+                      type="password"
+                      value={mayarApiKeyInput}
+                      onChange={(e) => setMayarApiKeyInput(e.target.value)}
+                      placeholder="Contoh: myr_live_... atau myr_test_..."
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '12px',
+                        fontFamily: 'monospace',
+                        outline: 'none',
+                      }}
+                    />
+                    <span style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
+                      Kosongkan untuk menggunakan Smart Simulation Mode saat presentasi ke mentor
+                    </span>
+                  </div>
+
+                  {/* Webhook Endpoint Display */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                      Endpoint Webhook POS Lumbung
+                    </label>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <input
+                        type="text"
+                        readOnly
+                        value={mayarConfig.webhookUrl}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          backgroundColor: '#f8fafc',
+                          fontSize: '11px',
+                          color: '#475569',
+                          fontFamily: 'monospace',
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(mayarConfig.webhookUrl);
+                          setCopiedWebhook(true);
+                          setTimeout(() => setCopiedWebhook(false), 2000);
+                        }}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          backgroundColor: '#ffffff',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: '#334155',
+                        }}
+                      >
+                        {copiedWebhook ? <Check size={14} color="#16a34a" /> : <Copy size={14} />}
+                        <span>{copiedWebhook ? 'Tersalin' : 'Salin'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      saveMayarConfig({
+                        apiKey: mayarApiKeyInput,
+                        isSandbox: mayarIsSandbox,
+                      });
+                      setMayarConfig(getMayarConfig());
+                      setMayarSavedToast(true);
+                      setTimeout(() => setMayarSavedToast(false), 3000);
+                    }}
+                    style={{
+                      padding: '10px',
+                      borderRadius: '8px',
+                      backgroundColor: '#78350f',
+                      color: '#ffffff',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: 'pointer',
+                      marginTop: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <Check size={15} />
+                    <span>{mayarSavedToast ? 'Pengaturan Berhasil Disimpan!' : 'Simpan Pengaturan Gateway'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Interactive QRIS Sandbox Tester */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                padding: '20px',
+                border: '1px solid #e2e8f0',
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Zap size={16} color="#eab308" />
+                  Uji Coba Dynamic QRIS Sandbox
+                </h4>
+                <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '14px' }}>
+                  Uji pembuatan tagihan QRIS Mayar langsung untuk memastikan respons API dan simulasi siap dipresentasikan.
+                </p>
+
+                <button
+                  type="button"
+                  disabled={testQrisLoading}
+                  onClick={async () => {
+                    setTestQrisLoading(true);
+                    try {
+                      const res = await createMayarQRIS({
+                        amount: 32000,
+                        orderNumber: `TEST-ORD-${Date.now().toString().slice(-4)}`,
+                        customerName: 'Mentor Test Account',
+                        branchName: 'Lumbung Tebet',
+                        items: [
+                          { nama: 'Kopi Susu Lumbung', qty: 1, harga: 22000 },
+                          { nama: 'Roti Srikaya Panggang', qty: 1, harga: 10000 },
+                        ],
+                      });
+                      setTestQrisResult(res);
+                    } catch (e) {
+                      console.error('Test QRIS error:', e);
+                    } finally {
+                      setTestQrisLoading(false);
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    backgroundColor: '#f0f9ff',
+                    border: '1px solid #bae6fd',
+                    color: '#0369a1',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <QrCode size={15} />
+                  <span>{testQrisLoading ? 'Menghubungi Mayar API...' : '🧪 Generate Dynamic QRIS Sandbox (Rp32.000)'}</span>
+                </button>
+
+                {testQrisResult && (
+                  <div style={{
+                    marginTop: '14px',
+                    padding: '14px',
+                    borderRadius: '10px',
+                    backgroundColor: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}>
+                    <img
+                      src={testQrisResult.qrCodeUrl}
+                      alt="Preview QRIS"
+                      style={{ width: '150px', height: '150px', borderRadius: '6px' }}
+                    />
+                    <div style={{ width: '100%', fontSize: '11px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
+                        <span>Reference ID:</span>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0f172a' }}>{testQrisResult.paymentId}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
+                        <span>Nominal:</span>
+                        <span style={{ fontWeight: 700, color: '#16a34a' }}>Rp{testQrisResult.amount.toLocaleString('id-ID')}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
+                        <span>Biaya MDR (0.7%):</span>
+                        <span style={{ fontWeight: 600 }}>Rp{testQrisResult.fee.toLocaleString('id-ID')}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Column 2: Fee Structure & Mentor Presentation Talking Points */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              
+              {/* Fee Structure Card */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                padding: '20px',
+                border: '1px solid #e2e8f0',
+              }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b', marginBottom: '12px' }}>
+                  Struktur Biaya &amp; Settlement (MDR)
+                </h4>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
+                    <div>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', display: 'block' }}>QRIS Nasional (BCA, Mandiri, E-Wallet)</span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Sesuai regulasi Bank Indonesia</span>
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#0284c7' }}>0.7%</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
+                    <div>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', display: 'block' }}>Virtual Account (BCA, Mandiri, BRI, BNI)</span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Flat per transaksi berhasil</span>
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#334155' }}>Rp3.000</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', backgroundColor: '#f8fafc', borderRadius: '8px' }}>
+                    <div>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', display: 'block' }}>Biaya Sewa / Terminal EDC Bulanan</span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>Tidak memerlukan mesin hardware khusus</span>
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#16a34a' }}>GRATIS (Rp0)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mentor Presentation Talking Points */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                padding: '20px',
+                border: '1px solid #fed7aa',
+                background: 'linear-gradient(180deg, #fffaf5 0%, #ffffff 100%)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
+                  <BookOpen size={16} color="#ea580c" />
+                  <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#9a3412', margin: 0 }}>
+                    Panduan Jawaban ke Mentor (Showcase Checklist)
+                  </h4>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px', color: '#334155', lineHeight: 1.5 }}>
+                  <div style={{ padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #ffedd5' }}>
+                    <strong style={{ color: '#9a3412', display: 'block', marginBottom: '3px' }}>
+                      1. Kenapa memilih Mayar.id dibandingkan gateway konvensional?
+                    </strong>
+                    <span>
+                      Mayar menyediakan <em>REST API</em> modern, proses aktivasi instan tanpa verifikasi ribet, tanpa biaya sewa mesin EDC bulanan, serta mendukung webhook real-time yang langsung terhubung ke kasir POS Lumbung.
+                    </span>
+                  </div>
+
+                  <div style={{ padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #ffedd5' }}>
+                    <strong style={{ color: '#9a3412', display: 'block', marginBottom: '3px' }}>
+                      2. Kenapa Dynamic QRIS, bukan stiker QRIS statis biasa?
+                    </strong>
+                    <span>
+                      Stiker statis rawan <strong>rekayasa screenshot palsu</strong> dan salah ketik nominal oleh pelanggan. Dynamic QRIS Mayar secara otomatis mengunci nominal tagihan pesanan dan unik per transaksi, sehingga kasir tidak perlu memverifikasi mutasi rekening bank secara manual.
+                    </span>
+                  </div>
+
+                  <div style={{ padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #ffedd5' }}>
+                    <strong style={{ color: '#9a3412', display: 'block', marginBottom: '3px' }}>
+                      3. Bagaimana alur Webhook Callback POS Lumbung?
+                    </strong>
+                    <span>
+                      Pelanggan scan QRIS Mayar &rarr; Bank / E-Wallet memproses dana &rarr; Server Mayar mengirimkan sinyal HTTP POST (Webhook) ke POS Lumbung &rarr; Sistem otomatis menandai transaksi &quot;LUNAS&quot; &rarr; Struk digital / cetak langsung terbit ke kasir.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       )}

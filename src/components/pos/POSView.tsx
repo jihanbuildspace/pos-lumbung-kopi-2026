@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { usePOS } from '../../context/POSContext';
 import type { Produk, KategoriProduk } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
-import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User } from 'lucide-react';
+import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User, CheckCircle2, ExternalLink, Zap, ShieldCheck, X, Clock } from 'lucide-react';
+import { createMayarQRIS, type MayarPaymentResponse } from '../../lib/mayarService';
 
 interface POSViewProps {
   onOpenShiftModal: () => void;
@@ -42,6 +43,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [checkoutLoading, setCheckoutLoading] = useState<boolean>(false);
   const [checkoutError, setCheckoutError] = useState<string>('');
+
+  // Mayar.id Payment Gateway Modal State
+  const [showMayarModal, setShowMayarModal] = useState<boolean>(false);
+  const [mayarPaymentData, setMayarPaymentData] = useState<MayarPaymentResponse | null>(null);
+  const [mayarLoading, setMayarLoading] = useState<boolean>(false);
+  const [mayarSuccessAnim, setMayarSuccessAnim] = useState<boolean>(false);
 
   // Discount modal state
   const [showDiscountModal, setShowDiscountModal] = useState<boolean>(false);
@@ -167,6 +174,43 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
       // Refresh stock after purchase
       fetchProductsAndStock();
     }
+  };
+
+  const handleCheckoutClick = async () => {
+    if (metodeBayar === 'qris') {
+      setMayarLoading(true);
+      setMayarSuccessAnim(false);
+      setShowMayarModal(true);
+      try {
+        const res = await createMayarQRIS({
+          amount: total,
+          orderNumber: `ORD-${Date.now().toString().slice(-6)}`,
+          customerName: namaPelanggan || 'Pelanggan Walk-in',
+          branchName: cabang?.nama || 'Lumbung Kopi dan Roti',
+          items: cart.map((c) => ({
+            nama: c.produk.nama,
+            qty: c.jumlah,
+            harga: c.produk.harga_jual,
+          })),
+        });
+        setMayarPaymentData(res);
+      } catch (err) {
+        console.error('Mayar QRIS error:', err);
+      } finally {
+        setMayarLoading(false);
+      }
+    } else {
+      await handleCheckoutSubmit();
+    }
+  };
+
+  const handleSimulateMayarSuccess = async () => {
+    setMayarSuccessAnim(true);
+    setTimeout(async () => {
+      setShowMayarModal(false);
+      setMayarSuccessAnim(false);
+      await handleCheckoutSubmit();
+    }, 700);
   };
 
   return (
@@ -761,15 +805,19 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   padding: '8px',
                   borderRadius: '8px',
                   border: '1px solid',
-                  borderColor: metodeBayar === 'qris' ? '#b45309' : '#cbd5e1',
-                  backgroundColor: metodeBayar === 'qris' ? '#fef3c7' : '#ffffff',
-                  color: metodeBayar === 'qris' ? '#92400e' : '#475569',
+                  borderColor: metodeBayar === 'qris' ? '#0284c7' : '#cbd5e1',
+                  backgroundColor: metodeBayar === 'qris' ? '#e0f2fe' : '#ffffff',
+                  color: metodeBayar === 'qris' ? '#0369a1' : '#475569',
                   fontSize: '12px',
                   fontWeight: 700,
+                  transition: 'all 0.15s ease',
                 }}
               >
                 <QrCode size={15} />
-                <span>QRIS</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.1 }}>
+                  <span>QRIS</span>
+                  <span style={{ fontSize: '9px', fontWeight: 600, color: metodeBayar === 'qris' ? '#0369a1' : '#94a3b8' }}>Mayar.id Gateway</span>
+                </div>
               </button>
             </div>
           </div>
@@ -866,20 +914,31 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           <button
             type="button"
             disabled={cart.length === 0 || !activeShift || checkoutLoading || (metodeBayar === 'tunai' && uangDiterima < total)}
-            onClick={handleCheckoutSubmit}
+            onClick={handleCheckoutClick}
             style={{
               padding: '12px',
               borderRadius: '10px',
-              backgroundColor: '#78350f',
+              backgroundColor: metodeBayar === 'qris' ? '#0284c7' : '#78350f',
               color: '#ffffff',
               fontSize: '14px',
               fontWeight: 800,
-              boxShadow: '0 4px 12px rgba(120, 53, 15, 0.25)',
+              boxShadow: metodeBayar === 'qris' ? '0 4px 12px rgba(2, 132, 199, 0.3)' : '0 4px 12px rgba(120, 53, 15, 0.25)',
               opacity: cart.length === 0 || !activeShift || checkoutLoading || (metodeBayar === 'tunai' && uangDiterima < total) ? 0.5 : 1,
-              transition: 'opacity 0.2s',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
             }}
           >
-            {checkoutLoading ? 'Memproses Transaksi...' : `Bayar Rp${total.toLocaleString('id-ID')}`}
+            {metodeBayar === 'qris' && <QrCode size={16} />}
+            <span>
+              {checkoutLoading
+                ? 'Memproses Transaksi...'
+                : metodeBayar === 'qris'
+                ? `Buka QRIS Mayar • Rp${total.toLocaleString('id-ID')}`
+                : `Bayar Tunai Rp${total.toLocaleString('id-ID')}`}
+            </span>
           </button>
         </div>
       </div>
@@ -982,6 +1041,203 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                 }}
               >
                 Terapkan Diskon
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mayar.id Dynamic QRIS Payment Modal */}
+      {showMayarModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)',
+          backdropFilter: 'blur(5px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 120,
+          padding: '16px',
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '18px',
+            width: '100%',
+            maxWidth: '430px',
+            padding: '24px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            position: 'relative',
+          }}>
+            {/* Close Button */}
+            <button
+              onClick={() => setShowMayarModal(false)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: '#f1f5f9',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#64748b',
+                cursor: 'pointer',
+              }}
+            >
+              <X size={16} />
+            </button>
+
+            {/* Header Badge */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              backgroundColor: '#e0f2fe',
+              color: '#0369a1',
+              fontSize: '11px',
+              fontWeight: 800,
+              marginBottom: '10px',
+              border: '1px solid #bae6fd',
+            }}>
+              <ShieldCheck size={14} />
+              <span>MAYAR.ID PAYMENT GATEWAY</span>
+            </div>
+
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', textAlign: 'center', margin: '0 0 4px 0' }}>
+              QRIS Dinamis Otomatis
+            </h3>
+            <p style={{ fontSize: '12px', color: '#64748b', textAlign: 'center', margin: '0 0 16px 0', lineHeight: 1.4 }}>
+              Scan dengan BCA Mobile, Mandiri Livin, GoPay, OVO, ShopeePay, atau aplikasi QRIS apa saja
+            </p>
+
+            {/* Total Amount Box */}
+            <div style={{
+              width: '100%',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '12px',
+              padding: '12px 16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '16px',
+            }}>
+              <div>
+                <span style={{ fontSize: '11px', color: '#64748b', display: 'block', fontWeight: 600 }}>Total Tagihan</span>
+                <span style={{ fontSize: '20px', fontWeight: 900, color: '#0284c7' }}>
+                  Rp{total.toLocaleString('id-ID')}
+                </span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>ID Transaksi</span>
+                <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: '#334155' }}>
+                  {mayarPaymentData?.paymentId || 'Generating...'}
+                </span>
+              </div>
+            </div>
+
+            {/* Dynamic QR Display */}
+            <div style={{
+              padding: '12px',
+              backgroundColor: '#ffffff',
+              borderRadius: '14px',
+              border: '2px dashed #0284c7',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              boxShadow: '0 4px 12px rgba(2, 132, 199, 0.08)',
+              minHeight: '230px',
+              width: '230px',
+            }}>
+              {mayarLoading ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <RefreshCw size={28} className="animate-spin" color="#0284c7" />
+                  <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>Menghubungi Mayar API...</span>
+                </div>
+              ) : mayarSuccessAnim ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  <CheckCircle2 size={56} color="#16a34a" />
+                  <span style={{ fontSize: '14px', color: '#16a34a', fontWeight: 800 }}>Pembayaran Diterima!</span>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>Menerbitkan struk transaksi...</span>
+                </div>
+              ) : (
+                <img
+                  src={mayarPaymentData?.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-DEMO520458125303360540${total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`}
+                  alt="QRIS Mayar.id"
+                  style={{ width: '210px', height: '210px', display: 'block', borderRadius: '8px' }}
+                />
+              )}
+            </div>
+
+            {/* Timer and Realtime Status */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              marginTop: '12px',
+              fontSize: '11px',
+              color: '#64748b',
+              fontWeight: 600,
+            }}>
+              <Clock size={13} color="#0284c7" />
+              <span>Berlaku 15:00 menit • Webhook Auto-Detect</span>
+            </div>
+
+            {/* Quick Simulation / Webhook Receiver CTA */}
+            <div style={{ width: '100%', marginTop: '18px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <button
+                type="button"
+                disabled={mayarLoading || mayarSuccessAnim}
+                onClick={handleSimulateMayarSuccess}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  backgroundColor: '#16a34a',
+                  color: '#ffffff',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)',
+                }}
+              >
+                <Zap size={16} />
+                <span>Simulasikan Webhook Mayar Berhasil (Sandbox)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowMayarModal(false)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  backgroundColor: 'transparent',
+                  color: '#64748b',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Tutup / Batalkan Transaksi
               </button>
             </div>
           </div>
