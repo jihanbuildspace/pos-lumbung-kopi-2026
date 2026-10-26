@@ -22,6 +22,12 @@ export interface CustomerDisplayPayload {
   kembalian: number;
   status: 'active' | 'completed' | 'idle';
   lastCompletedStruk?: string;
+  // Mayar Dynamic QRIS synchronization fields
+  mayarModalOpen?: boolean;
+  mayarQrCodeUrl?: string;
+  mayarPaymentId?: string;
+  mayarPaymentUrl?: string;
+  mayarAmount?: number;
 }
 
 const CHANNEL_NAME = 'lumbung_customer_display_channel';

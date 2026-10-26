@@ -6,6 +6,7 @@ import type { Produk, KategoriProduk } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User, CheckCircle2, ExternalLink, Zap, ShieldCheck, X, Clock } from 'lucide-react';
 import { createMayarQRIS, type MayarPaymentResponse } from '../../lib/mayarService';
+import { broadcastCustomerDisplay } from '../../lib/customerDisplayService';
 
 interface POSViewProps {
   onOpenShiftModal: () => void;
@@ -176,11 +177,59 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
     }
   };
 
+  const closeMayarModal = () => {
+    setShowMayarModal(false);
+    broadcastCustomerDisplay({
+      cabangNama: cabang?.nama || 'Lumbung Kopi dan Roti',
+      tipePesanan,
+      namaPelanggan,
+      items: cart.map((c) => ({
+        id: c.produk.id,
+        nama: c.produk.nama,
+        jumlah: c.jumlah,
+        harga_satuan: c.produk.harga_jual,
+        subtotal: c.subtotal,
+      })),
+      subtotal,
+      diskon,
+      total,
+      metodeBayar: 'qris',
+      uangDiterima: total,
+      kembalian: 0,
+      status: 'active',
+      mayarModalOpen: false,
+    });
+  };
+
   const handleCheckoutClick = async () => {
     if (metodeBayar === 'qris') {
       setMayarLoading(true);
       setMayarSuccessAnim(false);
       setShowMayarModal(true);
+
+      // Broadcast modal opening immediately to customer display
+      broadcastCustomerDisplay({
+        cabangNama: cabang?.nama || 'Lumbung Kopi dan Roti',
+        tipePesanan,
+        namaPelanggan,
+        items: cart.map((c) => ({
+          id: c.produk.id,
+          nama: c.produk.nama,
+          jumlah: c.jumlah,
+          harga_satuan: c.produk.harga_jual,
+          subtotal: c.subtotal,
+        })),
+        subtotal,
+        diskon,
+        total,
+        metodeBayar: 'qris',
+        uangDiterima: total,
+        kembalian: 0,
+        status: 'active',
+        mayarModalOpen: true,
+        mayarAmount: total,
+      });
+
       try {
         const res = await createMayarQRIS({
           amount: total,
@@ -194,6 +243,32 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           })),
         });
         setMayarPaymentData(res);
+
+        // Broadcast generated QRIS code and transaction ID to customer display
+        broadcastCustomerDisplay({
+          cabangNama: cabang?.nama || 'Lumbung Kopi dan Roti',
+          tipePesanan,
+          namaPelanggan,
+          items: cart.map((c) => ({
+            id: c.produk.id,
+            nama: c.produk.nama,
+            jumlah: c.jumlah,
+            harga_satuan: c.produk.harga_jual,
+            subtotal: c.subtotal,
+          })),
+          subtotal,
+          diskon,
+          total,
+          metodeBayar: 'qris',
+          uangDiterima: total,
+          kembalian: 0,
+          status: 'active',
+          mayarModalOpen: true,
+          mayarQrCodeUrl: res.qrCodeUrl,
+          mayarPaymentId: res.paymentId,
+          mayarPaymentUrl: res.paymentUrl,
+          mayarAmount: total,
+        });
       } catch (err) {
         console.error('Mayar QRIS error:', err);
       } finally {
@@ -207,7 +282,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   const handleSimulateMayarSuccess = async () => {
     setMayarSuccessAnim(true);
     setTimeout(async () => {
-      setShowMayarModal(false);
+      closeMayarModal();
       setMayarSuccessAnim(false);
       await handleCheckoutSubmit();
     }, 700);
@@ -1075,7 +1150,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           }}>
             {/* Close Button */}
             <button
-              onClick={() => setShowMayarModal(false)}
+              onClick={closeMayarModal}
               style={{
                 position: 'absolute',
                 top: '16px',
@@ -1224,7 +1299,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
               <button
                 type="button"
-                onClick={() => setShowMayarModal(false)}
+                onClick={closeMayarModal}
                 style={{
                   width: '100%',
                   padding: '8px',

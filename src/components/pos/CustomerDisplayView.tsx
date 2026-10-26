@@ -3,7 +3,7 @@ import {
   subscribeCustomerDisplay,
   type CustomerDisplayPayload,
 } from '../../lib/customerDisplayService';
-import { Coffee, QrCode, Banknote, CheckCircle2, Clock } from 'lucide-react';
+import { Coffee, QrCode, Banknote, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
 
 export const CustomerDisplayView: React.FC = () => {
   const [data, setData] = useState<CustomerDisplayPayload>({
@@ -500,7 +500,7 @@ export const CustomerDisplayView: React.FC = () => {
                     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)',
                   }}>
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-${Date.now()}520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
+                      src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
                       alt="QRIS Mayar.id Asli"
                       style={{ width: '170px', height: '170px', display: 'block', borderRadius: '4px' }}
                     />
@@ -771,6 +771,145 @@ export const CustomerDisplayView: React.FC = () => {
                   </p>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mayar.id Dynamic QRIS Spotlight Modal on Customer Display */}
+      {data.mayarModalOpen && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(15, 23, 42, 0.75)',
+          backdropFilter: 'blur(6px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 150,
+          padding: '24px',
+          animation: 'fadeIn 0.25s ease',
+        }}>
+          <div style={{
+            backgroundColor: '#ffffff',
+            borderRadius: '24px',
+            width: '100%',
+            maxWidth: '460px',
+            padding: '28px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+            border: '1px solid #e2e8f0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            position: 'relative',
+          }}>
+            {/* Header Badge */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 14px',
+              borderRadius: '20px',
+              backgroundColor: '#e0f2fe',
+              color: '#0369a1',
+              fontSize: '11px',
+              fontWeight: 800,
+              marginBottom: '10px',
+              border: '1px solid #bae6fd',
+            }}>
+              <ShieldCheck size={14} />
+              <span>MAYAR.ID PAYMENT GATEWAY</span>
+            </div>
+
+            <h3 style={{ fontSize: '20px', fontWeight: 900, color: '#0f172a', textAlign: 'center', margin: '0 0 6px 0' }}>
+              QRIS Dinamis Otomatis
+            </h3>
+            <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', margin: '0 0 18px 0', lineHeight: 1.4 }}>
+              Scan dengan BCA Mobile, Mandiri Livin, GoPay, OVO, ShopeePay, DANA atau aplikasi QRIS apa saja
+            </p>
+
+            {/* Total Amount Box */}
+            <div style={{
+              width: '100%',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '14px',
+              padding: '14px 18px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '18px',
+            }}>
+              <div>
+                <span style={{ fontSize: '11px', color: '#64748b', display: 'block', fontWeight: 600 }}>Total Tagihan</span>
+                <span style={{ fontSize: '24px', fontWeight: 900, color: '#0284c7' }}>
+                  Rp{(data.mayarAmount || data.total).toLocaleString('id-ID')}
+                </span>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>ID Transaksi</span>
+                <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: '#334155' }}>
+                  {data.mayarPaymentId || 'Menghubungkan...'}
+                </span>
+              </div>
+            </div>
+
+            {/* Dynamic QR Display */}
+            <div style={{
+              padding: '14px',
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              border: '2px dashed #0284c7',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 6px 20px rgba(2, 132, 199, 0.1)',
+            }}>
+              <img
+                src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
+                alt="QRIS Mayar.id Dinamis"
+                style={{ width: '220px', height: '220px', display: 'block', borderRadius: '10px' }}
+              />
+            </div>
+
+            {/* Timer and Realtime Status */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              marginTop: '14px',
+              fontSize: '12px',
+              color: '#64748b',
+              fontWeight: 600,
+            }}>
+              <Clock size={14} color="#0284c7" />
+              <span>Berlaku 15:00 menit • Webhook Auto-Detect</span>
+            </div>
+
+            {/* Pulsing Status Indicator */}
+            <div style={{
+              marginTop: '18px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '8px 16px',
+              backgroundColor: '#f0fdf4',
+              border: '1px solid #bbf7d0',
+              borderRadius: '30px',
+              color: '#166534',
+              fontSize: '12px',
+              fontWeight: 700,
+            }}>
+              <span style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: '#22c55e',
+                display: 'inline-block',
+                boxShadow: '0 0 8px #22c55e',
+              }} />
+              <span>Silakan scan QRIS di atas untuk menyelesaikan pembayaran</span>
             </div>
           </div>
         </div>
