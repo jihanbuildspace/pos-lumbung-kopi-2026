@@ -73,8 +73,8 @@ export async function createMayarQRIS(request: MayarPaymentRequest): Promise<May
   if (config.apiKey && config.apiKey.trim()) {
     try {
       const endpoint = config.isSandbox
-        ? 'https://api.mayar.club/hl/v1/payment/create'
-        : 'https://api.mayar.id/hl/v1/payment/create';
+        ? 'https://api.mayar.io/hl/v2/payments/create'
+        : 'https://api.mayar.id/hl/v2/payments/create';
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -95,9 +95,9 @@ export async function createMayarQRIS(request: MayarPaymentRequest): Promise<May
         const data = await res.json();
         return {
           success: true,
-          paymentId: data?.data?.id || paymentId,
-          qrCodeUrl: data?.data?.qrCode || '',
-          paymentUrl: data?.data?.link || '',
+          paymentId: data?.data?.id || data?.data?.uuid || paymentId,
+          qrCodeUrl: data?.data?.qrCode || data?.data?.qr_code || '',
+          paymentUrl: data?.data?.link || data?.data?.payment_url || '',
           expiredAt,
           amount: request.amount,
           fee,
@@ -136,8 +136,8 @@ export async function checkMayarStatus(paymentId: string): Promise<{ isPaid: boo
   if (config.apiKey && config.apiKey.trim() && !paymentId.startsWith('MYR-')) {
     try {
       const endpoint = config.isSandbox
-        ? `https://api.mayar.club/hl/v1/payment/${paymentId}`
-        : `https://api.mayar.id/hl/v1/payment/${paymentId}`;
+        ? `https://api.mayar.io/hl/v2/payments/${paymentId}`
+        : `https://api.mayar.id/hl/v2/payments/${paymentId}`;
 
       const res = await fetch(endpoint, {
         headers: { 'Authorization': `Bearer ${config.apiKey.trim()}` },
