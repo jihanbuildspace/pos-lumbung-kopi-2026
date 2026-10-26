@@ -143,12 +143,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   }, [products, selectedCategory, searchQuery]);
 
   const categories = [
-    { key: 'semua', label: 'Semua', icon: '✨' },
-    { key: 'kopi', label: 'Kopi', icon: '☕' },
-    { key: 'non_kopi', label: 'Non Kopi', icon: '🍵' },
-    { key: 'roti', label: 'Roti & Pastry', icon: '🥐' },
-    { key: 'snack', label: 'Snack', icon: '🍪' },
-    { key: 'kemasan', label: 'Kemasan', icon: '📦' },
+    { key: 'semua', label: 'Semua Menu' },
+    { key: 'kopi', label: 'Kopi' },
+    { key: 'non_kopi', label: 'Non Kopi' },
+    { key: 'roti', label: 'Roti & Pastry' },
+    { key: 'snack', label: 'Snack' },
+    { key: 'kemasan', label: 'Kemasan' },
   ];
 
   const handleApplyDiscount = () => {
@@ -291,49 +291,44 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
     switch (kategori) {
       case 'kopi':
         return {
-          bgGradient: 'linear-gradient(135deg, #2d1305 0%, #4d1c06 50%, #78350f 100%)',
-          accentColor: '#f59e0b',
+          accentColor: '#b45309',
           lightBg: '#fef3c7',
           textColor: '#92400e',
-          icon: '☕',
-          tag: 'KOPI ESPRESSO',
+          borderColor: '#fde68a',
+          tag: 'Kopi',
         };
       case 'non_kopi':
         return {
-          bgGradient: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)',
-          accentColor: '#34d399',
+          accentColor: '#059669',
           lightBg: '#ecfdf5',
           textColor: '#065f46',
-          icon: '🍵',
-          tag: 'NON KOPI & TEH',
+          borderColor: '#a7f3d0',
+          tag: 'Non Kopi',
         };
       case 'roti':
         return {
-          bgGradient: 'linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #c2410c 100%)',
-          accentColor: '#fb923c',
+          accentColor: '#ea580c',
           lightBg: '#fff7ed',
           textColor: '#9a3412',
-          icon: '🥐',
-          tag: 'ROTI & BAKERY',
+          borderColor: '#fed7aa',
+          tag: 'Roti & Bakery',
         };
       case 'snack':
         return {
-          bgGradient: 'linear-gradient(135deg, #713f12 0%, #854d0e 50%, #b45309 100%)',
-          accentColor: '#fde047',
+          accentColor: '#ca8a04',
           lightBg: '#fefce8',
           textColor: '#854d0e',
-          icon: '🍪',
-          tag: 'SNACK & CAKE',
+          borderColor: '#fef08a',
+          tag: 'Camilan',
         };
       case 'kemasan':
       default:
         return {
-          bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-          accentColor: '#94a3b8',
-          lightBg: '#f8fafc',
+          accentColor: '#475569',
+          lightBg: '#f1f5f9',
           textColor: '#334155',
-          icon: '📦',
-          tag: 'PRODUK KEMASAN',
+          borderColor: '#cbd5e1',
+          tag: 'Kemasan',
         };
     }
   };
@@ -521,7 +516,6 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     transition: 'all 0.18s ease',
                   }}
                 >
-                  <span style={{ fontSize: '14px' }}>{cat.icon}</span>
                   <span>{cat.label}</span>
                 </button>
               );
@@ -529,7 +523,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           </div>
         </div>
 
-        {/* Product Cards Grid with High-Definition Food & Drink Photography */}
+        {/* Product Cards Grid - Clean POS Architecture */}
         <div style={{
           flex: 1,
           overflowY: 'auto',
@@ -550,7 +544,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               border: '1.5px dashed #cbd5e1',
               margin: '20px',
             }}>
-              <span style={{ fontSize: '36px' }}>☕</span>
+              <Search size={32} color="#94a3b8" style={{ margin: '0 auto 10px' }} />
               <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b', marginTop: '10px' }}>
                 Menu Tidak Ditemukan
               </h4>
@@ -579,8 +573,8 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: '16px',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+              gap: '14px',
             }}>
               {filteredProducts.map((p) => {
                 const isOutOfStock = p.lacak_stok && (p.stok_saat_ini ?? 0) <= 0;
@@ -596,186 +590,165 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      borderRadius: '18px',
+                      justifyContent: 'space-between',
+                      borderRadius: '16px',
                       backgroundColor: '#ffffff',
                       border: '1.5px solid',
                       borderColor: isLowStock ? '#fed7aa' : '#e2e8f0',
                       textAlign: 'left',
-                      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)',
-                      transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                      transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
                       opacity: isOutOfStock || !activeShift ? 0.55 : 1,
                       cursor: isOutOfStock || !activeShift ? 'not-allowed' : 'pointer',
-                      overflow: 'hidden',
-                      padding: 0,
+                      padding: '16px',
+                      minHeight: '138px',
                     }}
                   >
-                    {/* Pure UI Stylized Card Header with Category Gradient & Glass Badges */}
-                    <div style={{
-                      padding: '12px 14px',
-                      background: catStyle.bgGradient,
-                      position: 'relative',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                    }}>
-                      {/* Subtle ambient light orb */}
+                    {/* Top Row: Category Tag Pill + Stock Pill */}
+                    <div>
                       <div style={{
-                        position: 'absolute',
-                        top: '-15px',
-                        right: '-15px',
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%)',
-                        pointerEvents: 'none',
-                      }} />
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 1 }}>
-                        {/* Category Icon Glass Badge */}
-                        <div style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '10px',
-                          backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                          backdropFilter: 'blur(8px)',
-                          border: '1px solid rgba(255, 255, 255, 0.3)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '15px',
-                          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
-                        }}>
-                          {catStyle.icon}
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '6px',
+                        marginBottom: '10px',
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{
-                            fontSize: '9.5px',
-                            fontWeight: 900,
-                            color: '#fef3c7',
-                            letterSpacing: '0.5px',
-                            fontFamily: 'monospace',
-                          }}>
-                            {p.sku}
-                          </span>
-                          <span style={{
-                            fontSize: '8px',
+                            fontSize: '10px',
                             fontWeight: 800,
-                            color: 'rgba(255, 255, 255, 0.75)',
-                            letterSpacing: '0.4px',
+                            color: catStyle.textColor,
+                            backgroundColor: catStyle.lightBg,
+                            border: `1px solid ${catStyle.borderColor}`,
+                            padding: '2px 7px',
+                            borderRadius: '6px',
                             textTransform: 'uppercase',
+                            letterSpacing: '0.4px',
                           }}>
                             {catStyle.tag}
                           </span>
+                          <span style={{
+                            fontSize: '9.5px',
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            color: '#94a3b8',
+                          }}>
+                            {p.sku}
+                          </span>
                         </div>
-                      </div>
 
-                      {/* Stock Status Pill */}
-                      <div style={{ zIndex: 1 }}>
+                        {/* Stock indicator dot + text */}
                         {!p.lacak_stok ? (
                           <span style={{
                             fontSize: '9.5px',
-                            color: '#ffffff',
-                            fontWeight: 800,
-                            backgroundColor: 'rgba(5, 150, 105, 0.88)',
-                            backdropFilter: 'blur(6px)',
-                            border: '1px solid rgba(167, 243, 208, 0.45)',
-                            padding: '3px 8px',
-                            borderRadius: '20px',
+                            fontWeight: 700,
+                            color: '#059669',
+                            backgroundColor: '#ecfdf5',
+                            border: '1px solid #a7f3d0',
+                            padding: '2px 7px',
+                            borderRadius: '10px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '3px',
+                            gap: '4px',
                           }}>
-                            ✨ Racikan
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+                            Racikan
                           </span>
                         ) : isOutOfStock ? (
                           <span style={{
                             fontSize: '9.5px',
-                            color: '#ffffff',
-                            fontWeight: 900,
-                            backgroundColor: 'rgba(220, 38, 38, 0.92)',
-                            backdropFilter: 'blur(6px)',
-                            border: '1px solid rgba(254, 202, 202, 0.45)',
-                            padding: '3px 8px',
-                            borderRadius: '20px',
+                            fontWeight: 800,
+                            color: '#dc2626',
+                            backgroundColor: '#fef2f2',
+                            border: '1px solid #fecaca',
+                            padding: '2px 7px',
+                            borderRadius: '10px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
                           }}>
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
                             Habis
+                          </span>
+                        ) : isLowStock ? (
+                          <span style={{
+                            fontSize: '9.5px',
+                            fontWeight: 800,
+                            color: '#c2410c',
+                            backgroundColor: '#fff7ed',
+                            border: '1px solid #fed7aa',
+                            padding: '2px 7px',
+                            borderRadius: '10px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                          }}>
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#f97316' }} />
+                            Sisa {p.stok_saat_ini}
                           </span>
                         ) : (
                           <span style={{
                             fontSize: '9.5px',
-                            fontWeight: 800,
-                            padding: '3px 8px',
-                            borderRadius: '20px',
-                            backgroundColor: isLowStock ? 'rgba(225, 29, 72, 0.92)' : 'rgba(15, 23, 42, 0.55)',
-                            backdropFilter: 'blur(6px)',
-                            color: isLowStock ? '#ffe4e6' : '#ffffff',
-                            border: '1px solid',
-                            borderColor: isLowStock ? 'rgba(254, 205, 211, 0.5)' : 'rgba(255, 255, 255, 0.25)',
+                            fontWeight: 600,
+                            color: '#64748b',
+                            backgroundColor: '#f8fafc',
+                            border: '1px solid #e2e8f0',
+                            padding: '2px 7px',
+                            borderRadius: '10px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '3px',
+                            gap: '4px',
                           }}>
-                            {isLowStock ? `⚠️ Sisa ${p.stok_saat_ini}!` : `Stok: ${p.stok_saat_ini}`}
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#94a3b8' }} />
+                            Stok {p.stok_saat_ini}
                           </span>
                         )}
                       </div>
+
+                      {/* Product Name */}
+                      <h4 style={{
+                        fontSize: '14.5px',
+                        fontWeight: 800,
+                        color: '#0f172a',
+                        lineHeight: 1.35,
+                        margin: 0,
+                      }}>
+                        {p.nama}
+                      </h4>
                     </div>
 
-                    {/* Card Content & Action Bar */}
+                    {/* Bottom Row: Price & Quick Add Button */}
                     <div style={{
-                      padding: '16px',
+                      marginTop: '14px',
+                      paddingTop: '10px',
+                      borderTop: '1px solid #f1f5f9',
                       display: 'flex',
-                      flexDirection: 'column',
-                      flex: 1,
                       justifyContent: 'space-between',
-                      gap: '12px',
+                      alignItems: 'center',
                     }}>
-                      <div>
-                        <h4 style={{
-                          fontSize: '14.5px',
-                          fontWeight: 800,
-                          color: '#0f172a',
-                          lineHeight: 1.35,
-                          margin: 0,
-                          minHeight: '38px',
-                        }}>
-                          {p.nama}
-                        </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontSize: '9.5px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                          Harga Jual
+                        </span>
+                        <span style={{ fontSize: '15.5px', fontWeight: 900, color: '#78350f', letterSpacing: '-0.3px' }}>
+                          Rp{p.harga_jual.toLocaleString('id-ID')}
+                        </span>
                       </div>
 
                       <div style={{
-                        marginTop: '10px',
-                        paddingTop: '10px',
-                        borderTop: '1px solid #f1f5f9',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '9px',
+                        background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+                        color: '#fef3c7',
+                        border: '1px solid #d97706',
                         display: 'flex',
-                        justifyContent: 'space-between',
                         alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 6px rgba(180, 83, 9, 0.25)',
+                        transition: 'all 0.15s ease',
                       }}>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga Jual</span>
-                          <span style={{ fontSize: '16px', fontWeight: 900, color: '#78350f', letterSpacing: '-0.3px' }}>
-                            Rp{p.harga_jual.toLocaleString('id-ID')}
-                          </span>
-                        </div>
-
-                        <div style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '10px',
-                          background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
-                          color: '#fef3c7',
-                          border: '1px solid #d97706',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          boxShadow: '0 3px 8px rgba(180, 83, 9, 0.3)',
-                          transition: 'all 0.15s ease',
-                        }}>
-                          <Plus size={17} strokeWidth={2.5} />
-                        </div>
+                        <Plus size={16} strokeWidth={2.5} />
                       </div>
                     </div>
                   </button>
@@ -1067,18 +1040,20 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               >
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <div style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: itemCatStyle.bgGradient,
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '8px',
+                    backgroundColor: itemCatStyle.lightBg,
+                    color: itemCatStyle.textColor,
+                    border: `1px solid ${itemCatStyle.borderColor}`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '16px',
+                    fontSize: '11px',
+                    fontWeight: 800,
                     flexShrink: 0,
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
                   }}>
-                    {itemCatStyle.icon}
+                    {item.jumlah}x
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h5 style={{

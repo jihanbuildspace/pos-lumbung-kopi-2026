@@ -344,8 +344,20 @@ export const CustomerDisplayView: React.FC = () => {
                   borderRadius: '12px',
                   textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: '20px' }}>☕</span>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    color: '#92400e',
+                    backgroundColor: '#fef3c7',
+                    border: '1px solid #fde68a',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.4px',
+                  }}>
+                    Espresso
+                  </span>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Kopi Susu Lumbung
                   </div>
                   <div style={{ fontSize: '11px', color: '#b45309', fontWeight: 600 }}>Favorit Kedai</div>
@@ -358,8 +370,20 @@ export const CustomerDisplayView: React.FC = () => {
                   borderRadius: '12px',
                   textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: '20px' }}>🥐</span>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    color: '#9a3412',
+                    backgroundColor: '#fff7ed',
+                    border: '1px solid #fed7aa',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.4px',
+                  }}>
+                    Pastry
+                  </span>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Croissant Mentega
                   </div>
                   <div style={{ fontSize: '11px', color: '#b45309', fontWeight: 600 }}>Hangat &amp; Renyah</div>
@@ -372,8 +396,20 @@ export const CustomerDisplayView: React.FC = () => {
                   borderRadius: '12px',
                   textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: '20px' }}>🍞</span>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    color: '#9a3412',
+                    backgroundColor: '#fff7ed',
+                    border: '1px solid #fed7aa',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.4px',
+                  }}>
+                    Bakery
+                  </span>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Roti Cokelat Klasik
                   </div>
                   <div style={{ fontSize: '11px', color: '#b45309', fontWeight: 600 }}>Cokelat Lumer</div>
