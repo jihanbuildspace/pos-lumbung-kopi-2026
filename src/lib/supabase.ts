@@ -1,16 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Dalam browser dev, arahkan ke proxy /supabase di Vite agar request diteruskan secara server-to-server
-// dan tidak diblokir oleh pengecekan User-Agent Supabase Gateway ("Forbidden use of secret API key in browser")
-const isBrowser = typeof window !== 'undefined';
-const supabaseUrl = isBrowser
-  ? `${window.location.origin}/supabase`
-  : (import.meta.env.VITE_SUPABASE_URL || 'https://mtunnrwjiasvmiyfwuhv.supabase.co');
+const DEFAULT_SUPABASE_URL = 'https://mtunnrwjiasvmiyfwuhv.supabase.co';
+// Fallback key agar createClient tidak melempar 'supabaseKey is required'
+// saat aplikasi pertama kali dijalankan di hosting Netlify.
+const FALLBACK_KEY = 'dummy-anon-key-pos-lumbung-kopi';
 
-const supabaseKey = 
-  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || 
-  import.meta.env.VITE_SUPABASE_ANON_KEY || 
-  '';
+const isBrowser = typeof window !== 'undefined';
+
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL ||
+  (isBrowser ? `${window.location.origin}/supabase` : DEFAULT_SUPABASE_URL);
+
+const supabaseKey =
+  import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  FALLBACK_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
@@ -18,4 +22,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     autoRefreshToken: true,
   },
 });
+
+
 
