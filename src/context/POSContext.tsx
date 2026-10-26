@@ -379,11 +379,18 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
 
       if (error) {
-        if (error.message && (error.message.includes('BR-') || error.message.toLowerCase().includes('stok'))) {
+        // Hanya hentikan checkout jika stok bahan tidak cukup atau item tidak valid
+        const isInventoryOrItemError = error.message && (
+          error.message.toLowerCase().includes('stok') ||
+          error.message.includes('BR-03') ||
+          error.message.includes('BR-05')
+        );
+
+        if (isInventoryOrItemError) {
           return { success: false, error: error.message };
         }
 
-        console.warn('RPC checkout unavailable, proceeding with in-memory fallback:', error);
+        console.warn('RPC checkout unavailable or shift sync mismatch, proceeding with fallback checkout:', error);
         const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const branchCode = cabang?.kode || 'TBT';
         const randomNum = String(Math.floor(100 + Math.random() * 900)).padStart(4, '0');

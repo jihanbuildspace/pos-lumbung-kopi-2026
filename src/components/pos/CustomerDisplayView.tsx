@@ -176,13 +176,14 @@ export const CustomerDisplayView: React.FC = () => {
       <main style={{
         flex: 1,
         display: 'grid',
-        gridTemplateColumns: '1.2fr 0.9fr',
-        padding: '24px',
-        gap: '24px',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        padding: '16px',
+        gap: '16px',
         maxWidth: '1400px',
         width: '100%',
         margin: '0 auto',
         boxSizing: 'border-box',
+        overflowY: 'auto',
       }}>
         {/* Left Column: Order Items or Welcome Showcase */}
         <section style={{
