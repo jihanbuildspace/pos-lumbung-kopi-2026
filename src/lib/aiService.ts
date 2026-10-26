@@ -61,27 +61,27 @@ ATURAN FORMAT PENTING:
 
   // 1. Try real Gemini API if key is present
   if (geminiKey) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) {
-          // Bersihkan sisa tanda bintang/markdown
-          return text.replace(/\*{2,}/g, '').replace(/\*/g, '').trim();
+    const candidateModels = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-1.5-flash'];
+    for (const model of candidateModels) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            // Bersihkan sisa tanda bintang/markdown
+            return text.replace(/\*{2,}/g, '').replace(/\*/g, '').trim();
+          }
         }
-      } else {
-        const errText = await res.text();
-        console.warn('Gemini API returned error status:', res.status, errText);
+      } catch (e) {
+        console.warn(`Gemini API call (${model}) error:`, e);
       }
-    } catch (e) {
-      console.warn('Gemini API call failed, falling back to local AI analysis:', e);
     }
   }
 
@@ -206,5 +206,44 @@ export function generateStockForecast(
       statusKritis,
     };
   });
+}
+
+export async function askGeminiStockInsight(
+  stockSummary: { branchName: string; criticalCount: number; warningCount: number; totalRestock: number; items: any[] }
+): Promise<string> {
+  const geminiKey = getGeminiApiKey();
+  const prompt = `Anda adalah Lumbung AI, konsultan manajemen persediaan toko 'Lumbung Kopi dan Roti' (${stockSummary.branchName}).
+Ringkasan Stok Cabang:
+- Total Item Kritis (Habis): ${stockSummary.criticalCount}
+- Total Item Waspada (Menipis): ${stockSummary.warningCount}
+- Total Kebutuhan Restock: ${stockSummary.totalRestock} unit
+- Item yang perlu restock: ${stockSummary.items.map(it => `${it.nama} (Sisa: ${it.stokSaatIni}, Rekomendasi: +${it.rekomendasiTambah})`).join(', ')}
+
+Berikan analisa dan rekomendasi taktis singkat dalam 2-3 paragraf padat (tanpa tanda bintang asteriks) untuk Kepala Toko / Owner mengenai pengadaan stok dan prioritas pasokan.`;
+
+  if (geminiKey) {
+    const candidateModels = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-1.5-flash'];
+    for (const model of candidateModels) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) return text.replace(/\*{2,}/g, '').replace(/\*/g, '').trim();
+        }
+      } catch (e) {
+        console.warn(`Gemini stock insight (${model}) error:`, e);
+      }
+    }
+  }
+
+  // Fallback
+  return `Rekomendasi Pengadaan Stok (${stockSummary.branchName}):\n\n` +
+    `Terdapat ${stockSummary.criticalCount + stockSummary.warningCount} item bakery dan retail yang membutuhkan pengiriman stok segera dengan total ${stockSummary.totalRestock} unit. ` +
+    `Prioritaskan pasokan roti dan pastry dari dapur pusat sebelum jam sarapan (07.00 WIB) agar tidak kehilangan potensi omzet pagi hari.`;
 }
 

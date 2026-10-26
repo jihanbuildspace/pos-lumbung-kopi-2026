@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import type { StokCabang, Produk, Cabang } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Package, AlertTriangle, Edit3, Search, RefreshCw, CheckCircle2, Sparkles, TrendingUp, X, AlertCircle, Copy } from 'lucide-react';
-import { generateStockForecast } from '../../lib/aiService';
+import { generateStockForecast, askGeminiStockInsight, hasGeminiApiKey } from '../../lib/aiService';
 import type { StockForecastItem } from '../../lib/aiService';
 
 export const StokView: React.FC = () => {
@@ -21,6 +21,8 @@ export const StokView: React.FC = () => {
   const [showForecastModal, setShowForecastModal] = useState<boolean>(false);
   const [forecastFilter, setForecastFilter] = useState<'all' | 'need_restock'>('need_restock');
   const [forecastLoading, setForecastLoading] = useState<boolean>(false);
+  const [geminiStockAdvice, setGeminiStockAdvice] = useState<string>('');
+  const [loadingStockAdvice, setLoadingStockAdvice] = useState<boolean>(false);
 
   // Modal Adjustment
   const [showAdjustModal, setShowAdjustModal] = useState<boolean>(false);
@@ -183,6 +185,19 @@ export const StokView: React.FC = () => {
   const displayedForecast = forecastFilter === 'need_restock'
     ? forecastList.filter((f) => f.statusKritis !== 'aman')
     : forecastList;
+
+  const handleGetGeminiStockAdvice = async () => {
+    setLoadingStockAdvice(true);
+    const advice = await askGeminiStockInsight({
+      branchName: activeCabangName,
+      criticalCount: criticalItems.length,
+      warningCount: warningItems.length,
+      totalRestock: totalRestockUnits,
+      items: forecastList.filter((f) => f.rekomendasiTambah > 0),
+    });
+    setGeminiStockAdvice(advice);
+    setLoadingStockAdvice(false);
+  };
 
   const handleCopyProcurementList = () => {
     const itemsToRestock = forecastList.filter((f) => f.rekomendasiTambah > 0);
@@ -716,6 +731,51 @@ export const StokView: React.FC = () => {
                     Total kuota restock yang disarankan AI
                   </p>
                 </div>
+              </div>
+
+              {/* Gemini AI Tactical Insight Card */}
+              <div style={{
+                padding: '14px 18px',
+                backgroundColor: '#fef3c7',
+                border: '1px solid #fde68a',
+                borderRadius: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Sparkles size={18} color="#b45309" />
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#78350f' }}>
+                      Rekomendasi Taktis Gemini AI ({hasGeminiApiKey() ? 'Gemini 3.5 Flash' : 'Mode Cerdas'})
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleGetGeminiStockAdvice}
+                    disabled={loadingStockAdvice}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '6px',
+                      backgroundColor: '#78350f',
+                      color: '#ffffff',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: loadingStockAdvice ? 'wait' : 'pointer',
+                    }}
+                  >
+                    {loadingStockAdvice ? 'Menganalisis...' : (geminiStockAdvice ? 'Perbarui Analisa ↺' : 'Minta Analisis Gemini AI ↗')}
+                  </button>
+                </div>
+                {geminiStockAdvice ? (
+                  <p style={{ fontSize: '12px', color: '#451a03', lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0 }}>
+                    {geminiStockAdvice}
+                  </p>
+                ) : (
+                  <p style={{ fontSize: '11px', color: '#92400e', margin: 0 }}>
+                    Klik tombol <strong>"Minta Analisis Gemini AI"</strong> untuk menghasilkan ringkasan taktis kebutuhan pengadaan barang secara real-time.
+                  </p>
+                )}
               </div>
 
               {/* Filter Tabs & Copy Button */}
