@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import type { StokCabang, Produk, Cabang } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Package, AlertTriangle, Edit3, Search, RefreshCw, CheckCircle2, Sparkles, TrendingUp, X, AlertCircle, Copy } from 'lucide-react';
-import { generateStockForecast, askGeminiStockInsight, hasGeminiApiKey } from '../../lib/aiService';
+import { generateStockForecast, askGeminiStockInsight, hasGeminiApiKey, getGeminiApiKey, saveGeminiApiKey } from '../../lib/aiService';
 import type { StockForecastItem } from '../../lib/aiService';
 
 export const StokView: React.FC = () => {
@@ -23,6 +23,8 @@ export const StokView: React.FC = () => {
   const [forecastLoading, setForecastLoading] = useState<boolean>(false);
   const [geminiStockAdvice, setGeminiStockAdvice] = useState<string>('');
   const [loadingStockAdvice, setLoadingStockAdvice] = useState<boolean>(false);
+  const [showApiKeySetting, setShowApiKeySetting] = useState<boolean>(false);
+  const [geminiApiKeyInput, setGeminiApiKeyInput] = useState<string>(getGeminiApiKey());
 
   // Modal Adjustment
   const [showAdjustModal, setShowAdjustModal] = useState<boolean>(false);
@@ -194,6 +196,7 @@ export const StokView: React.FC = () => {
       warningCount: warningItems.length,
       totalRestock: totalRestockUnits,
       items: forecastList.filter((f) => f.rekomendasiTambah > 0),
+      allItems: forecastList,
     });
     setGeminiStockAdvice(advice);
     setLoadingStockAdvice(false);
@@ -747,8 +750,27 @@ export const StokView: React.FC = () => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Sparkles size={18} color="#b45309" />
                     <span style={{ fontSize: '13px', fontWeight: 800, color: '#78350f' }}>
-                      Rekomendasi Taktis Gemini AI ({hasGeminiApiKey() ? 'Gemini 3.5 Flash' : 'Mode Cerdas'})
+                      Rekomendasi Taktis Gemini AI
                     </span>
+                    <button
+                      onClick={() => setShowApiKeySetting(!showApiKeySetting)}
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        backgroundColor: hasGeminiApiKey() ? '#10b981' : '#f59e0b',
+                        color: '#ffffff',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                      title="Klik untuk konfigurasi Gemini API Key"
+                    >
+                      <span>{hasGeminiApiKey() ? '● Gemini 3.5 Flash' : '⚙️ Atur API Key'}</span>
+                    </button>
                   </div>
                   <button
                     onClick={handleGetGeminiStockAdvice}
@@ -767,6 +789,60 @@ export const StokView: React.FC = () => {
                     {loadingStockAdvice ? 'Menganalisis...' : (geminiStockAdvice ? 'Perbarui Analisa ↺' : 'Minta Analisis Gemini AI ↗')}
                   </button>
                 </div>
+
+                {/* Collapsible API Key Drawer */}
+                {showApiKeySetting && (
+                  <div style={{
+                    padding: '10px 14px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    marginTop: '4px',
+                  }}>
+                    <label style={{ fontSize: '11px', fontWeight: 700, color: '#78350f' }}>
+                      Google Gemini API Key:
+                    </label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input
+                        type="password"
+                        placeholder="AQ.Ab8RN... atau AIzaSy..."
+                        value={geminiApiKeyInput}
+                        onChange={(e) => setGeminiApiKeyInput(e.target.value)}
+                        style={{
+                          flex: 1,
+                          padding: '5px 10px',
+                          borderRadius: '6px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '12px',
+                          outline: 'none',
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          saveGeminiApiKey(geminiApiKeyInput);
+                          setShowApiKeySetting(false);
+                          handleGetGeminiStockAdvice();
+                        }}
+                        style={{
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          backgroundColor: '#78350f',
+                          color: '#ffffff',
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          border: 'none',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Simpan &amp; Terapkan
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {geminiStockAdvice ? (
                   <p style={{ fontSize: '12px', color: '#451a03', lineHeight: 1.6, whiteSpace: 'pre-wrap', margin: 0 }}>
                     {geminiStockAdvice}
