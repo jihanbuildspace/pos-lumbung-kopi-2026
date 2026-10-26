@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import type { StokCabang, Produk, Cabang } from '../../types/database';
+import { SEED_PRODUCTS } from '../../lib/seedData';
 import { Package, AlertTriangle, Edit3, Search, RefreshCw, CheckCircle2, Sparkles, TrendingUp, X, AlertCircle, Copy } from 'lucide-react';
 import { generateStockForecast } from '../../lib/aiService';
 import type { StockForecastItem } from '../../lib/aiService';
@@ -45,9 +46,18 @@ export const StokView: React.FC = () => {
         .eq('cabang_id', selectedCabangId)
         .order('diubah_pada', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching stock:', error);
-      } else if (data) {
+      if (error || !data || data.length === 0) {
+        const fallbackStock = SEED_PRODUCTS.filter((p) => p.lacak_stok).map((p) => ({
+          id: `stock-${selectedCabangId}-${p.id}`,
+          cabang_id: selectedCabangId,
+          produk_id: p.id,
+          jumlah: p.stok_saat_ini,
+          stok_minimum: p.stok_minimum,
+          diubah_pada: new Date().toISOString(),
+          produk: p,
+        }));
+        setStockList(fallbackStock as any);
+      } else {
         setStockList(data);
       }
 

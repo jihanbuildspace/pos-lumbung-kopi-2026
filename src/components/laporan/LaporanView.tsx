@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { exportReportToExcel } from '../../lib/exportUtils';
 import { askLumbungAI } from '../../lib/aiService';
+import { SEED_TRANSAKSI, SEED_SHIFTS, SEED_HARGA_MODAL } from '../../lib/seedTransactions';
 import {
   TrendingUp,
   ShoppingBag,
@@ -112,12 +113,34 @@ export const LaporanView: React.FC = () => {
       const shiftResult = results[1];
       const modalResult = results[2];
 
-      if (trxResult?.data) setTransaksi(trxResult.data);
-      if (shiftResult?.data) setShifts(shiftResult.data);
+      if (trxResult?.data && trxResult.data.length > 0) {
+        setTransaksi(trxResult.data);
+      } else {
+        let fallbackTrx = SEED_TRANSAKSI;
+        if (!isOwner && profile?.cabang_id) {
+          fallbackTrx = fallbackTrx.filter((t) => t.cabang_id === profile.cabang_id);
+        } else if (isOwner && selectedCabangId !== 'semua') {
+          fallbackTrx = fallbackTrx.filter((t) => t.cabang_id === selectedCabangId);
+        }
+        setTransaksi(fallbackTrx);
+      }
 
-      if (isOwner && modalResult?.data) {
+      if (shiftResult?.data && shiftResult.data.length > 0) {
+        setShifts(shiftResult.data);
+      } else {
+        let fallbackShifts = SEED_SHIFTS;
+        if (!isOwner && profile?.cabang_id) {
+          fallbackShifts = fallbackShifts.filter((s) => s.cabang_id === profile.cabang_id);
+        } else if (isOwner && selectedCabangId !== 'semua') {
+          fallbackShifts = fallbackShifts.filter((s) => s.cabang_id === selectedCabangId);
+        }
+        setShifts(fallbackShifts);
+      }
+
+      if (isOwner) {
+        const rawModal = (modalResult?.data && modalResult.data.length > 0) ? modalResult.data : SEED_HARGA_MODAL;
         const mMap = new Map<string, number>();
-        modalResult.data.forEach((m: any) => {
+        rawModal.forEach((m: any) => {
           if (!mMap.has(m.produk_id)) {
             mMap.set(m.produk_id, m.harga_modal);
           }

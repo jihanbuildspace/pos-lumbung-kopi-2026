@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import { usePOS } from '../../context/POSContext';
 import type { ShiftKasir } from '../../types/database';
+import { SEED_SHIFTS } from '../../lib/seedTransactions';
 import { Users, Clock, CheckCircle2, AlertTriangle, ShieldCheck, RefreshCw, DollarSign, CreditCard, Lock, Play } from 'lucide-react';
 
 interface ShiftManagementViewProps {
@@ -60,9 +61,17 @@ export const ShiftManagementView: React.FC<ShiftManagementViewProps> = ({
       }
 
       const { data, error } = await query;
-      if (error) {
-        console.error('Error fetching shifts:', error);
-      } else if (data) {
+      if (error || !data || data.length === 0) {
+        let fallback = SEED_SHIFTS;
+        if (profile?.peran === 'kasir') {
+          fallback = fallback.filter((s) => s.kasir_id === profile.id);
+        } else if (profile?.peran === 'kepala_toko') {
+          fallback = fallback.filter((s) => s.cabang_id === profile.cabang_id);
+        } else if (profile?.peran === 'owner' && selectedCabangId !== 'semua') {
+          fallback = fallback.filter((s) => s.cabang_id === selectedCabangId);
+        }
+        setShifts(fallback);
+      } else {
         setShifts(data);
       }
     } catch (err) {

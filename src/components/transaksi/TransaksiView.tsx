@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 import type { Transaksi, Cabang } from '../../types/database';
+import { SEED_TRANSAKSI } from '../../lib/seedTransactions';
 import { Search, Filter, Ban, Eye, FileText, CheckCircle2, AlertOctagon } from 'lucide-react';
 
 interface TransaksiViewProps {
@@ -59,9 +60,18 @@ export const TransaksiView: React.FC<TransaksiViewProps> = ({ onViewReceipt }) =
       }
 
       const { data, error } = await query;
-      if (error) {
-        console.error('Error fetching transactions:', error);
-      } else if (data) {
+      if (error || !data || data.length === 0) {
+        if (error) console.warn('Supabase fetch error/empty, fallback to seed transactions:', error);
+        let fallback = SEED_TRANSAKSI;
+        if (profile?.peran === 'kasir') {
+          fallback = fallback.filter((t) => t.kasir_id === profile.id);
+        } else if (profile?.peran === 'kepala_toko') {
+          fallback = fallback.filter((t) => t.cabang_id === profile.cabang_id);
+        } else if (profile?.peran === 'owner' && selectedCabangId !== 'semua') {
+          fallback = fallback.filter((t) => t.cabang_id === selectedCabangId);
+        }
+        setTransaksiList(fallback);
+      } else {
         setTransaksiList(data as any);
       }
     } catch (err) {
