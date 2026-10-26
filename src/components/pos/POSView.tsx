@@ -4,9 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import { usePOS } from '../../context/POSContext';
 import type { Produk, KategoriProduk } from '../../types/database';
 import { SEED_PRODUCTS } from '../../lib/seedData';
-import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User, CheckCircle2, ExternalLink, Zap, ShieldCheck, X, Clock } from 'lucide-react';
+import { Search, ShoppingBag, Plus, Minus, Trash2, Tag, QrCode, Banknote, AlertCircle, RefreshCw, Monitor, User, CheckCircle2, ExternalLink, Zap, ShieldCheck, X, Clock, Coffee, Sparkles } from 'lucide-react';
 import { createMayarQRIS, type MayarPaymentResponse } from '../../lib/mayarService';
 import { broadcastCustomerDisplay } from '../../lib/customerDisplayService';
+import { getProductImageUrl } from '../../lib/productImages';
 
 interface POSViewProps {
   onOpenShiftModal: () => void;
@@ -312,8 +313,62 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
         }}>
+          {/* Ambient Live Branch Banner */}
+          <div style={{
+            padding: '10px 16px',
+            background: 'linear-gradient(90deg, #2c1003 0%, #451a03 50%, #78350f 100%)',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderRadius: '14px',
+            boxShadow: '0 4px 14px rgba(44, 16, 3, 0.25)',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '10px',
+                backgroundColor: 'rgba(251, 191, 36, 0.2)',
+                border: '1px solid rgba(251, 191, 36, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fef3c7',
+              }}>
+                <Coffee size={17} />
+              </div>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', letterSpacing: '0.2px' }}>
+                  Katalog Menu • {cabang?.nama || 'Lumbung Tebet'}
+                </div>
+                <div style={{ fontSize: '10.5px', color: '#fde68a' }}>
+                  Pilih menu kopi racikan &amp; roti segar untuk pelanggan
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '4px 10px',
+                borderRadius: '20px',
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                border: '1px solid rgba(52, 211, 153, 0.4)',
+                fontSize: '10px',
+                fontWeight: 800,
+                color: '#a7f3d0',
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#34d399', boxShadow: '0 0 6px #34d399' }} />
+                TERMINAL POS AKTIF
+              </span>
+            </div>
+          </div>
+
           {/* Search bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
@@ -325,7 +380,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '14px' }} />
               <input
                 type="text"
-                placeholder="Cari nama menu kopi, roti, atau SKU (contoh: KOP-001, Croissant)..."
+                placeholder="Cari nama menu kopi, pastry, roti, atau SKU (contoh: KOP-001, Croissant)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -402,7 +457,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
-                    padding: '7px 16px',
+                    padding: '8px 18px',
                     borderRadius: '24px',
                     fontSize: '12px',
                     fontWeight: isSelected ? 800 : 600,
@@ -412,12 +467,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     border: '1.5px solid',
                     borderColor: isSelected ? '#78350f' : '#e2e8f0',
                     whiteSpace: 'nowrap',
-                    boxShadow: isSelected ? '0 4px 12px rgba(120, 53, 15, 0.25)' : '0 1px 2px rgba(0,0,0,0.03)',
+                    boxShadow: isSelected ? '0 4px 14px rgba(120, 53, 15, 0.28)' : '0 1px 3px rgba(0,0,0,0.04)',
                     cursor: 'pointer',
                     transition: 'all 0.18s ease',
                   }}
                 >
-                  <span>{cat.icon}</span>
+                  <span style={{ fontSize: '14px' }}>{cat.icon}</span>
                   <span>{cat.label}</span>
                 </button>
               );
@@ -425,7 +480,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           </div>
         </div>
 
-        {/* Product Cards Grid */}
+        {/* Product Cards Grid with High-Definition Food & Drink Photography */}
         <div style={{
           flex: 1,
           overflowY: 'auto',
@@ -433,53 +488,55 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
         }}>
           {loading ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: '#64748b' }}>
-              <RefreshCw size={28} className="animate-spin" style={{ margin: '0 auto 12px auto', color: '#b45309' }} />
-              <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>Memuat Menu Kafe...</div>
-              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Sinkronisasi stok cabang aktif</p>
+              <RefreshCw size={30} className="animate-spin" style={{ margin: '0 auto 12px auto', color: '#b45309' }} />
+              <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b' }}>Menyajikan Katalog Menu...</div>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Menghubungkan stok resep cabang</p>
             </div>
           ) : filteredProducts.length === 0 ? (
             <div style={{
               textAlign: 'center',
               padding: '60px 20px',
               backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              border: '1px dashed #cbd5e1',
+              borderRadius: '20px',
+              border: '1.5px dashed #cbd5e1',
               margin: '20px',
             }}>
-              <span style={{ fontSize: '32px' }}>☕</span>
-              <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b', marginTop: '10px' }}>
+              <span style={{ fontSize: '36px' }}>☕</span>
+              <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b', marginTop: '10px' }}>
                 Menu Tidak Ditemukan
               </h4>
               <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                Tidak ada produk yang cocok dengan kata kunci "{searchQuery}"
+                Tidak ada menu yang sesuai dengan kata kunci "{searchQuery}"
               </p>
               <button
                 type="button"
                 onClick={() => { setSearchQuery(''); setSelectedCategory('semua'); }}
+                className="hover-lift"
                 style={{
-                  marginTop: '12px',
-                  padding: '6px 14px',
-                  borderRadius: '8px',
+                  marginTop: '14px',
+                  padding: '8px 16px',
+                  borderRadius: '10px',
                   backgroundColor: '#fef3c7',
                   color: '#92400e',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   border: '1px solid #fde68a',
                   cursor: 'pointer',
                 }}
               >
-                Reset Pencarian
+                Tampilkan Semua Menu
               </button>
             </div>
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
-              gap: '14px',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: '16px',
             }}>
               {filteredProducts.map((p) => {
                 const isOutOfStock = p.lacak_stok && (p.stok_saat_ini ?? 0) <= 0;
                 const isLowStock = p.lacak_stok && (p.stok_saat_ini ?? 0) <= (p.stok_minimum ?? 0) && (p.stok_saat_ini ?? 0) > 0;
+                const imageUrl = getProductImageUrl(p.sku, p.kategori);
 
                 return (
                   <button
@@ -490,127 +547,178 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      padding: '16px',
-                      borderRadius: '16px',
+                      borderRadius: '18px',
                       backgroundColor: '#ffffff',
                       border: '1.5px solid',
                       borderColor: isLowStock ? '#fed7aa' : '#e2e8f0',
                       textAlign: 'left',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                      opacity: isOutOfStock || !activeShift ? 0.6 : 1,
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                      transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                      opacity: isOutOfStock || !activeShift ? 0.55 : 1,
                       cursor: isOutOfStock || !activeShift ? 'not-allowed' : 'pointer',
-                      position: 'relative',
                       overflow: 'hidden',
+                      padding: 0,
                     }}
                   >
-                    <div>
-                      {/* Top Badges */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{
-                          fontSize: '10px',
-                          fontWeight: 800,
-                          color: '#92400e',
-                          backgroundColor: '#fef3c7',
-                          border: '1px solid #fde68a',
-                          padding: '2px 7px',
-                          borderRadius: '6px',
-                          letterSpacing: '0.4px',
-                        }}>
-                          {p.sku}
-                        </span>
+                    {/* Hero Food & Drink Image Header */}
+                    <div style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '135px',
+                      overflow: 'hidden',
+                      backgroundColor: '#f1f5f9',
+                    }}>
+                      <img
+                        src={imageUrl}
+                        alt={p.nama}
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.08)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                      />
+                      {/* Ambient Shadow Overlay */}
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(15, 23, 42, 0.5) 0%, transparent 60%)',
+                        pointerEvents: 'none',
+                      }} />
 
-                        {/* Stock Badge */}
+                      {/* Floating Glass SKU Tag */}
+                      <div style={{
+                        position: 'absolute',
+                        top: '8px',
+                        left: '8px',
+                        fontSize: '9.5px',
+                        fontWeight: 900,
+                        color: '#fef3c7',
+                        backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                        backdropFilter: 'blur(6px)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        padding: '2px 7px',
+                        borderRadius: '6px',
+                        letterSpacing: '0.5px',
+                      }}>
+                        {p.sku}
+                      </div>
+
+                      {/* Floating Glass Stock Pill */}
+                      <div style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                      }}>
                         {!p.lacak_stok ? (
                           <span style={{
-                            fontSize: '10px',
-                            color: '#065f46',
-                            fontWeight: 700,
-                            backgroundColor: '#ecfdf5',
-                            border: '1px solid #a7f3d0',
-                            padding: '2px 7px',
+                            fontSize: '9.5px',
+                            color: '#ffffff',
+                            fontWeight: 800,
+                            backgroundColor: 'rgba(5, 150, 105, 0.88)',
+                            backdropFilter: 'blur(6px)',
+                            border: '1px solid rgba(167, 243, 208, 0.4)',
+                            padding: '2px 8px',
                             borderRadius: '6px',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '3px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                           }}>
-                            <span>✨ Racikan</span>
+                            ✨ Racikan
                           </span>
                         ) : isOutOfStock ? (
                           <span style={{
-                            fontSize: '10px',
-                            color: '#991b1b',
-                            fontWeight: 800,
-                            backgroundColor: '#fee2e2',
-                            border: '1px solid #fecaca',
-                            padding: '2px 7px',
+                            fontSize: '9.5px',
+                            color: '#ffffff',
+                            fontWeight: 900,
+                            backgroundColor: 'rgba(220, 38, 38, 0.92)',
+                            backdropFilter: 'blur(6px)',
+                            border: '1px solid rgba(254, 202, 202, 0.4)',
+                            padding: '2px 8px',
                             borderRadius: '6px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                           }}>
                             Habis
                           </span>
                         ) : (
                           <span style={{
-                            fontSize: '10px',
-                            fontWeight: 700,
-                            padding: '2px 7px',
+                            fontSize: '9.5px',
+                            fontWeight: 800,
+                            padding: '2px 8px',
                             borderRadius: '6px',
-                            backgroundColor: isLowStock ? '#fff1f2' : '#f1f5f9',
-                            color: isLowStock ? '#e11d48' : '#475569',
+                            backgroundColor: isLowStock ? 'rgba(225, 29, 72, 0.92)' : 'rgba(15, 23, 42, 0.75)',
+                            backdropFilter: 'blur(6px)',
+                            color: isLowStock ? '#ffe4e6' : '#ffffff',
                             border: '1px solid',
-                            borderColor: isLowStock ? '#fecdd3' : '#e2e8f0',
+                            borderColor: isLowStock ? 'rgba(254, 205, 211, 0.5)' : 'rgba(255, 255, 255, 0.25)',
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '3px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                           }}>
                             {isLowStock ? `⚠️ Sisa ${p.stok_saat_ini}!` : `Stok: ${p.stok_saat_ini}`}
                           </span>
                         )}
                       </div>
+                    </div>
 
-                      {/* Product Name */}
+                    {/* Card Content & Action Bar */}
+                    <div style={{
+                      padding: '14px 16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flex: 1,
+                      justifyContent: 'space-between',
+                    }}>
                       <h4 style={{
-                        fontSize: '13.5px',
+                        fontSize: '14px',
                         fontWeight: 800,
                         color: '#0f172a',
-                        lineHeight: 1.35,
-                        minHeight: '36px',
+                        lineHeight: 1.3,
                         margin: 0,
+                        minHeight: '36px',
                       }}>
                         {p.nama}
                       </h4>
-                    </div>
 
-                    {/* Price and Add Button */}
-                    <div style={{
-                      marginTop: '14px',
-                      paddingTop: '10px',
-                      borderTop: '1px solid #f1f5f9',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}>
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga</span>
-                        <span style={{ fontSize: '14.5px', fontWeight: 900, color: '#78350f' }}>
-                          Rp{p.harga_jual.toLocaleString('id-ID')}
-                        </span>
-                      </div>
                       <div style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '8px',
-                        backgroundColor: '#fef3c7',
-                        background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-                        color: '#92400e',
-                        border: '1px solid #fcd34d',
+                        marginTop: '12px',
+                        paddingTop: '10px',
+                        borderTop: '1px solid #f1f5f9',
                         display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 2px 5px rgba(245, 158, 11, 0.15)',
-                        transition: 'transform 0.15s ease',
                       }}>
-                        <Plus size={15} strokeWidth={2.5} />
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga</span>
+                          <span style={{ fontSize: '15px', fontWeight: 900, color: '#78350f' }}>
+                            Rp{p.harga_jual.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+
+                        <div style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '10px',
+                          background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+                          color: '#fef3c7',
+                          border: '1px solid #d97706',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 3px 8px rgba(180, 83, 9, 0.3)',
+                          transition: 'transform 0.15s ease',
+                        }}>
+                          <Plus size={16} strokeWidth={2.5} />
+                        </div>
                       </div>
                     </div>
                   </button>
@@ -898,16 +1006,36 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   transition: 'all 0.15s ease',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ flex: 1, paddingRight: '8px' }}>
-                    <h5 style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <img
+                    src={getProductImageUrl(item.produk.sku, item.produk.kategori)}
+                    alt={item.produk.nama}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                      flexShrink: 0,
+                      border: '1px solid #e2e8f0',
+                    }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h5 style={{
+                      fontSize: '12.5px',
+                      fontWeight: 800,
+                      color: '#0f172a',
+                      margin: 0,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}>
                       {item.produk.nama}
                     </h5>
                     <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
                       @Rp{item.produk.harga_jual.toLocaleString('id-ID')}
                     </span>
                   </div>
-                  <span style={{ fontSize: '14px', fontWeight: 900, color: '#78350f' }}>
+                  <span style={{ fontSize: '13.5px', fontWeight: 900, color: '#78350f', flexShrink: 0 }}>
                     Rp{item.subtotal.toLocaleString('id-ID')}
                   </span>
                 </div>

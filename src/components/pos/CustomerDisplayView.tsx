@@ -4,6 +4,7 @@ import {
   type CustomerDisplayPayload,
 } from '../../lib/customerDisplayService';
 import { Coffee, QrCode, Banknote, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
+import { getProductImageByName } from '../../lib/productImages';
 
 export const CustomerDisplayView: React.FC = () => {
   const [data, setData] = useState<CustomerDisplayPayload>({
@@ -276,11 +277,24 @@ export const CustomerDisplayView: React.FC = () => {
                         justifyContent: 'center',
                         fontSize: '13px',
                         fontWeight: 800,
+                        flexShrink: 0,
                       }}>
                         {item.jumlah}x
                       </div>
+                      <img
+                        src={getProductImageByName(item.nama)}
+                        alt={item.nama}
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '8px',
+                          objectFit: 'cover',
+                          border: '1px solid #e2e8f0',
+                          flexShrink: 0,
+                        }}
+                      />
                       <div>
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>
+                        <div style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>
                           {item.nama}
                         </div>
                         <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
