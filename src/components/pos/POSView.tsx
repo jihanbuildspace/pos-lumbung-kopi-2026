@@ -143,12 +143,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   }, [products, selectedCategory, searchQuery]);
 
   const categories = [
-    { key: 'semua', label: 'Semua' },
-    { key: 'kopi', label: 'Kopi' },
-    { key: 'non_kopi', label: 'Non Kopi' },
-    { key: 'roti', label: 'Roti' },
-    { key: 'snack', label: 'Snack' },
-    { key: 'kemasan', label: 'Kemasan' },
+    { key: 'semua', label: 'Semua', icon: '✨' },
+    { key: 'kopi', label: 'Kopi', icon: '☕' },
+    { key: 'non_kopi', label: 'Non Kopi', icon: '🍵' },
+    { key: 'roti', label: 'Roti & Pastry', icon: '🥐' },
+    { key: 'snack', label: 'Snack', icon: '🍪' },
+    { key: 'kemasan', label: 'Kemasan', icon: '📦' },
   ];
 
   const handleApplyDiscount = () => {
@@ -312,6 +312,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
         }}>
           {/* Search bar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -324,66 +325,100 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '14px' }} />
               <input
                 type="text"
-                placeholder="Cari nama produk atau SKU (contoh: KOP-001, Croissant)..."
+                placeholder="Cari nama menu kopi, roti, atau SKU (contoh: KOP-001, Croissant)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '10px 14px 10px 42px',
-                  borderRadius: '10px',
-                  border: '1px solid #cbd5e1',
+                  borderRadius: '12px',
+                  border: '1.5px solid #cbd5e1',
                   backgroundColor: '#f8fafc',
                   fontSize: '13px',
                   outline: 'none',
                   transition: 'all 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = '#b45309';
+                  e.target.style.borderColor = '#d97706';
                   e.target.style.backgroundColor = '#ffffff';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(217, 119, 6, 0.12)';
                 }}
                 onBlur={(e) => {
                   e.target.style.borderColor = '#cbd5e1';
                   e.target.style.backgroundColor = '#f8fafc';
+                  e.target.style.boxShadow = 'none';
                 }}
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                >
+                  ✕
+                </button>
+              )}
             </div>
             <button
               onClick={fetchProductsAndStock}
-              title="Refresh Stok"
+              title="Perbarui Stok Real-Time"
+              className="hover-lift"
               style={{
-                padding: '10px',
-                borderRadius: '10px',
-                border: '1px solid #e2e8f0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 14px',
+                borderRadius: '12px',
+                border: '1.5px solid #e2e8f0',
                 backgroundColor: '#ffffff',
-                color: '#64748b',
+                color: '#78350f',
+                fontWeight: 700,
+                fontSize: '12px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                cursor: 'pointer',
               }}
             >
-              <RefreshCw size={16} />
+              <RefreshCw size={14} />
+              <span>Sinkron</span>
             </button>
           </div>
 
           {/* Category Tabs */}
-          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '2px' }}>
+          <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat.key;
               return (
                 <button
                   key={cat.key}
                   onClick={() => setSelectedCategory(cat.key)}
+                  className="hover-lift"
                   style={{
-                    padding: '6px 14px',
-                    borderRadius: '9999px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '7px 16px',
+                    borderRadius: '24px',
                     fontSize: '12px',
-                    fontWeight: isSelected ? 700 : 500,
-                    backgroundColor: isSelected ? '#78350f' : '#f1f5f9',
+                    fontWeight: isSelected ? 800 : 600,
+                    backgroundColor: isSelected ? '#78350f' : '#ffffff',
+                    background: isSelected ? 'linear-gradient(135deg, #78350f 0%, #b45309 100%)' : '#ffffff',
                     color: isSelected ? '#ffffff' : '#475569',
-                    border: '1px solid',
+                    border: '1.5px solid',
                     borderColor: isSelected ? '#78350f' : '#e2e8f0',
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? '0 4px 12px rgba(120, 53, 15, 0.25)' : '0 1px 2px rgba(0,0,0,0.03)',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s ease',
                   }}
                 >
-                  {cat.label}
+                  <span>{cat.icon}</span>
+                  <span>{cat.label}</span>
                 </button>
               );
             })}
@@ -397,17 +432,49 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           padding: '20px',
         }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
-              Memuat katalog produk...
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: '#64748b' }}>
+              <RefreshCw size={28} className="animate-spin" style={{ margin: '0 auto 12px auto', color: '#b45309' }} />
+              <div style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>Memuat Menu Kafe...</div>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>Sinkronisasi stok cabang aktif</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
-              Tidak ada produk yang cocok dengan pencarian "{searchQuery}"
+            <div style={{
+              textAlign: 'center',
+              padding: '60px 20px',
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              border: '1px dashed #cbd5e1',
+              margin: '20px',
+            }}>
+              <span style={{ fontSize: '32px' }}>☕</span>
+              <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b', marginTop: '10px' }}>
+                Menu Tidak Ditemukan
+              </h4>
+              <p style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+                Tidak ada produk yang cocok dengan kata kunci "{searchQuery}"
+              </p>
+              <button
+                type="button"
+                onClick={() => { setSearchQuery(''); setSelectedCategory('semua'); }}
+                style={{
+                  marginTop: '12px',
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  backgroundColor: '#fef3c7',
+                  color: '#92400e',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  border: '1px solid #fde68a',
+                  cursor: 'pointer',
+                }}
+              >
+                Reset Pencarian
+              </button>
             </div>
           ) : (
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
               gap: '14px',
             }}>
               {filteredProducts.map((p) => {
@@ -419,92 +486,131 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     key={p.id}
                     disabled={isOutOfStock || !activeShift}
                     onClick={() => addToCart(p)}
+                    className={!isOutOfStock && activeShift ? "hover-lift" : ""}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      padding: '14px',
-                      borderRadius: '12px',
+                      padding: '16px',
+                      borderRadius: '16px',
                       backgroundColor: '#ffffff',
-                      border: '1px solid #e2e8f0',
+                      border: '1.5px solid',
+                      borderColor: isLowStock ? '#fed7aa' : '#e2e8f0',
                       textAlign: 'left',
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-                      transition: 'all 0.15s ease',
-                      opacity: isOutOfStock || !activeShift ? 0.55 : 1,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                      opacity: isOutOfStock || !activeShift ? 0.6 : 1,
                       cursor: isOutOfStock || !activeShift ? 'not-allowed' : 'pointer',
-                    }}
-                    onMouseOver={(e) => {
-                      if (!isOutOfStock && activeShift) {
-                        e.currentTarget.style.borderColor = '#b45309';
-                        e.currentTarget.style.boxShadow = '0 6px 12px rgba(180, 83, 9, 0.12)';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                      }
-                    }}
-                    onMouseOut={(e) => {
-                      if (!isOutOfStock && activeShift) {
-                        e.currentTarget.style.borderColor = '#e2e8f0';
-                        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
-                        e.currentTarget.style.transform = 'none';
-                      }
+                      position: 'relative',
+                      overflow: 'hidden',
                     }}
                   >
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                      {/* Top Badges */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                         <span style={{
                           fontSize: '10px',
-                          fontWeight: 700,
-                          color: '#b45309',
+                          fontWeight: 800,
+                          color: '#92400e',
                           backgroundColor: '#fef3c7',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          textTransform: 'uppercase',
+                          border: '1px solid #fde68a',
+                          padding: '2px 7px',
+                          borderRadius: '6px',
+                          letterSpacing: '0.4px',
                         }}>
                           {p.sku}
                         </span>
 
                         {/* Stock Badge */}
                         {!p.lacak_stok ? (
-                          <span style={{ fontSize: '10px', color: '#059669', fontWeight: 600, backgroundColor: '#ecfdf5', padding: '1px 6px', borderRadius: '4px' }}>
-                            racikan
+                          <span style={{
+                            fontSize: '10px',
+                            color: '#065f46',
+                            fontWeight: 700,
+                            backgroundColor: '#ecfdf5',
+                            border: '1px solid #a7f3d0',
+                            padding: '2px 7px',
+                            borderRadius: '6px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px',
+                          }}>
+                            <span>✨ Racikan</span>
                           </span>
                         ) : isOutOfStock ? (
-                          <span style={{ fontSize: '10px', color: '#dc2626', fontWeight: 700, backgroundColor: '#fee2e2', padding: '1px 6px', borderRadius: '4px' }}>
+                          <span style={{
+                            fontSize: '10px',
+                            color: '#991b1b',
+                            fontWeight: 800,
+                            backgroundColor: '#fee2e2',
+                            border: '1px solid #fecaca',
+                            padding: '2px 7px',
+                            borderRadius: '6px',
+                          }}>
                             Habis
                           </span>
                         ) : (
                           <span style={{
                             fontSize: '10px',
-                            fontWeight: 600,
-                            padding: '1px 6px',
-                            borderRadius: '4px',
-                            backgroundColor: isLowStock ? '#fee2e2' : '#f1f5f9',
-                            color: isLowStock ? '#b91c1c' : '#475569',
+                            fontWeight: 700,
+                            padding: '2px 7px',
+                            borderRadius: '6px',
+                            backgroundColor: isLowStock ? '#fff1f2' : '#f1f5f9',
+                            color: isLowStock ? '#e11d48' : '#475569',
+                            border: '1px solid',
+                            borderColor: isLowStock ? '#fecdd3' : '#e2e8f0',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px',
                           }}>
-                            Stok: {p.stok_saat_ini}
+                            {isLowStock ? `⚠️ Sisa ${p.stok_saat_ini}!` : `Stok: ${p.stok_saat_ini}`}
                           </span>
                         )}
                       </div>
 
-                      <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b', lineHeight: 1.3, minHeight: '34px' }}>
+                      {/* Product Name */}
+                      <h4 style={{
+                        fontSize: '13.5px',
+                        fontWeight: 800,
+                        color: '#0f172a',
+                        lineHeight: 1.35,
+                        minHeight: '36px',
+                        margin: 0,
+                      }}>
                         {p.nama}
                       </h4>
                     </div>
 
-                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '14px', fontWeight: 800, color: '#78350f' }}>
-                        Rp{p.harga_jual.toLocaleString('id-ID')}
-                      </span>
+                    {/* Price and Add Button */}
+                    <div style={{
+                      marginTop: '14px',
+                      paddingTop: '10px',
+                      borderTop: '1px solid #f1f5f9',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>Harga</span>
+                        <span style={{ fontSize: '14.5px', fontWeight: 900, color: '#78350f' }}>
+                          Rp{p.harga_jual.toLocaleString('id-ID')}
+                        </span>
+                      </div>
                       <div style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '6px',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '8px',
                         backgroundColor: '#fef3c7',
+                        background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
                         color: '#92400e',
+                        border: '1px solid #fcd34d',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        boxShadow: '0 2px 5px rgba(245, 158, 11, 0.15)',
+                        transition: 'transform 0.15s ease',
                       }}>
-                        <Plus size={14} />
+                        <Plus size={15} strokeWidth={2.5} />
                       </div>
                     </div>
                   </button>
@@ -525,45 +631,76 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
       }}>
         {/* Cart Header */}
         <div style={{
-          padding: '12px 16px',
+          padding: '14px 18px',
           borderBottom: '1px solid #e2e8f0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           backgroundColor: '#ffffff',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <ShoppingBag size={17} color="#78350f" />
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>
-              Pesanan ({cart.reduce((a, b) => a + b.jumlah, 0)})
-            </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '10px',
+              backgroundColor: '#fef3c7',
+              color: '#92400e',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <ShoppingBag size={17} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                Pesanan Kasir
+              </h3>
+              <span style={{ fontSize: '11px', color: '#64748b' }}>
+                {cart.reduce((a, b) => a + b.jumlah, 0)} item dipilih
+              </span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               type="button"
               onClick={() => window.open('/?mode=customer-display', 'LumbungCustomerDisplay', 'width=1000,height=750')}
               title="Buka Layar Pelanggan di tab/monitor terpisah"
+              className="hover-lift"
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '5px',
                 fontSize: '11px',
-                fontWeight: 700,
+                fontWeight: 800,
                 color: '#78350f',
                 backgroundColor: '#fef3c7',
-                border: '1px solid #fde68a',
-                padding: '4px 8px',
-                borderRadius: '6px',
+                border: '1.5px solid #fde68a',
+                padding: '6px 10px',
+                borderRadius: '8px',
                 cursor: 'pointer',
+                boxShadow: '0 1px 3px rgba(245, 158, 11, 0.1)',
               }}
             >
-              <Monitor size={12} />
+              <Monitor size={13} />
               <span>Layar Pelanggan</span>
             </button>
+
             {cart.length > 0 && (
               <button
                 onClick={clearCart}
-                style={{ fontSize: '11px', color: '#dc2626', fontWeight: 600, padding: '4px' }}
+                title="Kosongkan Keranjang"
+                style={{
+                  fontSize: '11px',
+                  color: '#dc2626',
+                  fontWeight: 700,
+                  padding: '5px 8px',
+                  borderRadius: '6px',
+                  backgroundColor: '#fee2e2',
+                  border: '1px solid #fecaca',
+                  cursor: 'pointer',
+                }}
               >
                 Hapus
               </button>
@@ -573,69 +710,78 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
         {/* Tipe Pesanan & Nama Pelanggan Section */}
         <div style={{
-          padding: '10px 16px',
+          padding: '12px 18px',
           backgroundColor: '#f8fafc',
           borderBottom: '1px solid #e2e8f0',
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px',
+          gap: '10px',
         }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             <button
               type="button"
               onClick={() => setTipePesanan('dine_in')}
+              className="hover-lift"
               style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                border: `1.5px solid ${tipePesanan === 'dine_in' ? '#78350f' : '#cbd5e1'}`,
+                padding: '8px 10px',
+                borderRadius: '10px',
+                border: '1.5px solid',
+                borderColor: tipePesanan === 'dine_in' ? '#b45309' : '#e2e8f0',
                 backgroundColor: tipePesanan === 'dine_in' ? '#fef3c7' : '#ffffff',
                 color: tipePesanan === 'dine_in' ? '#78350f' : '#64748b',
-                fontWeight: 700,
-                fontSize: '11px',
+                fontWeight: 800,
+                fontSize: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '5px',
+                gap: '6px',
                 cursor: 'pointer',
+                boxShadow: tipePesanan === 'dine_in' ? '0 2px 6px rgba(180, 83, 9, 0.12)' : 'none',
                 transition: 'all 0.15s ease',
               }}
             >
-              <span>🍽️ Dine-In</span>
+              <span>🍽️</span>
+              <span>Dine-In (Di Tempat)</span>
             </button>
 
             <button
               type="button"
               onClick={() => setTipePesanan('takeaway')}
+              className="hover-lift"
               style={{
-                padding: '6px 8px',
-                borderRadius: '6px',
-                border: `1.5px solid ${tipePesanan === 'takeaway' ? '#78350f' : '#cbd5e1'}`,
+                padding: '8px 10px',
+                borderRadius: '10px',
+                border: '1.5px solid',
+                borderColor: tipePesanan === 'takeaway' ? '#b45309' : '#e2e8f0',
                 backgroundColor: tipePesanan === 'takeaway' ? '#fef3c7' : '#ffffff',
                 color: tipePesanan === 'takeaway' ? '#78350f' : '#64748b',
-                fontWeight: 700,
-                fontSize: '11px',
+                fontWeight: 800,
+                fontSize: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '5px',
+                gap: '6px',
                 cursor: 'pointer',
+                boxShadow: tipePesanan === 'takeaway' ? '0 2px 6px rgba(180, 83, 9, 0.12)' : 'none',
                 transition: 'all 0.15s ease',
               }}
             >
-              <span>🛍️ Takeaway</span>
+              <span>🛍️</span>
+              <span>Takeaway (Bungkus)</span>
             </button>
           </div>
 
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '8px',
             backgroundColor: '#ffffff',
-            border: '1px solid #cbd5e1',
-            borderRadius: '6px',
-            padding: '5px 8px',
+            border: '1.5px solid #cbd5e1',
+            borderRadius: '10px',
+            padding: '7px 10px',
+            transition: 'all 0.2s',
           }}>
-            <User size={13} color="#94a3b8" />
+            <User size={15} color="#94a3b8" />
             <input
               type="text"
               placeholder="Nama pemesan / No. meja (cth: Kak Sarah • Meja 03)"
@@ -644,10 +790,11 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               style={{
                 border: 'none',
                 outline: 'none',
-                fontSize: '11px',
+                fontSize: '12px',
                 width: '100%',
                 backgroundColor: 'transparent',
                 color: '#1e293b',
+                fontWeight: 600,
               }}
             />
           </div>
@@ -656,7 +803,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
         {/* Shift Warning banner if not open */}
         {!activeShift && (
           <div style={{
-            padding: '12px 16px',
+            padding: '12px 18px',
             backgroundColor: '#fffbeb',
             borderBottom: '1px solid #fde68a',
             display: 'flex',
@@ -664,20 +811,29 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
             justifyContent: 'space-between',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} color="#d97706" />
-              <span style={{ fontSize: '12px', fontWeight: 600, color: '#92400e' }}>
-                Shift belum dibuka
-              </span>
+              <AlertCircle size={18} color="#d97706" />
+              <div>
+                <div style={{ fontSize: '12px', fontWeight: 800, color: '#92400e' }}>
+                  Shift Kasir Belum Dibuka
+                </div>
+                <div style={{ fontSize: '11px', color: '#b45309' }}>
+                  Buka shift untuk mulai menyimpan transaksi
+                </div>
+              </div>
             </div>
             <button
               onClick={onOpenShiftModal}
+              className="hover-lift"
               style={{
                 fontSize: '11px',
-                fontWeight: 700,
+                fontWeight: 800,
                 color: '#ffffff',
                 backgroundColor: '#b45309',
-                padding: '4px 10px',
-                borderRadius: '6px',
+                background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 6px rgba(180, 83, 9, 0.25)',
+                cursor: 'pointer',
               }}
             >
               Buka Shift
@@ -689,10 +845,10 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '16px 20px',
+          padding: '14px 18px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '12px',
+          gap: '10px',
         }}>
           {cart.length === 0 ? (
             <div style={{
@@ -702,10 +858,29 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               alignItems: 'center',
               justifyContent: 'center',
               color: '#94a3b8',
-              gap: '8px',
+              gap: '10px',
+              padding: '40px 20px',
+              textAlign: 'center',
             }}>
-              <ShoppingBag size={36} strokeWidth={1.5} />
-              <p style={{ fontSize: '13px' }}>Pilih produk dari katalog untuk memesan</p>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                backgroundColor: '#f8fafc',
+                border: '1.5px dashed #cbd5e1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#94a3b8',
+              }}>
+                <ShoppingBag size={28} />
+              </div>
+              <h4 style={{ fontSize: '14px', fontWeight: 800, color: '#334155', margin: 0 }}>
+                Keranjang Masih Kosong
+              </h4>
+              <p style={{ fontSize: '12px', color: '#64748b', margin: 0, maxWidth: '200px' }}>
+                Pilih menu kopi atau roti dari katalog untuk memulai pesanan
+              </p>
             </div>
           ) : (
             cart.map((item) => (
@@ -714,62 +889,83 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '6px',
-                  padding: '10px 12px',
-                  backgroundColor: '#f8fafc',
-                  borderRadius: '10px',
-                  border: '1px solid #e2e8f0',
+                  gap: '8px',
+                  padding: '12px 14px',
+                  backgroundColor: '#ffffff',
+                  borderRadius: '12px',
+                  border: '1.5px solid #e2e8f0',
+                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.03)',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <h5 style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b' }}>
+                  <div style={{ flex: 1, paddingRight: '8px' }}>
+                    <h5 style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
                       {item.produk.nama}
                     </h5>
-                    <span style={{ fontSize: '11px', color: '#64748b' }}>
+                    <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
                       @Rp{item.produk.harga_jual.toLocaleString('id-ID')}
                     </span>
                   </div>
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 900, color: '#78350f' }}>
                     Rp{item.subtotal.toLocaleString('id-ID')}
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
                   {/* Quantity Controls (BR-05: 1 s.d. 99) */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    backgroundColor: '#ffffff',
-                    padding: '2px 4px',
-                    borderRadius: '8px',
+                    gap: '4px',
+                    backgroundColor: '#f8fafc',
+                    padding: '3px 6px',
+                    borderRadius: '10px',
                     border: '1px solid #cbd5e1',
                   }}>
                     <button
                       onClick={() => updateQuantity(item.produk.id, item.jumlah - 1)}
-                      style={{ padding: '3px', color: '#475569' }}
+                      style={{
+                        padding: '4px 6px',
+                        borderRadius: '6px',
+                        color: '#475569',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
                     >
-                      <Minus size={13} />
+                      <Minus size={13} strokeWidth={2.5} />
                     </button>
-                    <span style={{ fontSize: '12px', fontWeight: 700, minWidth: '22px', textAlign: 'center' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 800, minWidth: '26px', textAlign: 'center', color: '#0f172a' }}>
                       {item.jumlah}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.produk.id, item.jumlah + 1)}
                       disabled={item.jumlah >= 99}
-                      style={{ padding: '3px', color: '#475569' }}
+                      style={{
+                        padding: '4px 6px',
+                        borderRadius: '6px',
+                        color: '#475569',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
                     >
-                      <Plus size={13} />
+                      <Plus size={13} strokeWidth={2.5} />
                     </button>
                   </div>
 
                   <button
                     onClick={() => removeFromCart(item.produk.id)}
-                    style={{ color: '#ef4444', padding: '4px' }}
-                    title="Hapus"
+                    style={{
+                      color: '#ef4444',
+                      padding: '5px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                    title="Hapus Item"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={15} />
                   </button>
                 </div>
               </div>
@@ -779,91 +975,107 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
         {/* Cart Bottom Summary & Checkout Panel */}
         <div style={{
-          padding: '16px 20px',
+          padding: '16px 18px',
           borderTop: '1px solid #e2e8f0',
           backgroundColor: '#ffffff',
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
+          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.03)',
         }}>
           {/* Subtotal & Discount rows */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b' }}>
-              <span>Subtotal:</span>
-              <span style={{ fontWeight: 600 }}>Rp{subtotal.toLocaleString('id-ID')}</span>
+              <span style={{ fontWeight: 600 }}>Subtotal:</span>
+              <span style={{ fontWeight: 700, color: '#1e293b' }}>Rp{subtotal.toLocaleString('id-ID')}</span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ color: '#64748b' }}>Diskon:</span>
+                <span style={{ color: '#64748b', fontWeight: 600 }}>Diskon:</span>
                 <button
                   onClick={() => {
                     setInputDiscount(diskon);
                     setInputReason(alasanDiskon);
                     setShowDiscountModal(true);
                   }}
+                  className="hover-lift"
                   style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '3px',
+                    gap: '4px',
                     fontSize: '11px',
-                    color: '#b45309',
+                    color: '#92400e',
                     backgroundColor: '#fef3c7',
+                    border: '1px solid #fde68a',
                     padding: '2px 8px',
                     borderRadius: '6px',
-                    fontWeight: 600,
+                    fontWeight: 700,
+                    cursor: 'pointer',
                   }}
                 >
                   <Tag size={12} />
-                  <span>{diskon > 0 ? `Ubah (Rp${diskon.toLocaleString('id-ID')})` : '+ Tambah'}</span>
+                  <span>{diskon > 0 ? `Ubah (Rp${diskon.toLocaleString('id-ID')})` : '+ Beri Diskon'}</span>
                 </button>
               </div>
-              <span style={{ fontWeight: 700, color: diskon > 0 ? '#dc2626' : '#64748b' }}>
+              <span style={{ fontWeight: 800, color: diskon > 0 ? '#dc2626' : '#64748b' }}>
                 {diskon > 0 ? `-Rp${diskon.toLocaleString('id-ID')}` : 'Rp0'}
               </span>
             </div>
 
+            {/* Total Tagihan Card */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              paddingTop: '8px',
-              borderTop: '1px dashed #e2e8f0',
-              fontSize: '15px',
-              fontWeight: 800,
-              color: '#1e293b',
+              marginTop: '4px',
+              padding: '12px 14px',
+              borderRadius: '12px',
+              backgroundColor: '#fffbeb',
+              border: '1.5px solid #fde68a',
             }}>
-              <span>Total Tagihan:</span>
-              <span style={{ color: '#78350f' }}>Rp{total.toLocaleString('id-ID')}</span>
+              <div>
+                <span style={{ fontSize: '11px', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  TOTAL TAGIHAN
+                </span>
+                <div style={{ fontSize: '10px', color: '#b45309' }}>Termasuk PPN &amp; Layanan</div>
+              </div>
+              <span style={{ fontSize: '19px', fontWeight: 900, color: '#78350f' }}>
+                Rp{total.toLocaleString('id-ID')}
+              </span>
             </div>
           </div>
 
           {/* Payment Method Selector */}
           <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#475569', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
               Metode Pembayaran
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
               <button
                 type="button"
                 onClick={() => setMetodeBayar('tunai')}
+                className="hover-lift"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '6px',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid',
+                  gap: '7px',
+                  padding: '10px',
+                  borderRadius: '10px',
+                  border: '1.5px solid',
                   borderColor: metodeBayar === 'tunai' ? '#b45309' : '#cbd5e1',
                   backgroundColor: metodeBayar === 'tunai' ? '#fef3c7' : '#ffffff',
-                  color: metodeBayar === 'tunai' ? '#92400e' : '#475569',
+                  color: metodeBayar === 'tunai' ? '#78350f' : '#475569',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
+                  boxShadow: metodeBayar === 'tunai' ? '0 2px 8px rgba(180, 83, 9, 0.15)' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <Banknote size={15} />
-                <span>Tunai</span>
+                <Banknote size={16} />
+                <span>Tunai (Cash)</span>
               </button>
 
               <button
@@ -872,26 +1084,29 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   setMetodeBayar('qris');
                   setUangDiterima(total);
                 }}
+                className="hover-lift"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '6px',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid',
+                  gap: '7px',
+                  padding: '10px',
+                  borderRadius: '10px',
+                  border: '1.5px solid',
                   borderColor: metodeBayar === 'qris' ? '#0284c7' : '#cbd5e1',
                   backgroundColor: metodeBayar === 'qris' ? '#e0f2fe' : '#ffffff',
                   color: metodeBayar === 'qris' ? '#0369a1' : '#475569',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
+                  boxShadow: metodeBayar === 'qris' ? '0 2px 8px rgba(2, 132, 199, 0.15)' : 'none',
+                  cursor: 'pointer',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <QrCode size={15} />
+                <QrCode size={16} />
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', lineHeight: 1.1 }}>
                   <span>QRIS</span>
-                  <span style={{ fontSize: '9px', fontWeight: 600, color: metodeBayar === 'qris' ? '#0369a1' : '#94a3b8' }}>Mayar.id Gateway</span>
+                  <span style={{ fontSize: '9px', fontWeight: 700, color: metodeBayar === 'qris' ? '#0284c7' : '#94a3b8' }}>Mayar Gateway</span>
                 </div>
               </button>
             </div>
@@ -899,7 +1114,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
           {/* Cash input & Change (if Tunai) */}
           {metodeBayar === 'tunai' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <input
                   type="number"
@@ -909,25 +1124,33 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   onChange={(e) => setUangDiterima(Number(e.target.value))}
                   style={{
                     flex: 1,
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    padding: '9px 12px',
+                    borderRadius: '10px',
+                    border: '1.5px solid #cbd5e1',
                     fontSize: '13px',
                     fontWeight: 700,
                     outline: 'none',
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#d97706';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#cbd5e1';
                   }}
                 />
                 <button
                   type="button"
                   onClick={() => setUangDiterima(total)}
+                  className="hover-lift"
                   style={{
-                    padding: '8px 12px',
-                    borderRadius: '8px',
+                    padding: '9px 14px',
+                    borderRadius: '10px',
                     backgroundColor: '#f1f5f9',
-                    fontSize: '11px',
-                    fontWeight: 700,
+                    fontSize: '12px',
+                    fontWeight: 800,
                     color: '#334155',
-                    border: '1px solid #cbd5e1',
+                    border: '1.5px solid #cbd5e1',
+                    cursor: 'pointer',
                   }}
                 >
                   Uang Pas
@@ -935,21 +1158,23 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               </div>
 
               {/* Quick Cash Presets */}
-              <div style={{ display: 'flex', gap: '4px' }}>
+              <div style={{ display: 'flex', gap: '5px' }}>
                 {[50000, 100000, 150000, 200000].map((preset) => (
                   <button
                     key={preset}
                     type="button"
                     onClick={() => setUangDiterima(preset)}
+                    className="hover-lift"
                     style={{
                       flex: 1,
-                      padding: '4px',
-                      borderRadius: '6px',
+                      padding: '5px 2px',
+                      borderRadius: '8px',
                       backgroundColor: '#f8fafc',
                       border: '1px solid #e2e8f0',
-                      fontSize: '10px',
-                      fontWeight: 600,
+                      fontSize: '11px',
+                      fontWeight: 700,
                       color: '#475569',
+                      cursor: 'pointer',
                     }}
                   >
                     {preset / 1000}k
@@ -957,10 +1182,19 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                 ))}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginTop: '2px' }}>
-                <span style={{ color: '#64748b' }}>Kembalian:</span>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: '12px',
+                padding: '6px 10px',
+                backgroundColor: uangDiterima >= total ? '#ecfdf5' : '#fff1f2',
+                borderRadius: '8px',
+                border: '1px solid',
+                borderColor: uangDiterima >= total ? '#a7f3d0' : '#fecdd3',
+              }}>
+                <span style={{ color: uangDiterima >= total ? '#065f46' : '#9f1239', fontWeight: 600 }}>Kembalian:</span>
                 <span style={{
-                  fontWeight: 800,
+                  fontWeight: 900,
                   color: uangDiterima >= total ? '#059669' : '#dc2626',
                 }}>
                   {uangDiterima >= total
@@ -973,15 +1207,15 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
           {checkoutError && (
             <div style={{
-              padding: '8px 12px',
+              padding: '10px 14px',
               backgroundColor: '#fef2f2',
-              borderRadius: '6px',
+              borderRadius: '8px',
               border: '1px solid #fecaca',
               color: '#991b1b',
-              fontSize: '11px',
+              fontSize: '12px',
               fontWeight: 600,
             }}>
-              {checkoutError}
+              ⚠️ {checkoutError}
             </div>
           )}
 
@@ -990,23 +1224,29 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
             type="button"
             disabled={cart.length === 0 || !activeShift || checkoutLoading || (metodeBayar === 'tunai' && uangDiterima < total)}
             onClick={handleCheckoutClick}
+            className="hover-lift hover-glow"
             style={{
-              padding: '12px',
-              borderRadius: '10px',
-              backgroundColor: metodeBayar === 'qris' ? '#0284c7' : '#78350f',
+              padding: '13px',
+              borderRadius: '12px',
+              background: metodeBayar === 'qris'
+                ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'
+                : 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)',
               color: '#ffffff',
               fontSize: '14px',
               fontWeight: 800,
-              boxShadow: metodeBayar === 'qris' ? '0 4px 12px rgba(2, 132, 199, 0.3)' : '0 4px 12px rgba(120, 53, 15, 0.25)',
+              boxShadow: metodeBayar === 'qris'
+                ? '0 6px 18px rgba(2, 132, 199, 0.35)'
+                : '0 6px 18px rgba(180, 83, 9, 0.35)',
               opacity: cart.length === 0 || !activeShift || checkoutLoading || (metodeBayar === 'tunai' && uangDiterima < total) ? 0.5 : 1,
               transition: 'all 0.2s',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '8px',
+              cursor: cart.length === 0 || !activeShift || checkoutLoading || (metodeBayar === 'tunai' && uangDiterima < total) ? 'not-allowed' : 'pointer',
             }}
           >
-            {metodeBayar === 'qris' && <QrCode size={16} />}
+            {metodeBayar === 'qris' ? <QrCode size={18} /> : <Banknote size={18} />}
             <span>
               {checkoutLoading
                 ? 'Memproses Transaksi...'
