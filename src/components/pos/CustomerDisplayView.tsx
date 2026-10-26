@@ -355,7 +355,7 @@ export const CustomerDisplayView: React.FC = () => {
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
                   }}>
-                    Espresso
+                    ☕ Espresso
                   </span>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Kopi Susu Lumbung
@@ -381,7 +381,7 @@ export const CustomerDisplayView: React.FC = () => {
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
                   }}>
-                    Pastry
+                    🥐 Pastry
                   </span>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Croissant Mentega
@@ -407,7 +407,7 @@ export const CustomerDisplayView: React.FC = () => {
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
                   }}>
-                    Bakery
+                    🍞 Bakery
                   </span>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginTop: '6px' }}>
                     Roti Cokelat Klasik

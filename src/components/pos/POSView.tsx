@@ -143,12 +143,12 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   }, [products, selectedCategory, searchQuery]);
 
   const categories = [
-    { key: 'semua', label: 'Semua Menu' },
-    { key: 'kopi', label: 'Kopi' },
-    { key: 'non_kopi', label: 'Non Kopi' },
-    { key: 'roti', label: 'Roti & Pastry' },
-    { key: 'snack', label: 'Snack' },
-    { key: 'kemasan', label: 'Kemasan' },
+    { key: 'semua', label: 'Semua Menu', icon: '✨' },
+    { key: 'kopi', label: 'Kopi', icon: '☕' },
+    { key: 'non_kopi', label: 'Non Kopi', icon: '🍵' },
+    { key: 'roti', label: 'Roti & Pastry', icon: '🥐' },
+    { key: 'snack', label: 'Snack', icon: '🍪' },
+    { key: 'kemasan', label: 'Kemasan', icon: '📦' },
   ];
 
   const handleApplyDiscount = () => {
@@ -296,6 +296,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           textColor: '#92400e',
           borderColor: '#fde68a',
           tag: 'Kopi',
+          icon: '☕',
         };
       case 'non_kopi':
         return {
@@ -304,6 +305,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           textColor: '#065f46',
           borderColor: '#a7f3d0',
           tag: 'Non Kopi',
+          icon: '🍵',
         };
       case 'roti':
         return {
@@ -312,6 +314,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           textColor: '#9a3412',
           borderColor: '#fed7aa',
           tag: 'Roti & Bakery',
+          icon: '🥐',
         };
       case 'snack':
         return {
@@ -320,6 +323,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           textColor: '#854d0e',
           borderColor: '#fef08a',
           tag: 'Camilan',
+          icon: '🍪',
         };
       case 'kemasan':
       default:
@@ -329,6 +333,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
           textColor: '#334155',
           borderColor: '#cbd5e1',
           tag: 'Kemasan',
+          icon: '📦',
         };
     }
   };
@@ -516,6 +521,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     transition: 'all 0.18s ease',
                   }}
                 >
+                  <span style={{ fontSize: '13px' }}>{cat.icon}</span>
                   <span>{cat.label}</span>
                 </button>
               );
@@ -620,12 +626,16 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             color: catStyle.textColor,
                             backgroundColor: catStyle.lightBg,
                             border: `1px solid ${catStyle.borderColor}`,
-                            padding: '2px 7px',
+                            padding: '2.5px 7px',
                             borderRadius: '6px',
                             textTransform: 'uppercase',
                             letterSpacing: '0.4px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
                           }}>
-                            {catStyle.tag}
+                            <span style={{ fontSize: '11px' }}>{catStyle.icon}</span>
+                            <span>{catStyle.tag}</span>
                           </span>
                           <span style={{
                             fontSize: '9.5px',
@@ -637,7 +647,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                           </span>
                         </div>
 
-                        {/* Stock indicator dot + text */}
+                        {/* Stock indicator pill with cute emoji */}
                         {!p.lacak_stok ? (
                           <span style={{
                             fontSize: '9.5px',
@@ -645,14 +655,13 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             color: '#059669',
                             backgroundColor: '#ecfdf5',
                             border: '1px solid #a7f3d0',
-                            padding: '2px 7px',
-                            borderRadius: '10px',
+                            padding: '2.5px 8px',
+                            borderRadius: '12px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '4px',
+                            gap: '3px',
                           }}>
-                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10b981' }} />
-                            Racikan
+                            ✨ Racikan
                           </span>
                         ) : isOutOfStock ? (
                           <span style={{
@@ -661,14 +670,13 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             color: '#dc2626',
                             backgroundColor: '#fef2f2',
                             border: '1px solid #fecaca',
-                            padding: '2px 7px',
-                            borderRadius: '10px',
+                            padding: '2.5px 8px',
+                            borderRadius: '12px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '4px',
+                            gap: '3px',
                           }}>
-                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                            Habis
+                            ❌ Habis
                           </span>
                         ) : isLowStock ? (
                           <span style={{
@@ -677,14 +685,13 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             color: '#c2410c',
                             backgroundColor: '#fff7ed',
                             border: '1px solid #fed7aa',
-                            padding: '2px 7px',
-                            borderRadius: '10px',
+                            padding: '2.5px 8px',
+                            borderRadius: '12px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '4px',
+                            gap: '3px',
                           }}>
-                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#f97316' }} />
-                            Sisa {p.stok_saat_ini}
+                            ⚠️ Sisa {p.stok_saat_ini}!
                           </span>
                         ) : (
                           <span style={{
@@ -693,14 +700,13 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                             color: '#64748b',
                             backgroundColor: '#f8fafc',
                             border: '1px solid #e2e8f0',
-                            padding: '2px 7px',
-                            borderRadius: '10px',
+                            padding: '2.5px 8px',
+                            borderRadius: '12px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            gap: '4px',
+                            gap: '3px',
                           }}>
-                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#94a3b8' }} />
-                            Stok {p.stok_saat_ini}
+                            📦 Stok {p.stok_saat_ini}
                           </span>
                         )}
                       </div>
@@ -1040,8 +1046,8 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
               >
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '34px',
+                    height: '34px',
                     borderRadius: '8px',
                     backgroundColor: itemCatStyle.lightBg,
                     color: itemCatStyle.textColor,
@@ -1049,11 +1055,10 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '11px',
-                    fontWeight: 800,
+                    fontSize: '15px',
                     flexShrink: 0,
                   }}>
-                    {item.jumlah}x
+                    {itemCatStyle.icon}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h5 style={{
@@ -1068,7 +1073,7 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                       {item.produk.nama}
                     </h5>
                     <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
-                      @Rp{item.produk.harga_jual.toLocaleString('id-ID')}
+                      @Rp{item.produk.harga_jual.toLocaleString('id-ID')} • {item.jumlah}x
                     </span>
                   </div>
                   <span style={{ fontSize: '13.5px', fontWeight: 900, color: '#78350f', flexShrink: 0 }}>
