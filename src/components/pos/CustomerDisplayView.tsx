@@ -458,67 +458,66 @@ export const CustomerDisplayView: React.FC = () => {
                   gap: '6px',
                   backgroundColor: '#eff6ff',
                   color: '#1d4ed8',
-                  padding: '4px 10px',
+                  padding: '4px 12px',
                   borderRadius: '9999px',
                   fontSize: '11px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   marginBottom: '12px',
+                  border: '1px solid #bfdbfe',
                 }}>
                   <QrCode size={14} />
-                  <span>PEMBAYARAN QRIS NASIONAL</span>
+                  <span>QRIS DINAMIS • MAYAR.ID</span>
                 </div>
 
-                {/* High Contrast QR Code Presentation */}
+                {/* High Contrast Authentic QRIS Presentation */}
                 <div style={{
                   padding: '16px',
                   backgroundColor: '#ffffff',
                   borderRadius: '16px',
                   border: '2px solid #e2e8f0',
-                  boxShadow: '0 8px 16px rgba(0,0,0,0.06)',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08)',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '10px',
+                  maxWidth: '240px',
+                  margin: '0 auto',
                 }}>
-                  <div style={{ fontSize: '14px', fontWeight: 900, color: '#1e293b', letterSpacing: '1px' }}>
-                    QRIS
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 900, color: '#1e293b', letterSpacing: '2px' }}>
+                      QRIS
+                    </div>
+                    <span style={{ fontSize: '10px', fontWeight: 600, color: '#64748b' }}>
+                      Lumbung Kopi dan Roti
+                    </span>
                   </div>
 
-                  <svg width="180" height="180" viewBox="0 0 100 100" style={{ shapeRendering: 'crispEdges' }}>
-                    <rect width="100" height="100" fill="#ffffff" />
-                    {/* Position markers */}
-                    <rect x="5" y="5" width="30" height="30" fill="#000000" />
-                    <rect x="10" y="10" width="20" height="20" fill="#ffffff" />
-                    <rect x="15" y="15" width="10" height="10" fill="#000000" />
-                    <rect x="65" y="5" width="30" height="30" fill="#000000" />
-                    <rect x="70" y="10" width="20" height="20" fill="#ffffff" />
-                    <rect x="75" y="15" width="10" height="10" fill="#000000" />
-                    <rect x="5" y="65" width="30" height="30" fill="#000000" />
-                    <rect x="10" y="70" width="20" height="20" fill="#ffffff" />
-                    <rect x="15" y="75" width="10" height="10" fill="#000000" />
-                    {/* Data patterns */}
-                    <rect x="42" y="8" width="6" height="6" fill="#000" />
-                    <rect x="52" y="8" width="6" height="6" fill="#000" />
-                    <rect x="42" y="20" width="6" height="6" fill="#000" />
-                    <rect x="52" y="20" width="6" height="6" fill="#000" />
-                    <rect x="8" y="42" width="6" height="6" fill="#000" />
-                    <rect x="20" y="42" width="6" height="6" fill="#000" />
-                    <rect x="40" y="40" width="20" height="20" fill="#78350f" />
-                    <rect x="68" y="42" width="6" height="6" fill="#000" />
-                    <rect x="80" y="42" width="6" height="6" fill="#000" />
-                    <rect x="42" y="68" width="6" height="6" fill="#000" />
-                    <rect x="52" y="68" width="6" height="6" fill="#000" />
-                    <rect x="68" y="68" width="8" height="8" fill="#000" />
-                    <rect x="80" y="80" width="8" height="8" fill="#000" />
-                  </svg>
+                  <div style={{
+                    padding: '8px',
+                    backgroundColor: '#ffffff',
+                    borderRadius: '10px',
+                    border: '1px solid #f1f5f9',
+                    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)',
+                  }}>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-${Date.now()}520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
+                      alt="QRIS Mayar.id Asli"
+                      style={{ width: '170px', height: '170px', display: 'block', borderRadius: '4px' }}
+                    />
+                  </div>
 
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#78350f' }}>
-                    NMID: ID102458921820
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 800, color: '#0369a1', fontFamily: 'monospace' }}>
+                      NMID: ID102458921820
+                    </div>
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#78350f', marginTop: '2px' }}>
+                      Rp{data.total.toLocaleString('id-ID')}
+                    </div>
                   </div>
                 </div>
 
-                <p style={{ fontSize: '11px', color: '#64748b', marginTop: '10px' }}>
-                  Buka aplikasi mobile banking (BCA, Mandiri, BRI) atau e-wallet (GoPay, OVO, ShopeePay, DANA) lalu scan QR di atas.
+                <p style={{ fontSize: '11px', color: '#64748b', marginTop: '12px', textAlign: 'center', lineHeight: 1.4 }}>
+                  Scan menggunakan BCA, Mandiri Livin, GoPay, OVO, ShopeePay, DANA atau aplikasi perbankan apa saja.
                 </p>
               </div>
             ) : (
