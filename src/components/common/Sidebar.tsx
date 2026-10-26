@@ -105,25 +105,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              padding: '10px 14px',
-              borderRadius: '10px',
+              padding: '11px 14px',
+              borderRadius: '12px',
               fontSize: '13px',
-              fontWeight: isActive ? 700 : 500,
+              fontWeight: isActive ? 800 : 600,
               color: isActive ? '#ffffff' : '#475569',
-              backgroundColor: isActive ? '#78350f' : 'transparent',
-              transition: 'all 0.15s ease',
+              background: isActive ? 'linear-gradient(135deg, #78350f 0%, #92400e 100%)' : 'transparent',
+              transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
               textAlign: 'left',
               width: '100%',
-              boxShadow: isActive ? '0 2px 8px rgba(120, 53, 15, 0.22)' : 'none',
+              boxShadow: isActive ? '0 4px 14px rgba(120, 53, 15, 0.3)' : 'none',
+              transform: isActive ? 'scale(1.02)' : 'scale(1)',
             }}
             onMouseOver={(e) => {
-              if (!isActive) e.currentTarget.style.backgroundColor = '#f8fafc';
+              if (!isActive) {
+                e.currentTarget.style.backgroundColor = '#fdfbf7';
+                e.currentTarget.style.color = '#78350f';
+                e.currentTarget.style.transform = 'translateX(3px)';
+              }
             }}
             onMouseOut={(e) => {
-              if (!isActive) e.currentTarget.style.backgroundColor = 'transparent';
+              if (!isActive) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#475569';
+                e.currentTarget.style.transform = 'translateX(0)';
+              }
             }}
           >
-            <span style={{ color: isActive ? '#ffffff' : '#64748b' }}>
+            <span style={{ color: isActive ? '#fde68a' : '#64748b', display: 'flex', alignItems: 'center' }}>
               {item.icon}
             </span>
             <span>{item.label}</span>

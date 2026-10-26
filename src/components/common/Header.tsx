@@ -44,23 +44,31 @@ export const Header: React.FC<HeaderProps> = ({ onOpenShiftModal, onCloseShiftMo
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
-            backgroundColor: '#78350f',
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#ffffff',
-            boxShadow: '0 2px 8px rgba(120, 53, 15, 0.25)',
+            color: '#fef3c7',
+            boxShadow: '0 4px 12px rgba(120, 53, 15, 0.3)',
           }}>
             <Coffee size={22} />
           </div>
           <div>
-            <h1 style={{ fontSize: '16px', fontWeight: 700, color: '#1e293b', lineHeight: 1.2 }}>
+            <h1 style={{ fontSize: '16px', fontWeight: 900, color: '#1e293b', lineHeight: 1.2, margin: 0 }}>
               Lumbung POS
             </h1>
-            <p style={{ fontSize: '11px', color: '#b45309', fontWeight: 600, letterSpacing: '0.5px' }}>
+            <p style={{
+              fontSize: '11px',
+              background: 'linear-gradient(135deg, #b45309 0%, #d97706 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 800,
+              letterSpacing: '0.8px',
+              margin: '2px 0 0 0',
+            }}>
               KOPI DAN ROTI
             </p>
           </div>
