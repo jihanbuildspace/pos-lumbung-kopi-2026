@@ -55,13 +55,30 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor: '#f8fafc',
+          backgroundColor: '#f0fdf4',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CheckCircle2 size={18} color="#059669" />
-            <span style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b' }}>
-              Transaksi Berhasil Disimpan
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              backgroundColor: '#10b981',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 6px rgba(16, 185, 129, 0.3)',
+            }}>
+              <CheckCircle2 size={18} />
+            </div>
+            <div>
+              <span style={{ fontSize: '15px', fontWeight: 900, color: '#166534', display: 'block' }}>
+                Pembayaran Berhasil!
+              </span>
+              <span style={{ fontSize: '11px', color: '#15803d', fontWeight: 600 }}>
+                Transaksi lunas tercatat di sistem
+              </span>
+            </div>
           </div>
           <button onClick={onClose} style={{ color: '#64748b', padding: '4px' }}>
             <X size={18} />
@@ -70,12 +87,32 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
 
         {/* 58mm Thermal Receipt Area */}
         <div style={{
-          padding: '24px',
+          padding: '20px 24px 24px 24px',
           overflowY: 'auto',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
           backgroundColor: '#f1f5f9',
         }}>
+          {/* Prominent Success Pill */}
+          <div className="no-print" style={{
+            marginBottom: '14px',
+            padding: '8px 16px',
+            backgroundColor: '#dcfce7',
+            border: '1.5px solid #86efac',
+            borderRadius: '9999px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            color: '#166534',
+            fontSize: '12px',
+            fontWeight: 800,
+            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.1)',
+          }}>
+            <CheckCircle2 size={15} color="#16a34a" />
+            <span>PEMBAYARAN BERHASIL • STRUK SIAP DICETAK</span>
+          </div>
+
           <div
             id="printable-receipt"
             style={{

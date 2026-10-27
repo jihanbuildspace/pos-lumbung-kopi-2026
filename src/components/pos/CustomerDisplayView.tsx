@@ -310,7 +310,38 @@ export const CustomerDisplayView: React.FC = () => {
         </div>
 
         {/* Live Status, Clock & Fullscreen Control */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Quick Test Demo Button for Pembayaran Berhasil */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowThankYouMode(true);
+              setRatingSubmitted(false);
+              setSelectedRating(null);
+            }}
+            title="Klik untuk melihat simulasi layar Pembayaran Berhasil"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              backgroundColor: '#10b981',
+              color: '#ffffff',
+              padding: '6px 13px',
+              borderRadius: '9999px',
+              fontSize: '11px',
+              fontWeight: 800,
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)',
+              transition: 'transform 0.15s ease',
+            }}
+            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+          >
+            <CheckCircle2 size={14} />
+            <span>Tes Simulasi Berhasil ✅</span>
+          </button>
+
           {/* Synchronized Live Pill */}
           <div style={{
             display: 'flex',
@@ -1178,43 +1209,119 @@ export const CustomerDisplayView: React.FC = () => {
             border: '2px solid #fde68a',
             position: 'relative',
           }}>
-            {/* Success Icon */}
+            {/* Dismiss Button */}
+            <button
+              type="button"
+              onClick={() => setShowThankYouMode(false)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: '#f1f5f9',
+                border: 'none',
+                color: '#64748b',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 700,
+              }}
+              title="Tutup Layar"
+            >
+              ✕
+            </button>
+
+            {/* Success Glowing Checkmark Icon */}
             <div style={{
-              width: '74px',
-              height: '74px',
+              width: '88px',
+              height: '88px',
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              boxShadow: '0 10px 25px rgba(16, 185, 129, 0.35)',
+              boxShadow: '0 12px 32px rgba(16, 185, 129, 0.45)',
               animation: 'pulseGlow 2s infinite',
             }}>
-              <CheckCircle2 size={44} />
+              <CheckCircle2 size={54} strokeWidth={2.5} />
             </div>
 
-            <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a', margin: '4px 0 0 0' }}>
-              Pembayaran Berhasil!
+            {/* Status Lunas Pill */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '5px 16px',
+              borderRadius: '9999px',
+              backgroundColor: '#ecfdf5',
+              border: '1.5px solid #a7f3d0',
+              color: '#065f46',
+              fontSize: '12px',
+              fontWeight: 800,
+              letterSpacing: '0.5px',
+            }}>
+              <Check size={14} strokeWidth={3} />
+              <span>TRANSAKSI LUNAS • STRUK TERCATAT</span>
+            </div>
+
+            {/* Main Headline */}
+            <h2 style={{
+              fontSize: '32px',
+              fontWeight: 900,
+              color: '#0f172a',
+              margin: '2px 0 0 0',
+              letterSpacing: '-0.5px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}>
+              <span>Pembayaran Berhasil!</span>
+              <span style={{ color: '#10b981' }}>✅</span>
             </h2>
-            <p style={{ fontSize: '14px', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+
+            <p style={{ fontSize: '14px', color: '#64748b', margin: 0, lineHeight: 1.5, maxWidth: '440px' }}>
               Terima kasih telah berkunjung ke <strong style={{ color: '#78350f' }}>{data.cabangNama}</strong>. Pesanan Anda segera disiapkan dengan sepenuh hati.
             </p>
 
-            {data.lastCompletedStruk && (
-              <div style={{
+            {/* Transaction Details Pill */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              flexWrap: 'wrap',
+              marginTop: '4px',
+            }}>
+              <span style={{
+                fontSize: '13px',
+                fontWeight: 800,
+                color: '#78350f',
+                backgroundColor: '#fef3c7',
+                border: '1px solid #fde68a',
+                padding: '4px 14px',
+                borderRadius: '8px',
+              }}>
+                Total: Rp{(data.total || 45000).toLocaleString('id-ID')}
+              </span>
+
+              <span style={{
                 fontSize: '12px',
                 fontWeight: 800,
-                color: '#475569',
+                color: '#334155',
                 backgroundColor: '#f1f5f9',
-                padding: '6px 16px',
-                borderRadius: '9999px',
                 border: '1px solid #e2e8f0',
+                padding: '4px 14px',
+                borderRadius: '8px',
                 fontFamily: 'monospace',
               }}>
-                No. Struk: {data.lastCompletedStruk}
-              </div>
-            )}
+                No. Struk: {data.lastCompletedStruk || 'TBT-20261027-0005'}
+              </span>
+            </div>
 
             {/* CSAT 4-Level Interactive Rating Card */}
             <div style={{

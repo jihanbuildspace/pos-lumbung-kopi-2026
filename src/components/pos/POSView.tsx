@@ -281,11 +281,34 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
 
   const handleSimulateMayarSuccess = async () => {
     setMayarSuccessAnim(true);
+    // Broadcast immediately to customer display that payment succeeded
+    broadcastCustomerDisplay({
+      cabangNama: cabang?.nama || 'Lumbung Kopi dan Roti',
+      tipePesanan,
+      namaPelanggan,
+      items: cart.map((c) => ({
+        id: c.produk.id,
+        nama: c.produk.nama,
+        jumlah: c.jumlah,
+        harga_satuan: c.produk.harga_jual,
+        subtotal: c.subtotal,
+      })),
+      subtotal,
+      diskon,
+      total,
+      metodeBayar: 'qris',
+      uangDiterima: total,
+      kembalian: 0,
+      status: 'completed',
+      lastCompletedStruk: `QRIS-${Date.now().toString().slice(-6)}`,
+      mayarModalOpen: false,
+    });
+
     setTimeout(async () => {
       closeMayarModal();
       setMayarSuccessAnim(false);
       await handleCheckoutSubmit();
-    }, 700);
+    }, 1200);
   };
   const getCategoryStyle = (kategori?: string) => {
     switch (kategori) {
@@ -1651,10 +1674,29 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
                   <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>Menghubungi Mayar API...</span>
                 </div>
               ) : mayarSuccessAnim ? (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                  <CheckCircle2 size={56} color="#16a34a" />
-                  <span style={{ fontSize: '14px', color: '#16a34a', fontWeight: 800 }}>Pembayaran Diterima!</span>
-                  <span style={{ fontSize: '11px', color: '#64748b' }}>Menerbitkan struk transaksi...</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', textAlign: 'center', padding: '10px' }}>
+                  <div style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    backgroundColor: '#10b981',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 8px 20px rgba(16, 185, 129, 0.4)',
+                  }}>
+                    <CheckCircle2 size={40} />
+                  </div>
+                  <span style={{ fontSize: '18px', color: '#16a34a', fontWeight: 900 }}>
+                    Pembayaran Berhasil!
+                  </span>
+                  <span style={{ fontSize: '12px', color: '#047857', fontWeight: 700 }}>
+                    Dana QRIS Rp{total.toLocaleString('id-ID')} Telah Diterima
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#64748b' }}>
+                    Mencetak struk transaksi...
+                  </span>
                 </div>
               ) : (
                 <img
