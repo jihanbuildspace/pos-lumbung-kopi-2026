@@ -171,18 +171,18 @@ export const CustomerDisplayView: React.FC = () => {
   const getItemBadge = (nama: string) => {
     const lower = (nama || '').toLowerCase();
     if (lower.includes('kopi') || lower.includes('espresso') || lower.includes('latte') || lower.includes('americano') || lower.includes('cappuccino') || lower.includes('brew')) {
-      return { tag: 'Kopi Racikan', icon: '☕', bg: 'rgba(217, 119, 6, 0.2)', text: '#fde68a', border: 'rgba(253, 230, 138, 0.35)' };
+      return { tag: 'Kopi Racikan', icon: '☕', bg: '#fef3c7', text: '#92400e', border: '#fde68a' };
     }
     if (lower.includes('teh') || lower.includes('tea') || lower.includes('matcha') || lower.includes('cokelat') || lower.includes('chocolate') || lower.includes('red velvet')) {
-      return { tag: 'Non Kopi', icon: '🍵', bg: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: 'rgba(167, 243, 208, 0.35)' };
+      return { tag: 'Non Kopi', icon: '🍵', bg: '#ecfdf5', text: '#065f46', border: '#a7f3d0' };
     }
     if (lower.includes('roti') || lower.includes('croissant') || lower.includes('danish') || lower.includes('toast') || lower.includes('pastry')) {
-      return { tag: 'Fresh Bakery', icon: '🥐', bg: 'rgba(234, 88, 12, 0.2)', text: '#fed7aa', border: 'rgba(254, 215, 170, 0.35)' };
+      return { tag: 'Fresh Bakery', icon: '🥐', bg: '#ffedd5', text: '#9a3412', border: '#fed7aa' };
     }
     if (lower.includes('cookie') || lower.includes('snack') || lower.includes('donat') || lower.includes('cake') || lower.includes('brownie')) {
-      return { tag: 'Kudapan', icon: '🍪', bg: 'rgba(217, 70, 239, 0.2)', text: '#f5d0fe', border: 'rgba(245, 208, 254, 0.35)' };
+      return { tag: 'Kudapan', icon: '🍪', bg: '#fdf4ff', text: '#86198f', border: '#f5d0fe' };
     }
-    return { tag: 'Produk Retail', icon: '📦', bg: 'rgba(148, 163, 184, 0.2)', text: '#e2e8f0', border: 'rgba(226, 232, 240, 0.3)' };
+    return { tag: 'Produk Retail', icon: '📦', bg: '#f1f5f9', text: '#334155', border: '#cbd5e1' };
   };
 
   const hasItems = data.items && data.items.length > 0;
@@ -288,13 +288,13 @@ export const CustomerDisplayView: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#0c0704',
+      backgroundColor: '#fbf9f5',
       backgroundImage: `
-        radial-gradient(circle at 15% 20%, rgba(180, 83, 9, 0.18) 0%, transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(217, 119, 6, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(69, 26, 3, 0.25) 0%, transparent 60%)
+        radial-gradient(circle at 10% 15%, rgba(217, 119, 6, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(180, 83, 9, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(254, 243, 199, 0.35) 0%, transparent 60%)
       `,
-      color: '#f8fafc',
+      color: '#1c1917',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: '"Plus Jakarta Sans", "Outfit", -apple-system, sans-serif',
@@ -323,46 +323,48 @@ export const CustomerDisplayView: React.FC = () => {
           animation: fadeInScale 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .glass-panel {
-          background: rgba(26, 14, 7, 0.65);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border: 1px solid rgba(253, 230, 138, 0.15);
+          background: #ffffff;
+          border: 1px solid #ebd9c8;
+          box-shadow: 0 10px 30px -5px rgba(120, 53, 15, 0.06), 0 4px 12px -2px rgba(120, 53, 15, 0.04);
         }
         .glass-card-item {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.07);
+          background: #ffffff;
+          border: 1.5px solid #f2ece4;
+          box-shadow: 0 2px 6px rgba(69, 26, 3, 0.03);
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .glass-card-item:hover {
-          background: rgba(255, 255, 255, 0.06);
-          border-color: rgba(253, 230, 138, 0.3);
+          background: #fffdfa;
+          border-color: #d97706;
+          box-shadow: 0 8px 20px rgba(180, 83, 9, 0.1);
           transform: translateY(-2px);
         }
         .custom-scroll::-webkit-scrollbar {
           width: 6px;
         }
         .custom-scroll::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.04);
+          background: #f5f0e8;
           border-radius: 9999px;
         }
         .custom-scroll::-webkit-scrollbar-thumb {
-          background: rgba(253, 230, 138, 0.25);
+          background: #d6cbbe;
           border-radius: 9999px;
         }
         .custom-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(253, 230, 138, 0.45);
+          background: #bfae9d;
         }
       `}</style>
 
       {/* ================= TOP NAVIGATION BAR ================= */}
       <header style={{
-        background: 'rgba(15, 8, 4, 0.85)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(20px)',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottom: '1px solid rgba(253, 230, 138, 0.2)',
+        borderBottom: '1px solid #ebd9c8',
+        boxShadow: '0 4px 16px rgba(180, 83, 9, 0.05)',
         position: 'sticky',
         top: 0,
         zIndex: 50,
@@ -374,11 +376,11 @@ export const CustomerDisplayView: React.FC = () => {
             height: '46px',
             borderRadius: '14px',
             background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
-            border: '1.5px solid rgba(253, 230, 138, 0.4)',
+            border: '1.5px solid #fde68a',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 8px 20px rgba(180, 83, 9, 0.35)',
+            boxShadow: '0 6px 16px rgba(180, 83, 9, 0.25)',
             animation: 'floatSubtle 3s ease-in-out infinite',
             flexShrink: 0,
           }}>
@@ -391,7 +393,7 @@ export const CustomerDisplayView: React.FC = () => {
                 fontSize: '18px',
                 fontWeight: 900,
                 letterSpacing: '1px',
-                color: '#ffffff',
+                color: '#451a03',
                 textTransform: 'uppercase',
               }}>
                 LUMBUNG KOPI DAN ROTI
@@ -399,11 +401,11 @@ export const CustomerDisplayView: React.FC = () => {
               <span style={{
                 fontSize: '10px',
                 fontWeight: 800,
-                backgroundColor: 'rgba(253, 230, 138, 0.15)',
-                color: '#fde68a',
+                backgroundColor: '#fef3c7',
+                color: '#92400e',
                 padding: '2px 8px',
                 borderRadius: '9999px',
-                border: '1px solid rgba(253, 230, 138, 0.3)',
+                border: '1px solid #fde68a',
                 letterSpacing: '0.6px',
               }}>
                 CUSTOMER DISPLAY
@@ -413,17 +415,17 @@ export const CustomerDisplayView: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '3px' }}>
               <span style={{
                 fontSize: '12px',
-                color: '#fed7aa',
+                color: '#78350f',
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
               }}>
-                <Store size={13} color="#fde68a" />
+                <Store size={13} color="#b45309" />
                 {data.cabangNama || 'Kedai Kopi & Toko Roti'}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '11px' }}>•</span>
-              <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 500 }}>
+              <span style={{ color: '#d6cbbe', fontSize: '11px' }}>•</span>
+              <span style={{ fontSize: '12px', color: '#78716c', fontWeight: 600 }}>
                 {currentDate}
               </span>
             </div>
@@ -453,7 +455,7 @@ export const CustomerDisplayView: React.FC = () => {
               fontWeight: 800,
               border: '1px solid #34d399',
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
             }}
           >
             <CheckCircle2 size={15} />
@@ -465,20 +467,20 @@ export const CustomerDisplayView: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            backgroundColor: 'rgba(16, 185, 129, 0.12)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
+            backgroundColor: '#ecfdf5',
+            border: '1px solid #a7f3d0',
             padding: '7px 14px',
             borderRadius: '9999px',
             fontSize: '12px',
             fontWeight: 700,
-            color: '#6ee7b7',
+            color: '#065f46',
           }}>
             <span style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
               backgroundColor: '#10b981',
-              boxShadow: '0 0 10px #10b981',
+              boxShadow: '0 0 8px #10b981',
               display: 'inline-block',
               animation: 'pulseGlow 2s infinite',
             }} />
@@ -491,15 +493,15 @@ export const CustomerDisplayView: React.FC = () => {
             alignItems: 'center',
             gap: '6px',
             fontSize: '13px',
-            color: '#fde68a',
+            color: '#78350f',
             fontWeight: 800,
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            backgroundColor: '#fef3c7',
             padding: '7px 14px',
             borderRadius: '12px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid #fde68a',
             fontFamily: 'monospace',
           }}>
-            <Clock size={15} />
+            <Clock size={15} color="#b45309" />
             <span>{currentTime}</span>
           </div>
 
@@ -511,9 +513,9 @@ export const CustomerDisplayView: React.FC = () => {
               width: '38px',
               height: '38px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(255, 255, 255, 0.06)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              color: '#ffffff',
+              backgroundColor: '#f5efe6',
+              border: '1px solid #e7decb',
+              color: '#451a03',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -554,7 +556,7 @@ export const CustomerDisplayView: React.FC = () => {
               {/* Active Order Header */}
               <div style={{
                 paddingBottom: '16px',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                borderBottom: '1px solid #ebd9c8',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -562,9 +564,9 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <span style={{
-                      backgroundColor: data.tipePesanan === 'takeaway' ? 'rgba(234, 88, 12, 0.2)' : 'rgba(16, 185, 129, 0.2)',
-                      color: data.tipePesanan === 'takeaway' ? '#fed7aa' : '#a7f3d0',
-                      border: `1px solid ${data.tipePesanan === 'takeaway' ? 'rgba(234, 88, 12, 0.4)' : 'rgba(16, 185, 129, 0.4)'}`,
+                      backgroundColor: data.tipePesanan === 'takeaway' ? '#ffedd5' : '#ecfdf5',
+                      color: data.tipePesanan === 'takeaway' ? '#9a3412' : '#065f46',
+                      border: `1px solid ${data.tipePesanan === 'takeaway' ? '#fed7aa' : '#a7f3d0'}`,
                       fontSize: '11px',
                       fontWeight: 800,
                       padding: '4px 12px',
@@ -592,9 +594,9 @@ export const CustomerDisplayView: React.FC = () => {
                       <span style={{
                         fontSize: '12px',
                         fontWeight: 800,
-                        color: '#fde68a',
-                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
-                        border: '1px solid rgba(253, 230, 138, 0.3)',
+                        color: '#92400e',
+                        backgroundColor: '#fef3c7',
+                        border: '1px solid #fde68a',
                         padding: '4px 12px',
                         borderRadius: '8px',
                       }}>
@@ -606,7 +608,7 @@ export const CustomerDisplayView: React.FC = () => {
                   <h2 style={{
                     fontSize: '24px',
                     fontWeight: 900,
-                    color: '#ffffff',
+                    color: '#1c1917',
                     margin: '4px 0 0 0',
                     letterSpacing: '-0.3px',
                   }}>
@@ -617,14 +619,14 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{
                   fontSize: '13px',
                   fontWeight: 800,
-                  color: '#fde68a',
-                  backgroundColor: 'rgba(253, 230, 138, 0.1)',
-                  border: '1px solid rgba(253, 230, 138, 0.25)',
+                  color: '#78350f',
+                  backgroundColor: '#fef3c7',
+                  border: '1px solid #fde68a',
                   padding: '8px 16px',
                   borderRadius: '14px',
                   textAlign: 'right',
                 }}>
-                  <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: '#cbd5e1', fontWeight: 600 }}>
+                  <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: '#92400e', fontWeight: 700 }}>
                     Total Menu
                   </span>
                   <span style={{ fontSize: '18px', fontWeight: 900 }}>
@@ -672,14 +674,14 @@ export const CustomerDisplayView: React.FC = () => {
                           fontSize: '16px',
                           fontWeight: 900,
                           flexShrink: 0,
-                          boxShadow: '0 4px 12px rgba(180, 83, 9, 0.4)',
+                          boxShadow: '0 4px 12px rgba(180, 83, 9, 0.3)',
                         }}>
                           {item.jumlah}x
                         </div>
 
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ fontSize: '17px', fontWeight: 800, color: '#ffffff' }}>
+                            <span style={{ fontSize: '17px', fontWeight: 800, color: '#1c1917' }}>
                               {item.nama}
                             </span>
                             <span style={{
@@ -699,17 +701,17 @@ export const CustomerDisplayView: React.FC = () => {
                             </span>
                           </div>
 
-                          <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px', fontWeight: 600 }}>
+                          <div style={{ fontSize: '13px', color: '#78716c', marginTop: '4px', fontWeight: 600 }}>
                             Rp{item.harga_satuan.toLocaleString('id-ID')} / porsi
                           </div>
                         </div>
                       </div>
 
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 900, color: '#fde68a', letterSpacing: '-0.3px' }}>
+                        <div style={{ fontSize: '20px', fontWeight: 900, color: '#b45309', letterSpacing: '-0.3px' }}>
                           Rp{item.subtotal.toLocaleString('id-ID')}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#64748b' }}>
+                        <div style={{ fontSize: '11px', color: '#a8a29e' }}>
                           Subtotal item
                         </div>
                       </div>
@@ -723,8 +725,8 @@ export const CustomerDisplayView: React.FC = () => {
                 marginTop: '12px',
                 padding: '14px 18px',
                 borderRadius: '16px',
-                backgroundColor: 'rgba(217, 119, 6, 0.1)',
-                border: '1px dashed rgba(253, 230, 138, 0.3)',
+                backgroundColor: '#fffbeb',
+                border: '1.5px dashed #f59e0b',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -732,10 +734,10 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '22px' }}>🥐</span>
                   <div>
-                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#fde68a', display: 'block' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#92400e', display: 'block' }}>
                       Rekomendasi Tambahan Hangat:
                     </span>
-                    <span style={{ fontSize: '11px', color: '#cbd5e1' }}>
+                    <span style={{ fontSize: '11px', color: '#57534e' }}>
                       Croissant Mentega (+Rp24.000) • Donat Gula Halus (+Rp10.000) • Roti Pisang Cokelat (+Rp18.000)
                     </span>
                   </div>
@@ -743,11 +745,11 @@ export const CustomerDisplayView: React.FC = () => {
                 <span style={{
                   fontSize: '11px',
                   fontWeight: 800,
-                  color: '#fde68a',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  color: '#92400e',
+                  backgroundColor: '#fef3c7',
                   padding: '4px 12px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(253, 230, 138, 0.2)',
+                  border: '1px solid #fde68a',
                 }}>
                   Tersedia di Meja Kasir
                 </span>
@@ -760,8 +762,8 @@ export const CustomerDisplayView: React.FC = () => {
               <div style={{
                 padding: '18px 22px',
                 borderRadius: '20px',
-                background: 'linear-gradient(135deg, rgba(180, 83, 9, 0.35) 0%, rgba(69, 26, 3, 0.25) 100%)',
-                border: '1px solid rgba(253, 230, 138, 0.25)',
+                background: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)',
+                border: '1.5px solid #fde68a',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -776,19 +778,19 @@ export const CustomerDisplayView: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '24px',
-                    boxShadow: '0 6px 16px rgba(180, 83, 9, 0.3)',
+                    boxShadow: '0 6px 16px rgba(180, 83, 9, 0.25)',
                   }}>
                     {timeGreeting.icon}
                   </div>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '18px', fontWeight: 900, color: '#ffffff' }}>
+                      <span style={{ fontSize: '18px', fontWeight: 900, color: '#451a03' }}>
                         {timeGreeting.headline} Selamat Datang di Lumbung
                       </span>
                       <span style={{
                         fontSize: '10px',
                         fontWeight: 800,
-                        backgroundColor: '#d97706',
+                        backgroundColor: '#b45309',
                         color: '#ffffff',
                         padding: '2px 8px',
                         borderRadius: '6px',
@@ -796,7 +798,7 @@ export const CustomerDisplayView: React.FC = () => {
                         MENU UTAMA
                       </span>
                     </div>
-                    <p style={{ fontSize: '13px', color: '#fed7aa', margin: '3px 0 0 0', fontWeight: 500 }}>
+                    <p style={{ fontSize: '13px', color: '#78350f', margin: '3px 0 0 0', fontWeight: 600 }}>
                       {timeGreeting.sub}
                     </p>
                   </div>
@@ -805,12 +807,13 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{
                   fontSize: '12px',
                   fontWeight: 800,
-                  color: '#fde68a',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  color: '#78350f',
+                  backgroundColor: '#ffffff',
                   padding: '8px 16px',
                   borderRadius: '12px',
-                  border: '1px solid rgba(253, 230, 138, 0.2)',
+                  border: '1px solid #fde68a',
                   whiteSpace: 'nowrap',
+                  boxShadow: '0 2px 6px rgba(120, 53, 15, 0.05)',
                 }}>
                   Sampaikan Pesanan Anda 🗣️
                 </div>
@@ -819,8 +822,8 @@ export const CustomerDisplayView: React.FC = () => {
               {/* Category Filter Pills for Menu Board */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Flame size={18} color="#f59e0b" />
-                  <span style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <Flame size={18} color="#d97706" />
+                  <span style={{ fontSize: '15px', fontWeight: 800, color: '#1c1917', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Koleksi Menu Pilihan &amp; Signature
                   </span>
                 </div>
@@ -843,11 +846,12 @@ export const CustomerDisplayView: React.FC = () => {
                         borderRadius: '8px',
                         fontSize: '11px',
                         fontWeight: 800,
-                        backgroundColor: activeMenuTab === tab.key ? '#b45309' : 'rgba(255, 255, 255, 0.05)',
-                        color: activeMenuTab === tab.key ? '#ffffff' : '#94a3b8',
-                        border: `1px solid ${activeMenuTab === tab.key ? '#fde68a' : 'rgba(255, 255, 255, 0.08)'}`,
+                        backgroundColor: activeMenuTab === tab.key ? '#78350f' : '#ffffff',
+                        color: activeMenuTab === tab.key ? '#ffffff' : '#57534e',
+                        border: `1.5px solid ${activeMenuTab === tab.key ? '#78350f' : '#e7e5e4'}`,
                         cursor: 'pointer',
                         transition: 'all 0.15s ease',
+                        boxShadow: activeMenuTab === tab.key ? '0 2px 8px rgba(120, 53, 15, 0.25)' : 'none',
                       }}
                     >
                       {tab.label}
@@ -888,35 +892,35 @@ export const CustomerDisplayView: React.FC = () => {
                         <span style={{
                           fontSize: '10px',
                           fontWeight: 800,
-                          backgroundColor: 'rgba(217, 119, 6, 0.25)',
-                          color: '#fde68a',
+                          backgroundColor: '#fef3c7',
+                          color: '#92400e',
                           padding: '2px 8px',
                           borderRadius: '6px',
-                          border: '1px solid rgba(253, 230, 138, 0.3)',
+                          border: '1px solid #fde68a',
                         }}>
                           {item.highlight}
                         </span>
                         <span style={{
                           fontSize: '9px',
                           fontFamily: 'monospace',
-                          color: '#94a3b8',
-                          backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                          color: '#78716c',
+                          backgroundColor: '#f5f5f4',
                           padding: '2px 5px',
                           borderRadius: '4px',
                         }}>
                           {item.sku}
                         </span>
                       </div>
-                      <span style={{ fontSize: '15px', fontWeight: 900, color: '#fde68a' }}>
+                      <span style={{ fontSize: '15px', fontWeight: 900, color: '#b45309' }}>
                         Rp{item.harga.toLocaleString('id-ID')}
                       </span>
                     </div>
 
                     <div>
-                      <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
+                      <div style={{ fontSize: '15px', fontWeight: 800, color: '#1c1917' }}>
                         {item.nama}
                       </div>
-                      <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px', lineHeight: 1.4 }}>
+                      <div style={{ fontSize: '12px', color: '#57534e', marginTop: '2px', lineHeight: 1.4 }}>
                         {item.desc}
                       </div>
                     </div>
@@ -928,15 +932,15 @@ export const CustomerDisplayView: React.FC = () => {
               <div style={{
                 padding: '14px 20px',
                 borderRadius: '16px',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.08) 100%)',
-                border: '1px solid rgba(52, 211, 153, 0.3)',
+                background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
+                border: '1.5px solid #a7f3d0',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Tag size={18} color="#34d399" />
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#a7f3d0' }}>
+                  <Tag size={18} color="#059669" />
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#065f46' }}>
                     Paket Spesial Lumbung: Kopi Susu Lumbung + Croissant Mentega hanya Rp42.000 (Hemat Rp7.000)
                   </span>
                 </div>
@@ -966,11 +970,11 @@ export const CustomerDisplayView: React.FC = () => {
             <>
               {/* Grand Total Luxury Card */}
               <div style={{
-                background: 'linear-gradient(135deg, #1f0c03 0%, #3a1603 60%, #451a03 100%)',
+                background: 'linear-gradient(135deg, #78350f 0%, #92400e 50%, #b45309 100%)',
                 borderRadius: '28px',
                 padding: '26px',
-                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.5)',
-                border: '2px solid #b45309',
+                boxShadow: '0 16px 36px rgba(120, 53, 15, 0.25)',
+                border: '2px solid #fde68a',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '14px',
@@ -981,7 +985,7 @@ export const CustomerDisplayView: React.FC = () => {
                   <span style={{
                     fontSize: '11px',
                     fontWeight: 800,
-                    color: '#fde68a',
+                    color: '#fef3c7',
                     textTransform: 'uppercase',
                     letterSpacing: '1px',
                   }}>
@@ -989,18 +993,18 @@ export const CustomerDisplayView: React.FC = () => {
                   </span>
                   <span style={{
                     fontSize: '11px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
                     padding: '3px 10px',
                     borderRadius: '9999px',
-                    color: '#cbd5e1',
-                    fontWeight: 600,
+                    color: '#ffffff',
+                    fontWeight: 700,
                   }}>
                     Struk Terstandarisasi BR-04
                   </span>
                 </div>
 
                 {/* Subtotal */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#fed7aa' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#fef3c7' }}>
                   <span>Subtotal ({totalItemQty} item)</span>
                   <span style={{ fontWeight: 800, color: '#ffffff' }}>
                     Rp{data.subtotal.toLocaleString('id-ID')}
@@ -1014,17 +1018,17 @@ export const CustomerDisplayView: React.FC = () => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     fontSize: '13px',
-                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                    border: '1px solid rgba(239, 68, 68, 0.35)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
                     padding: '8px 12px',
                     borderRadius: '10px',
-                    color: '#fca5a5',
+                    color: '#fee2e2',
                   }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
-                      <Sparkles size={14} color="#fca5a5" />
+                      <Sparkles size={14} color="#fecaca" />
                       <span>Potongan Diskon (Maks. 10%)</span>
                     </span>
-                    <span style={{ fontWeight: 900, color: '#fef2f2' }}>
+                    <span style={{ fontWeight: 900, color: '#ffffff' }}>
                       -Rp{data.diskon.toLocaleString('id-ID')}
                     </span>
                   </div>
@@ -1034,21 +1038,21 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{
                   marginTop: '4px',
                   paddingTop: '16px',
-                  borderTop: '1px dashed rgba(253, 230, 138, 0.3)',
+                  borderTop: '1px dashed rgba(253, 230, 138, 0.4)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '4px',
                 }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#cbd5e1', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#fed7aa', textTransform: 'uppercase' }}>
                     Total yang Harus Dibayar:
                   </span>
                   <div style={{
                     fontSize: '38px',
                     fontWeight: 900,
-                    color: '#fde68a',
+                    color: '#ffffff',
                     letterSpacing: '-1px',
                     lineHeight: 1.1,
-                    textShadow: '0 2px 14px rgba(253, 230, 138, 0.25)',
+                    textShadow: '0 2px 14px rgba(0, 0, 0, 0.2)',
                   }}>
                     Rp{data.total.toLocaleString('id-ID')}
                   </div>
@@ -1059,7 +1063,7 @@ export const CustomerDisplayView: React.FC = () => {
               <div className="glass-panel" style={{
                 borderRadius: '28px',
                 padding: '24px',
-                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.35)',
+                boxShadow: '0 12px 30px rgba(120, 53, 15, 0.08)',
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -1076,7 +1080,7 @@ export const CustomerDisplayView: React.FC = () => {
                       backgroundColor: '#ffffff',
                       borderRadius: '22px',
                       border: '2px solid #dc2626',
-                      boxShadow: '0 12px 30px rgba(220, 38, 38, 0.2)',
+                      boxShadow: '0 12px 30px rgba(220, 38, 38, 0.15)',
                       overflow: 'hidden',
                       width: '100%',
                       maxWidth: '290px',
@@ -1138,7 +1142,7 @@ export const CustomerDisplayView: React.FC = () => {
                       flexWrap: 'wrap',
                     }}>
                       {['BCA', 'Mandiri', 'GoPay', 'OVO', 'ShopeePay', 'DANA'].map((app, i) => (
-                        <span key={i} style={{ fontSize: '9px', fontWeight: 800, backgroundColor: 'rgba(255,255,255,0.08)', color: '#f8fafc', padding: '3px 8px', borderRadius: '4px' }}>
+                        <span key={i} style={{ fontSize: '9px', fontWeight: 800, backgroundColor: '#f1f5f9', color: '#334155', border: '1px solid #e2e8f0', padding: '3px 8px', borderRadius: '4px' }}>
                           {app}
                         </span>
                       ))}
@@ -1151,19 +1155,18 @@ export const CustomerDisplayView: React.FC = () => {
                       width: '68px',
                       height: '68px',
                       borderRadius: '20px',
-                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.15) 100%)',
-                      border: '1.5px solid rgba(52, 211, 153, 0.4)',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#34d399',
+                      color: '#ffffff',
                       marginBottom: '16px',
                       boxShadow: '0 10px 24px rgba(16, 185, 129, 0.25)',
                     }}>
                       <Banknote size={36} />
                     </div>
 
-                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1c1917', margin: 0 }}>
                       Pembayaran Tunai di Meja Kasir
                     </h3>
 
@@ -1171,9 +1174,9 @@ export const CustomerDisplayView: React.FC = () => {
                       <div style={{
                         marginTop: '16px',
                         padding: '16px 20px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                        backgroundColor: '#f0fdf4',
                         borderRadius: '16px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        border: '1.5px solid #bbf7d0',
                         width: '100%',
                         maxWidth: '320px',
                         display: 'flex',
@@ -1181,21 +1184,21 @@ export const CustomerDisplayView: React.FC = () => {
                         gap: '8px',
                       }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                          <span style={{ color: '#94a3b8' }}>Uang Tunai Diterima:</span>
-                          <span style={{ fontWeight: 800, color: '#ffffff' }}>
+                          <span style={{ color: '#475569' }}>Uang Tunai Diterima:</span>
+                          <span style={{ fontWeight: 800, color: '#1c1917' }}>
                             Rp{data.uangDiterima.toLocaleString('id-ID')}
                           </span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.15)' }}>
-                          <span style={{ color: '#34d399', fontWeight: 800, fontSize: '14px' }}>Kembalian:</span>
-                          <span style={{ fontSize: '22px', fontWeight: 900, color: '#34d399' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px dashed #86efac' }}>
+                          <span style={{ color: '#059669', fontWeight: 800, fontSize: '14px' }}>Kembalian:</span>
+                          <span style={{ fontSize: '22px', fontWeight: 900, color: '#059669' }}>
                             Rp{data.kembalian.toLocaleString('id-ID')}
                           </span>
                         </div>
                       </div>
                     ) : (
-                      <div style={{ marginTop: '16px', padding: '14px 18px', backgroundColor: 'rgba(217, 119, 6, 0.15)', border: '1px dashed rgba(253, 230, 138, 0.3)', borderRadius: '14px' }}>
-                        <p style={{ fontSize: '13px', color: '#fde68a', margin: 0, fontWeight: 600 }}>
+                      <div style={{ marginTop: '16px', padding: '14px 18px', backgroundColor: '#fffbeb', border: '1.5px dashed #fde68a', borderRadius: '14px' }}>
+                        <p style={{ fontSize: '13px', color: '#92400e', margin: 0, fontWeight: 700 }}>
                           💵 Silakan serahkan uang tunai Rp{data.total.toLocaleString('id-ID')} kepada kasir kami.
                         </p>
                       </div>
@@ -1214,35 +1217,36 @@ export const CustomerDisplayView: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
+                border: '1.5px solid #e0f2fe',
               }}>
                 <div style={{
                   width: '54px',
                   height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                  border: '1.5px solid rgba(96, 165, 250, 0.35)',
+                  backgroundColor: '#eff6ff',
+                  border: '1.5px solid #bfdbfe',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#60a5fa',
+                  color: '#2563eb',
                   flexShrink: 0,
                 }}>
                   <Wifi size={28} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       Koneksi Tamu Gratis
                     </span>
-                    <span style={{ fontSize: '10px', backgroundColor: 'rgba(59, 130, 246, 0.25)', color: '#93c5fd', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                    <span style={{ fontSize: '10px', backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
                       100 Mbps
                     </span>
                   </div>
-                  <div style={{ fontSize: '16px', fontWeight: 900, color: '#ffffff', marginTop: '2px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 900, color: '#0f172a', marginTop: '2px' }}>
                     WiFi: Lumbung-Guest
                   </div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                    Kata Sandi: <strong style={{ color: '#fde68a', fontFamily: 'monospace' }}>kopihangat2026</strong>
+                  <div style={{ fontSize: '12px', color: '#475569', marginTop: '2px' }}>
+                    Kata Sandi: <strong style={{ color: '#b45309', fontFamily: 'monospace' }}>kopihangat2026</strong>
                   </div>
                 </div>
               </div>
@@ -1254,25 +1258,26 @@ export const CustomerDisplayView: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '12px',
+                border: '1.5px solid #fef3c7',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Clock size={18} color="#fde68a" />
-                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <Clock size={18} color="#b45309" />
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#451a03', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                     Jadwal Operasional Kedai
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <span style={{ color: '#94a3b8' }}>Jam Buka:</span>
-                  <span style={{ fontWeight: 800, color: '#ffffff' }}>07:00 – 22:00 WIB</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f2ece4' }}>
+                  <span style={{ color: '#78716c' }}>Jam Buka:</span>
+                  <span style={{ fontWeight: 800, color: '#1c1917' }}>07:00 – 22:00 WIB</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  <span style={{ color: '#94a3b8' }}>Fresh Oven Bake:</span>
-                  <span style={{ fontWeight: 800, color: '#fb923c' }}>07:30 &amp; 14:00 WIB</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f2ece4' }}>
+                  <span style={{ color: '#78716c' }}>Fresh Oven Bake:</span>
+                  <span style={{ fontWeight: 800, color: '#b45309' }}>07:30 &amp; 14:00 WIB</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0' }}>
-                  <span style={{ color: '#94a3b8' }}>Penyajian:</span>
-                  <span style={{ fontWeight: 800, color: '#34d399' }}>Dine-In &amp; Takeaway</span>
+                  <span style={{ color: '#78716c' }}>Penyajian:</span>
+                  <span style={{ fontWeight: 800, color: '#059669' }}>Dine-In &amp; Takeaway</span>
                 </div>
               </div>
 
@@ -1287,18 +1292,18 @@ export const CustomerDisplayView: React.FC = () => {
               }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <ShieldCheck size={18} color="#34d399" />
-                    <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <ShieldCheck size={18} color="#059669" />
+                    <span style={{ fontSize: '14px', fontWeight: 800, color: '#451a03', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       Metode Pembayaran Resmi
                     </span>
                   </div>
-                  <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, margin: '0 0 14px 0' }}>
+                  <p style={{ fontSize: '12px', color: '#57534e', lineHeight: 1.5, margin: '0 0 14px 0' }}>
                     Menerima seluruh pembayaran QRIS (semua Bank &amp; E-Wallet nasional) serta pembayaran tunai pas di kasir.
                   </p>
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {['BCA Mobile', 'Mandiri Livin', 'BRImo', 'GoPay', 'OVO', 'ShopeePay', 'DANA', 'Tunai'].map((app, i) => (
-                      <span key={i} style={{ fontSize: '10px', fontWeight: 800, backgroundColor: 'rgba(255,255,255,0.06)', color: '#f8fafc', padding: '4px 9px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <span key={i} style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#f5f5f4', color: '#1c1917', padding: '4px 9px', borderRadius: '6px', border: '1px solid #e7e5e4' }}>
                         {app}
                       </span>
                     ))}
@@ -1308,16 +1313,17 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{
                   marginTop: '16px',
                   padding: '12px 16px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  backgroundColor: '#ecfdf5',
                   borderRadius: '14px',
-                  border: '1px solid rgba(52, 211, 153, 0.25)',
+                  border: '1.5px solid #a7f3d0',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
                   fontSize: '12px',
-                  color: '#a7f3d0',
+                  color: '#065f46',
+                  fontWeight: 600,
                 }}>
-                  <Leaf size={16} color="#34d399" />
+                  <Leaf size={16} color="#059669" />
                   <span>100% Bahan Halal, Kopi Petani Lokal, Tanpa Pengawet</span>
                 </div>
               </div>
@@ -1328,14 +1334,14 @@ export const CustomerDisplayView: React.FC = () => {
 
       {/* Ticker Marquee Bottom Bar */}
       <div style={{
-        backgroundColor: '#1a0e07',
-        color: '#fde68a',
+        backgroundColor: '#fef3c7',
+        color: '#78350f',
         padding: '10px 0',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
-        borderTop: '1px solid rgba(253, 230, 138, 0.2)',
+        borderTop: '1.5px solid #fde68a',
         fontSize: '12px',
-        fontWeight: 700,
+        fontWeight: 800,
         letterSpacing: '0.6px',
       }}>
         <div style={{
@@ -1350,20 +1356,20 @@ export const CustomerDisplayView: React.FC = () => {
       {/* Footer Branding */}
       <footer style={{
         padding: '12px 28px',
-        backgroundColor: '#0f0804',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
+        backgroundColor: '#ffffff',
+        borderTop: '1px solid #ebd9c8',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         fontSize: '12px',
-        color: '#94a3b8',
+        color: '#78716c',
         fontWeight: 600,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShieldCheck size={16} color="#10b981" />
+          <ShieldCheck size={16} color="#059669" />
           <span>Sistem Kasir Pintar Lumbung POS • Struk Terstandarisasi BR-04</span>
         </div>
-        <div style={{ color: '#fde68a', fontWeight: 700 }}>
+        <div style={{ color: '#92400e', fontWeight: 800 }}>
           Semoga Hari Anda Menyenangkan! ☕🥐
         </div>
       </footer>
@@ -1373,8 +1379,8 @@ export const CustomerDisplayView: React.FC = () => {
         <div style={{
           position: 'fixed',
           inset: 0,
-          backgroundColor: 'rgba(5, 3, 2, 0.88)',
-          backdropFilter: 'blur(12px)',
+          backgroundColor: 'rgba(28, 25, 23, 0.7)',
+          backdropFilter: 'blur(10px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -1383,18 +1389,18 @@ export const CustomerDisplayView: React.FC = () => {
           animation: 'fadeInScale 0.25s ease',
         }}>
           <div style={{
-            backgroundColor: '#1a0e07',
+            backgroundColor: '#ffffff',
             borderRadius: '28px',
             maxWidth: '580px',
             width: '100%',
             padding: '40px 36px',
             textAlign: 'center',
-            boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.75)',
+            boxShadow: '0 25px 60px -10px rgba(120, 53, 15, 0.25)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '14px',
-            border: '2px solid rgba(253, 230, 138, 0.4)',
+            border: '2px solid #a7f3d0',
             position: 'relative',
           }}>
             {/* Dismiss Button */}
@@ -1408,9 +1414,9 @@ export const CustomerDisplayView: React.FC = () => {
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: 'none',
-                color: '#94a3b8',
+                backgroundColor: '#f5f5f4',
+                border: '1px solid #e7e5e4',
+                color: '#78716c',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1433,7 +1439,7 @@ export const CustomerDisplayView: React.FC = () => {
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              boxShadow: '0 12px 35px rgba(16, 185, 129, 0.5)',
+              boxShadow: '0 12px 35px rgba(16, 185, 129, 0.4)',
               animation: 'pulseGlow 2s infinite',
             }}>
               <CheckCircle2 size={56} strokeWidth={2.5} />
@@ -1446,9 +1452,9 @@ export const CustomerDisplayView: React.FC = () => {
               gap: '6px',
               padding: '6px 16px',
               borderRadius: '9999px',
-              backgroundColor: 'rgba(16, 185, 129, 0.2)',
-              border: '1.5px solid rgba(52, 211, 153, 0.4)',
-              color: '#6ee7b7',
+              backgroundColor: '#ecfdf5',
+              border: '1.5px solid #a7f3d0',
+              color: '#065f46',
               fontSize: '12px',
               fontWeight: 800,
               letterSpacing: '0.5px',
@@ -1461,7 +1467,7 @@ export const CustomerDisplayView: React.FC = () => {
             <h2 style={{
               fontSize: '32px',
               fontWeight: 900,
-              color: '#ffffff',
+              color: '#1c1917',
               margin: '2px 0 0 0',
               letterSpacing: '-0.5px',
               display: 'flex',
@@ -1469,11 +1475,11 @@ export const CustomerDisplayView: React.FC = () => {
               gap: '10px',
             }}>
               <span>Pembayaran Berhasil!</span>
-              <span style={{ color: '#34d399' }}>✅</span>
+              <span style={{ color: '#059669' }}>✅</span>
             </h2>
 
-            <p style={{ fontSize: '14px', color: '#cbd5e1', margin: 0, lineHeight: 1.5, maxWidth: '440px' }}>
-              Terima kasih telah berkunjung ke <strong style={{ color: '#fde68a' }}>{data.cabangNama}</strong>. Pesanan Anda segera disiapkan dengan sepenuh hati.
+            <p style={{ fontSize: '14px', color: '#57534e', margin: 0, lineHeight: 1.5, maxWidth: '440px' }}>
+              Terima kasih telah berkunjung ke <strong style={{ color: '#92400e' }}>{data.cabangNama}</strong>. Pesanan Anda segera disiapkan dengan sepenuh hati.
             </p>
 
             {/* Transaction Details Pill */}
@@ -1488,21 +1494,21 @@ export const CustomerDisplayView: React.FC = () => {
               <span style={{
                 fontSize: '13px',
                 fontWeight: 800,
-                color: '#fde68a',
-                backgroundColor: 'rgba(217, 119, 6, 0.25)',
-                border: '1px solid rgba(253, 230, 138, 0.3)',
+                color: '#78350f',
+                backgroundColor: '#fef3c7',
+                border: '1px solid #fde68a',
                 padding: '4px 14px',
                 borderRadius: '8px',
               }}>
-                Total: Rp{(data.total || 45000).toLocaleString('id-ID')}
+                Total: Rp{(data.total || 0).toLocaleString('id-ID')}
               </span>
 
               <span style={{
                 fontSize: '12px',
                 fontWeight: 800,
-                color: '#cbd5e1',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#475569',
+                backgroundColor: '#f1f5f9',
+                border: '1px solid #cbd5e1',
                 padding: '4px 14px',
                 borderRadius: '8px',
                 fontFamily: 'monospace',
@@ -1515,15 +1521,15 @@ export const CustomerDisplayView: React.FC = () => {
             <div style={{
               marginTop: '12px',
               padding: '22px',
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(253, 230, 138, 0.2)',
+              backgroundColor: '#faf7f2',
+              border: '1.5px solid #ebd9c8',
               borderRadius: '20px',
               width: '100%',
               boxSizing: 'border-box',
             }}>
               {!ratingSubmitted ? (
                 <>
-                  <p style={{ fontSize: '15px', fontWeight: 800, color: '#fde68a', margin: '0 0 16px 0' }}>
+                  <p style={{ fontSize: '15px', fontWeight: 800, color: '#451a03', margin: '0 0 16px 0' }}>
                     Bagaimana pengalaman pelayanan kami hari ini?
                   </p>
 
@@ -1534,8 +1540,8 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('sangat_puas')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        border: '1.5px solid rgba(52, 211, 153, 0.35)',
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #a7f3d0',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -1543,15 +1549,16 @@ export const CustomerDisplayView: React.FC = () => {
                         alignItems: 'center',
                         gap: '6px',
                         transition: 'all 0.15s ease',
+                        boxShadow: '0 2px 6px rgba(16, 185, 129, 0.08)',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>🤩</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#6ee7b7' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#065f46' }}>
                         Istimewa
                       </span>
-                      <span style={{ fontSize: '9px', color: '#a7f3d0' }}>
+                      <span style={{ fontSize: '9px', color: '#059669', fontWeight: 600 }}>
                         Sangat Puas
                       </span>
                     </button>
@@ -1562,8 +1569,8 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('baik')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        border: '1.5px solid rgba(52, 211, 153, 0.35)',
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #a7f3d0',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -1571,15 +1578,16 @@ export const CustomerDisplayView: React.FC = () => {
                         alignItems: 'center',
                         gap: '6px',
                         transition: 'all 0.15s ease',
+                        boxShadow: '0 2px 6px rgba(16, 185, 129, 0.08)',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😊</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#6ee7b7' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#065f46' }}>
                         Puas
                       </span>
-                      <span style={{ fontSize: '9px', color: '#a7f3d0' }}>
+                      <span style={{ fontSize: '9px', color: '#059669', fontWeight: 600 }}>
                         Pelayanan Baik
                       </span>
                     </button>
@@ -1590,8 +1598,8 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('sedang')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        border: '1.5px solid rgba(251, 191, 36, 0.35)',
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #fde68a',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -1599,15 +1607,16 @@ export const CustomerDisplayView: React.FC = () => {
                         alignItems: 'center',
                         gap: '6px',
                         transition: 'all 0.15s ease',
+                        boxShadow: '0 2px 6px rgba(217, 119, 6, 0.08)',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😐</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#fde68a' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#92400e' }}>
                         Cukup
                       </span>
-                      <span style={{ fontSize: '9px', color: '#fed7aa' }}>
+                      <span style={{ fontSize: '9px', color: '#b45309', fontWeight: 600 }}>
                         Biasa Saja
                       </span>
                     </button>
@@ -1618,8 +1627,8 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('buruk')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        border: '1.5px solid rgba(248, 113, 113, 0.35)',
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #fca5a5',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
@@ -1627,15 +1636,16 @@ export const CustomerDisplayView: React.FC = () => {
                         alignItems: 'center',
                         gap: '6px',
                         transition: 'all 0.15s ease',
+                        boxShadow: '0 2px 6px rgba(239, 68, 68, 0.08)',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😞</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#fca5a5' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#991b1b' }}>
                         Kurang
                       </span>
-                      <span style={{ fontSize: '9px', color: '#fecaca' }}>
+                      <span style={{ fontSize: '9px', color: '#b91c1c', fontWeight: 600 }}>
                         Perlu Evaluasi
                       </span>
                     </button>
@@ -1652,10 +1662,10 @@ export const CustomerDisplayView: React.FC = () => {
                   <div style={{ fontSize: '42px', animation: 'floatSubtle 1s infinite' }}>
                     {selectedRating === 'sangat_puas' ? '🎉' : selectedRating === 'baik' ? '🌟' : selectedRating === 'sedang' ? '👍' : '🙏'}
                   </div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#ffffff' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#1c1917' }}>
                     Terima Kasih atas Penilaian Anda!
                   </div>
-                  <p style={{ fontSize: '13px', color: '#cbd5e1', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#57534e', margin: 0 }}>
                     Masukan Anda sangat berharga untuk terus menyempurnakan kehangatan layanan Lumbung Kopi dan Roti.
                   </p>
                 </div>
