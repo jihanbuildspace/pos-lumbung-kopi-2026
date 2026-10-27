@@ -234,6 +234,18 @@ export const LaporanView: React.FC = () => {
     });
   };
 
+  // Cetak PDF handler dengan penamaan dokumen otomatis dan styling cetak A4
+  const handlePrintPDF = () => {
+    const origTitle = document.title;
+    const branchNameClean = activeBranchName.replace(/[^a-zA-Z0-9]/g, '_');
+    const dateStr = new Date().toISOString().slice(0, 10);
+    document.title = `Laporan_Penjualan_${branchNameClean}_${dateStr}`;
+    window.print();
+    setTimeout(() => {
+      document.title = origTitle;
+    }, 1000);
+  };
+
   // AI Ask Handler (Fitur AI 1)
   const handleSendAIQuestion = async (customQ?: string) => {
     const q = customQ || inputQuestion;
@@ -262,9 +274,31 @@ export const LaporanView: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
-      {/* Page Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+    <div className="report-print-container" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
+      {/* Print-Only Official Letterhead */}
+      <div className="print-only" style={{ borderBottom: '2px solid #0f172a', paddingBottom: '14px', marginBottom: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <h1 style={{ fontSize: '20px', fontWeight: 900, color: '#451a03', margin: 0, letterSpacing: '-0.5px' }}>
+              ☕ LUMBUNG KOPI DAN ROTI
+            </h1>
+            <p style={{ fontSize: '12px', color: '#64748b', margin: '4px 0 0 0', fontWeight: 500 }}>
+              Sistem POS &amp; Rekonsiliasi Kas Multi-Cabang Real-Time
+            </p>
+          </div>
+          <div style={{ textAlign: 'right', fontSize: '11px', color: '#334155', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', textTransform: 'uppercase' }}>
+              LAPORAN KINERJA PENJUALAN &amp; AUDIT KAS
+            </div>
+            <div>Cabang: <strong>{activeBranchName}</strong></div>
+            <div>Waktu Cetak: {new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })} WIB</div>
+            <div>Dicetak Oleh: <strong>{profile?.nama_lengkap || 'Ratna Kusuma'}</strong> ({profile?.peran?.toUpperCase() || 'OWNER'})</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Page Header (Screen only) */}
+      <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#1e293b' }}>
             Laporan &amp; Analitik Penjualan
@@ -323,19 +357,21 @@ export const LaporanView: React.FC = () => {
 
           {/* Print PDF Button */}
           <button
-            onClick={() => window.print()}
+            onClick={handlePrintPDF}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '8px 12px',
+              padding: '8px 14px',
               borderRadius: '8px',
-              backgroundColor: '#ffffff',
-              border: '1px solid #cbd5e1',
-              color: '#475569',
+              backgroundColor: '#1e293b',
+              border: '1px solid #0f172a',
+              color: '#ffffff',
               fontSize: '12px',
-              fontWeight: 600,
+              fontWeight: 700,
+              boxShadow: '0 2px 6px rgba(15, 23, 42, 0.2)',
             }}
+            title="Cetak atau Simpan Dokumen Laporan sebagai PDF"
           >
             <Printer size={15} />
             <span>Cetak PDF</span>
@@ -411,6 +447,7 @@ export const LaporanView: React.FC = () => {
           </div>
 
           <button
+            className="no-print"
             onClick={() => setShowAIChat(true)}
             style={{
               padding: '8px 14px',
@@ -615,7 +652,7 @@ export const LaporanView: React.FC = () => {
             </h4>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '220px', overflowY: 'auto' }}>
+          <div className="top-products-container" style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '220px', overflowY: 'auto' }}>
             {topProducts.map((p, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', padding: '6px 0', borderBottom: '1px solid #f8fafc' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -691,9 +728,32 @@ export const LaporanView: React.FC = () => {
         </div>
       )}
 
+      {/* Print-Only Signature & Audit Approval Section */}
+      <div className="print-only page-break-avoid" style={{ marginTop: '32px', paddingTop: '18px', borderTop: '1px solid #cbd5e1' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#334155' }}>
+          <div style={{ width: '220px', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontWeight: 500 }}>Mengetahui &amp; Memeriksa,</p>
+            <p style={{ margin: '4px 0 0 0', fontWeight: 700, color: '#0f172a' }}>Kepala Toko / Supervisor Cabang</p>
+            <div style={{ height: '65px' }} />
+            <p style={{ margin: 0, borderTop: '1px solid #64748b', paddingTop: '6px', fontWeight: 600 }}>( ........................................ )</p>
+            <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#64748b' }}>Tanda Tangan &amp; Nama Terang</p>
+          </div>
+          <div style={{ width: '220px', textAlign: 'center' }}>
+            <p style={{ margin: 0, fontWeight: 500 }}>Disetujui &amp; Diverifikasi,</p>
+            <p style={{ margin: '4px 0 0 0', fontWeight: 700, color: '#0f172a' }}>Owner / Manajemen Pusat</p>
+            <div style={{ height: '65px' }} />
+            <p style={{ margin: 0, borderTop: '1px solid #64748b', paddingTop: '6px', fontWeight: 600 }}>( {profile?.nama_lengkap || 'Ratna Kusuma'} )</p>
+            <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: '#64748b' }}>Pemilik Usaha Lumbung Kopi</p>
+          </div>
+        </div>
+        <div style={{ textAlign: 'center', fontSize: '9px', color: '#94a3b8', marginTop: '20px' }}>
+          Dokumen ini digenerate secara otomatis oleh Sistem POS Lumbung Kopi dan Roti pada {new Date().toLocaleString('id-ID')} WIB dan sah sebagai bukti rekapitulasi audit operasional.
+        </div>
+      </div>
+
       {/* MODAL / DRAWER CHAT "ASK LUMBUNG AI" (FITUR AI 1) */}
       {showAIChat && (
-        <div style={{
+        <div className="no-print" style={{
           position: 'fixed',
           inset: 0,
           backgroundColor: 'rgba(15, 23, 42, 0.65)',

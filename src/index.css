@@ -130,31 +130,126 @@ textarea {
   box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.35);
 }
 
-/* Thermal Receipt Print Styles (58mm) */
+/* Print-Only Elements Hidden on Screen */
+.print-only {
+  display: none !important;
+}
+
+/* =============================================================
+   UNIVERSAL PRINT STYLES (LAPORAN PENJUALAN PDF & STRUK KASIR)
+   ============================================================= */
 @media print {
-  body * {
-    visibility: hidden;
+  /* 1. Global Reset for Accurate Print Engine Rendering */
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  #printable-receipt,
-  #printable-receipt * {
-    visibility: visible;
-  }
-
-  #printable-receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 58mm !important;
-    padding: 2mm !important;
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
     margin: 0 !important;
-    font-size: 11px !important;
-    line-height: 1.3 !important;
-    color: #000 !important;
-    background: #fff !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
   }
 
-  .no-print {
+  /* Unconstrain SPA container divs so multi-page content flows naturally */
+  #root,
+  #root > div,
+  main {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    display: block !important;
+    background: #ffffff !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 2. Hide interactive UI elements */
+  .no-print,
+  header,
+  aside,
+  nav,
+  button,
+  select,
+  input,
+  textarea,
+  .hover-lift,
+  .hover-glow {
     display: none !important;
+  }
+
+  /* 3. Reveal Official Print Headers & Signatures */
+  .print-only {
+    display: block !important;
+  }
+
+  /* 4. Page Break & Flow Handling */
+  .page-break-avoid,
+  .kpi-card,
+  table,
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Unconstrain scrollable lists for complete printing */
+  .top-products-container {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .report-print-container {
+    padding: 8mm !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+  }
+
+  /* 5. Handle Modal Backdrop if user triggers browser print directly from modal */
+  .receipt-modal-backdrop {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    display: block !important;
+    inset: auto !important;
+  }
+
+  .receipt-modal-card {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 58mm !important;
+    width: 58mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* 6. Thermal receipt print styling (58mm) */
+  #printable-receipt {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    margin: 0 auto !important;
+    padding: 3mm 2mm !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
   }
 }

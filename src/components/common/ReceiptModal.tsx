@@ -1,5 +1,6 @@
 import React from 'react';
-import { Printer, X, CheckCircle2 } from 'lucide-react';
+import { Printer, X, CheckCircle2, FileDown } from 'lucide-react';
+import { printThermalReceipt } from '../../lib/receiptPrinter';
 
 interface ReceiptModalProps {
   show: boolean;
@@ -11,7 +12,11 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
   if (!show || !transaksi) return null;
 
   const handlePrint = () => {
-    window.print();
+    printThermalReceipt('printable-receipt', `Struk_${transaksi.nomor_struk || 'Transaksi'}`);
+  };
+
+  const handleSavePDF = () => {
+    printThermalReceipt('printable-receipt', `Struk_${transaksi.nomor_struk || 'Transaksi'}`);
   };
 
   const items = transaksi.items || [];
@@ -26,28 +31,34 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
   });
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(15, 23, 42, 0.65)',
-      backdropFilter: 'blur(4px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 100,
-      padding: '16px',
-    }}>
-      <div style={{
-        backgroundColor: '#ffffff',
-        borderRadius: '16px',
-        width: '100%',
-        maxWidth: '420px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        overflow: 'hidden',
+    <div
+      className="receipt-modal-backdrop"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(15, 23, 42, 0.65)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
-        flexDirection: 'column',
-        maxHeight: '90vh',
-      }}>
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 100,
+        padding: '16px',
+      }}
+    >
+      <div
+        className="receipt-modal-card"
+        style={{
+          backgroundColor: '#ffffff',
+          borderRadius: '16px',
+          width: '100%',
+          maxWidth: '420px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '90vh',
+        }}
+      >
         {/* Header modal */}
         <div className="no-print" style={{
           padding: '14px 18px',
@@ -240,29 +251,56 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
           padding: '14px 18px',
           borderTop: '1px solid #f1f5f9',
           display: 'flex',
-          gap: '12px',
+          gap: '10px',
           backgroundColor: '#ffffff',
+          flexWrap: 'wrap',
         }}>
           <button
             onClick={handlePrint}
             style={{
               flex: 1,
+              minWidth: '130px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '6px',
               backgroundColor: '#78350f',
               color: '#ffffff',
-              padding: '10px 16px',
+              padding: '10px 14px',
               borderRadius: '8px',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 700,
               boxShadow: '0 2px 6px rgba(120, 53, 15, 0.25)',
             }}
+            title="Kirim ke Printer Thermal 58mm atau Cetak Fisik"
           >
-            <Printer size={16} />
+            <Printer size={15} />
             <span>Cetak Struk (58 mm)</span>
           </button>
+
+          <button
+            onClick={handleSavePDF}
+            style={{
+              flex: 1,
+              minWidth: '130px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              backgroundColor: '#059669',
+              color: '#ffffff',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: 700,
+              boxShadow: '0 2px 6px rgba(5, 150, 105, 0.25)',
+            }}
+            title="Simpan / Download Struk sebagai file PDF"
+          >
+            <FileDown size={15} />
+            <span>Simpan PDF Struk</span>
+          </button>
+
           <button
             onClick={onClose}
             style={{
@@ -271,7 +309,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ show, onClose, trans
               border: '1px solid #cbd5e1',
               backgroundColor: '#ffffff',
               color: '#475569',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 600,
             }}
           >
