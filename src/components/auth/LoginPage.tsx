@@ -54,91 +54,120 @@ export const LoginPage: React.FC = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '24px 16px',
+      padding: '32px 16px',
       position: 'relative',
       overflow: 'hidden',
-      background: 'radial-gradient(ellipse at 15% 25%, #2d1408 0%, #170a04 40%, #0c0502 100%)',
+      backgroundColor: '#faf7f2',
+      backgroundImage: `
+        radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(217, 119, 6, 0.10) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(254, 243, 199, 0.40) 0%, transparent 65%)
+      `,
+      fontFamily: '"Plus Jakarta Sans", "Outfit", -apple-system, sans-serif',
     }}>
-      {/* Dynamic Ambient Glow Orbs */}
+      {/* Keyframe Styles for Ambient Animation */}
+      <style>{`
+        @keyframes pulseGlow {
+          0%, 100% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.08); opacity: 0.4; }
+        }
+        @keyframes floatSlow {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        @keyframes fadeInScale {
+          from { opacity: 0; transform: scale(0.98) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .hover-lift {
+          transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hover-lift:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(180, 83, 9, 0.12);
+        }
+        .hover-glow:hover {
+          box-shadow: 0 10px 25px rgba(217, 119, 6, 0.35);
+        }
+      `}</style>
+
+      {/* Dynamic Ambient Glow Orbs in Bright Warm Gold & Honey */}
       <div style={{
         position: 'absolute',
-        top: '5%',
-        left: '10%',
-        width: '380px',
-        height: '380px',
+        top: '6%',
+        left: '12%',
+        width: '420px',
+        height: '420px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, transparent 70%)',
-        filter: 'blur(50px)',
-        animation: 'pulseGlow 7s infinite ease-in-out',
+        background: 'radial-gradient(circle, rgba(251, 191, 36, 0.22) 0%, transparent 70%)',
+        filter: 'blur(60px)',
+        animation: 'pulseGlow 8s infinite ease-in-out',
         pointerEvents: 'none',
       }} />
 
       <div style={{
         position: 'absolute',
         bottom: '8%',
-        right: '12%',
-        width: '420px',
-        height: '420px',
+        right: '10%',
+        width: '450px',
+        height: '450px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(217, 119, 6, 0.14) 0%, transparent 70%)',
-        filter: 'blur(60px)',
-        animation: 'pulseGlow 9s infinite ease-in-out reverse',
+        background: 'radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, transparent 70%)',
+        filter: 'blur(70px)',
+        animation: 'pulseGlow 10s infinite ease-in-out reverse',
         pointerEvents: 'none',
       }} />
 
-      {/* Floating Coffee Sparkle Icon */}
+      {/* Floating Coffee Sparkle Icon (Soft Warm Accent) */}
       <div style={{
         position: 'absolute',
-        top: '12%',
-        right: '18%',
+        top: '10%',
+        right: '16%',
         animation: 'floatSlow 6s infinite ease-in-out',
-        opacity: 0.25,
+        opacity: 0.3,
         pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
-        color: '#fde68a',
+        color: '#d97706',
       }}>
-        <Coffee size={40} />
+        <Coffee size={42} />
       </div>
 
-      {/* Main Glassmorphic Card Container */}
+      {/* Main Bright Artisan Card Container */}
       <div style={{
         width: '100%',
-        maxWidth: '1000px',
+        maxWidth: '1020px',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+        backgroundColor: '#ffffff',
         borderRadius: '28px',
         overflow: 'hidden',
-        boxShadow: '0 25px 70px -15px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(251, 191, 36, 0.25)',
-        backdropFilter: 'blur(20px)',
+        boxShadow: '0 20px 60px -15px rgba(180, 83, 9, 0.14), 0 0 0 1px #fae8d2',
         zIndex: 10,
         position: 'relative',
         animation: 'fadeInScale 0.35s ease',
       }}>
 
-        {/* Left Side: Brand Story & Live Features Showcase */}
+        {/* Left Side: Bright Warm Artisan Brand Showcase */}
         <div style={{
-          backgroundColor: '#381404',
           padding: '42px 36px',
-          color: '#ffffff',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           position: 'relative',
           overflow: 'hidden',
-          background: 'linear-gradient(145deg, #2c1003 0%, #451a03 50%, #5e2405 100%)',
-          borderRight: '1px solid rgba(251, 191, 36, 0.15)',
+          background: 'linear-gradient(150deg, #fffdfa 0%, #fef7ee 45%, #ffedd5 100%)',
+          borderRight: '1.5px solid #fed7aa',
         }}>
-          {/* Subtle gold mesh pattern */}
+          {/* Subtle honey glow ornament */}
           <div style={{
             position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '240px',
-            height: '240px',
-            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%)',
+            top: -40,
+            right: -40,
+            width: '260px',
+            height: '260px',
+            background: 'radial-gradient(circle, rgba(251, 191, 36, 0.28) 0%, transparent 70%)',
             pointerEvents: 'none',
           }} />
 
@@ -150,14 +179,14 @@ export const LoginPage: React.FC = () => {
               gap: '6px',
               padding: '6px 14px',
               borderRadius: '24px',
-              backgroundColor: 'rgba(254, 243, 199, 0.12)',
-              border: '1px solid rgba(253, 230, 138, 0.25)',
+              backgroundColor: '#ecfdf5',
+              border: '1.5px solid #a7f3d0',
               fontSize: '11px',
               fontWeight: 800,
-              color: '#fef3c7',
-              letterSpacing: '0.5px',
-              marginBottom: '24px',
-              backdropFilter: 'blur(6px)',
+              color: '#065f46',
+              letterSpacing: '0.6px',
+              marginBottom: '22px',
+              boxShadow: '0 2px 6px rgba(16, 185, 129, 0.08)',
             }}>
               <span style={{
                 width: '7px',
@@ -170,33 +199,34 @@ export const LoginPage: React.FC = () => {
               <span>SISTEM AKTIF • MULTI-CABANG 2026</span>
             </div>
 
-            {/* Glowing Brand Icon & Name */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+            {/* Brand Logo & Name */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '12px' }}>
               <div style={{
                 width: '54px',
                 height: '54px',
                 borderRadius: '16px',
-                backgroundColor: '#78350f',
-                background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+                background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                border: '1.5px solid #fde68a',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 8px 20px rgba(120, 53, 15, 0.45), 0 0 0 1px rgba(253, 230, 138, 0.3)',
+                boxShadow: '0 8px 20px rgba(180, 83, 9, 0.28)',
+                flexShrink: 0,
               }}>
-                <Coffee size={30} color="#fef3c7" />
+                <Coffee size={28} color="#ffffff" />
               </div>
               <div>
                 <h1 style={{
-                  fontSize: '24px',
+                  fontSize: '25px',
                   fontWeight: 900,
                   letterSpacing: '-0.5px',
                   lineHeight: 1.15,
                   margin: 0,
-                  color: '#ffffff',
+                  color: '#29180c',
                 }}>
                   Lumbung Kopi <br />
                   <span style={{
-                    background: 'linear-gradient(135deg, #fde68a 0%, #f59e0b 50%, #fbbf24 100%)',
+                    background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                   }}>
@@ -207,116 +237,122 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <p style={{
-              fontSize: '12px',
-              color: '#fed7aa',
-              fontWeight: 600,
+              fontSize: '11px',
+              color: '#9a3412',
+              fontWeight: 800,
               letterSpacing: '0.8px',
               textTransform: 'uppercase',
-              marginBottom: '28px',
+              marginBottom: '26px',
             }}>
               Modern Point of Sale &amp; Inventory Management
             </p>
 
-            {/* 3 Pillars / Feature Highlights with rich glass styling */}
+            {/* 3 Value Pillars (Crisp Bright Cards) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               
+              {/* Feature 1 */}
               <div style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '12px',
                 padding: '12px 14px',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.88)',
+                border: '1.5px solid #fed7aa',
+                boxShadow: '0 4px 12px rgba(180, 83, 9, 0.05)',
               }}>
                 <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: '#fef3c7',
+                  border: '1px solid #fde68a',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#fbbf24',
+                  color: '#b45309',
                   flexShrink: 0,
                 }}>
                   <Store size={18} />
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', margin: 0 }}>
                     3 Cabang Terpadu
                   </h4>
-                  <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '3px 0 0 0', lineHeight: 1.4 }}>
-                    Tebet (TBT), Bintaro (BTR), dan Depok (DPK) dengan pemotongan stok bahan resep otomatis.
+                  <p style={{ fontSize: '11px', color: '#64748b', margin: '3px 0 0 0', lineHeight: 1.4 }}>
+                    Tebet (TBT), Bintaro (BTR), dan Depok (DPK) dengan proteksi stok anti-minus real-time.
                   </p>
                 </div>
               </div>
 
+              {/* Feature 2 */}
               <div style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '12px',
                 padding: '12px 14px',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.88)',
+                border: '1.5px solid #fed7aa',
+                boxShadow: '0 4px 12px rgba(180, 83, 9, 0.05)',
               }}>
                 <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: '#d1fae5',
+                  border: '1px solid #a7f3d0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#34d399',
+                  color: '#059669',
                   flexShrink: 0,
                 }}>
                   <Bot size={18} />
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span>Lumbung AI Engine</span>
-                    <span style={{ fontSize: '9px', padding: '1px 6px', borderRadius: '4px', backgroundColor: '#065f46', color: '#a7f3d0' }}>Gemini 3.5</span>
+                    <span style={{ fontSize: '9px', fontWeight: 800, padding: '1px 6px', borderRadius: '4px', backgroundColor: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0' }}>Gemini AI</span>
                   </h4>
-                  <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '3px 0 0 0', lineHeight: 1.4 }}>
-                    Prediksi cerdas kebutuhan restock bahan baku &amp; asisten konsultasi bisnis Owner.
+                  <p style={{ fontSize: '11px', color: '#64748b', margin: '3px 0 0 0', lineHeight: 1.4 }}>
+                    Prediksi cerdas kebutuhan restock stok &amp; asisten konsultasi bisnis Owner.
                   </p>
                 </div>
               </div>
 
+              {/* Feature 3 */}
               <div style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '12px',
                 padding: '12px 14px',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.88)',
+                border: '1.5px solid #fed7aa',
+                boxShadow: '0 4px 12px rgba(180, 83, 9, 0.05)',
               }}>
                 <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: '#e0f2fe',
+                  border: '1px solid #bae6fd',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#38bdf8',
+                  color: '#0284c7',
                   flexShrink: 0,
                 }}>
                   <CreditCard size={18} />
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>Dynamic QRIS Gateway</span>
-                    <span style={{ fontSize: '9px', padding: '1px 6px', borderRadius: '4px', backgroundColor: '#075985', color: '#bae6fd' }}>Mayar.id</span>
+                  <h4 style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>Dual Screen Customer Display</span>
+                    <span style={{ fontSize: '9px', fontWeight: 800, padding: '1px 6px', borderRadius: '4px', backgroundColor: '#f0f9ff', color: '#0284c7', border: '1px solid #bae6fd' }}>0ms Sync</span>
                   </h4>
-                  <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '3px 0 0 0', lineHeight: 1.4 }}>
-                    QRIS otomatis per struk Bank Indonesia dengan webhook sinkronisasi kasir &amp; layar pelanggan.
+                  <p style={{ fontSize: '11px', color: '#64748b', margin: '3px 0 0 0', lineHeight: 1.4 }}>
+                    Sinkronisasi instan layar kasir &amp; monitor pelanggan via BroadcastChannel API.
                   </p>
                 </div>
               </div>
@@ -326,25 +362,26 @@ export const LoginPage: React.FC = () => {
 
           {/* Bottom Footnote Badge */}
           <div style={{
-            marginTop: '28px',
-            padding: '12px 16px',
-            backgroundColor: 'rgba(0, 0, 0, 0.25)',
+            marginTop: '26px',
+            padding: '10px 14px',
+            backgroundColor: '#ffffff',
             borderRadius: '12px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             fontSize: '11px',
-            color: '#cbd5e1',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            color: '#64748b',
+            border: '1px solid #fed7aa',
+            boxShadow: '0 2px 6px rgba(180, 83, 9, 0.04)',
           }}>
-            <span>Tahun Ajaran 2026 • Standar Tablet POS</span>
-            <span style={{ color: '#fde68a', fontWeight: 700 }}>v2.6.0 Live</span>
+            <span style={{ fontWeight: 600 }}>Tahun Ajaran 2026 • Standar Tablet POS</span>
+            <span style={{ color: '#b45309', fontWeight: 800, backgroundColor: '#fef3c7', padding: '2px 8px', borderRadius: '6px' }}>v2.6.0 Live</span>
           </div>
         </div>
 
-        {/* Right Side: Sleek Login Form & Instant Persona Cards */}
+        {/* Right Side: Clean Bright Login Form & Instant Persona Cards */}
         <div style={{
-          padding: '38px 36px',
+          padding: '42px 36px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -355,7 +392,7 @@ export const LoginPage: React.FC = () => {
               <Sparkles size={14} />
               <span>Portal Otoritas POS</span>
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.5px', margin: 0 }}>
+            <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#1e293b', letterSpacing: '-0.5px', margin: 0 }}>
               Masuk ke Aplikasi
             </h2>
             <p style={{ fontSize: '13px', color: '#64748b', marginTop: '4px' }}>
@@ -526,6 +563,8 @@ export const LoginPage: React.FC = () => {
                     fontSize: '13px',
                     outline: 'none',
                     transition: 'all 0.2s',
+                    backgroundColor: '#ffffff',
+                    color: '#0f172a',
                   }}
                   onFocus={(e) => {
                     e.target.style.borderColor = '#d97706';
@@ -557,6 +596,8 @@ export const LoginPage: React.FC = () => {
                     fontSize: '13px',
                     outline: 'none',
                     transition: 'all 0.2s',
+                    backgroundColor: '#ffffff',
+                    color: '#0f172a',
                   }}
                   onFocus={(e) => {
                     e.target.style.borderColor = '#d97706';
@@ -576,6 +617,8 @@ export const LoginPage: React.FC = () => {
                     top: '11px',
                     color: '#94a3b8',
                     cursor: 'pointer',
+                    background: 'none',
+                    border: 'none',
                   }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -594,14 +637,15 @@ export const LoginPage: React.FC = () => {
                 gap: '8px',
                 padding: '12px',
                 borderRadius: '12px',
-                background: 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)',
+                background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
                 color: '#ffffff',
                 fontWeight: 800,
                 fontSize: '13px',
-                boxShadow: '0 6px 18px rgba(180, 83, 9, 0.35)',
+                boxShadow: '0 6px 18px rgba(180, 83, 9, 0.25)',
                 marginTop: '6px',
                 opacity: loading ? 0.75 : 1,
                 cursor: 'pointer',
+                border: 'none',
               }}
             >
               <span>{loading ? 'Memverifikasi Akses...' : 'Masuk Sekarang'}</span>

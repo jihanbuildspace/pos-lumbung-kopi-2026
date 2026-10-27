@@ -73,10 +73,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         query = query.eq('cabang_id', profile.cabang_id);
       }
 
-      const { data, error } = await query.order('dibuka_pada', { ascending: false }).limit(1);
-
-      if (!error && data && data.length > 0) {
-        setActiveShift(data[0] as ShiftKasir);
+      if (!error && data) {
+        if (data.length > 0) {
+          setActiveShift(data[0] as ShiftKasir);
+        } else {
+          setActiveShift(null);
+        }
       } else {
         const seedOpen = SEED_SHIFTS.find((s) => s.kasir_id === profile.id && s.status === 'buka');
         setActiveShift((seedOpen as any) || null);
