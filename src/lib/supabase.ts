@@ -7,8 +7,7 @@ const DEFAULT_ANON_KEY = 'sb_publishable_UBaWmggjC3s6fftld42rLQ_dDzqtCv0';
 const isBrowser = typeof window !== 'undefined';
 
 const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL ||
-  (isBrowser ? `${window.location.origin}/supabase` : DEFAULT_SUPABASE_URL);
+  import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
 
 // HANYA gunakan Anon / Publishable key di sisi browser!
 // Jangan pernah gunakan Service Role Key (sb_secret_...) di browser
