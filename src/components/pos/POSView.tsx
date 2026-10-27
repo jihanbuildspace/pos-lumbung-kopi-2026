@@ -152,8 +152,9 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
   ];
 
   const handleApplyDiscount = () => {
-    if (inputDiscount > subtotal) {
-      alert('Diskon tidak boleh lebih besar dari subtotal!');
+    const maxDiskonAllowed = Math.floor(subtotal * 0.1);
+    if (inputDiscount > maxDiskonAllowed) {
+      alert(`BR-06: Diskon per transaksi paling besar 10% dari subtotal (Maksimal Rp${maxDiskonAllowed.toLocaleString('id-ID')})!`);
       return;
     }
     if (inputDiscount > 0 && (!inputReason || inputReason.trim() === '')) {
@@ -1451,109 +1452,266 @@ export const POSView: React.FC<POSViewProps> = ({ onOpenShiftModal }) => {
         </div>
       </div>
 
-      {/* Modal Diskon */}
-      {showDiscountModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.6)',
-          backdropFilter: 'blur(3px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 110,
-          padding: '16px',
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '14px',
-            width: '100%',
-            maxWidth: '380px',
-            padding: '20px',
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
-          }}>
-            <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#1e293b', marginBottom: '14px' }}>
-              Atur Diskon Transaksi
-            </h4>
+      {/* Modal Diskon (BR-06: Maksimal 10% dari Subtotal & Wajib Alasan) */}
+      {showDiscountModal && (() => {
+        const maxDiskonAllowed = Math.floor(subtotal * 0.1);
+        const isExceeding = inputDiscount > maxDiskonAllowed;
+        const discount5Pct = Math.floor(subtotal * 0.05);
+        const discount10Pct = maxDiskonAllowed;
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
-                  Nominal Diskon (Rp)
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  max={subtotal}
-                  value={inputDiscount}
-                  onChange={(e) => setInputDiscount(Number(e.target.value))}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    outline: 'none',
-                  }}
-                />
+        return (
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.6)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 110,
+            padding: '16px',
+          }}>
+            <div style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              width: '100%',
+              maxWidth: '420px',
+              padding: '24px',
+              boxShadow: '0 25px 35px -5px rgba(0, 0, 0, 0.25)',
+              border: '1px solid #fed7aa',
+            }}>
+              {/* Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                <div>
+                  <h4 style={{ fontSize: '16px', fontWeight: 800, color: '#451a03', margin: 0 }}>
+                    🏷️ Atur Diskon Transaksi
+                  </h4>
+                  <span style={{ fontSize: '11px', color: '#78716c' }}>
+                    Sesuai Ketentuan Bisnis Lumbung Kopi
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  backgroundColor: '#fef3c7',
+                  color: '#92400e',
+                  padding: '3px 8px',
+                  borderRadius: '9999px',
+                  border: '1px solid #fde68a',
+                }}>
+                  Aturan BR-06
+                </span>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>
-                  Alasan Diskon (Wajib bila diskon &gt; 0)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Promo Grand Opening, Pelanggan Setia"
-                  value={inputReason}
-                  onChange={(e) => setInputReason(e.target.value)}
+              {/* Subtotal & Batas Maksimal Info Box */}
+              <div style={{
+                backgroundColor: '#fffbeb',
+                border: '1px solid #fde68a',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                marginBottom: '16px',
+                fontSize: '12px',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#78350f', fontWeight: 600 }}>
+                  <span>Subtotal Pesanan:</span>
+                  <span style={{ fontWeight: 800, color: '#1c1917' }}>Rp{subtotal.toLocaleString('id-ID')}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#b45309', fontWeight: 700, marginTop: '4px' }}>
+                  <span>Maksimal Diskon (10%):</span>
+                  <span style={{ fontWeight: 900, color: '#b45309', fontSize: '13px' }}>
+                    Rp{maxDiskonAllowed.toLocaleString('id-ID')}
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {/* Nominal Input & Quick Presets */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '11px', fontWeight: 700, color: '#475569' }}>
+                      Nominal Diskon (Rp)
+                    </label>
+                    {isExceeding && (
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#dc2626' }}>
+                        ⚠️ Melebihi batas 10%!
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="number"
+                    min="0"
+                    max={maxDiskonAllowed}
+                    value={inputDiscount}
+                    onChange={(e) => setInputDiscount(Number(e.target.value))}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      border: isExceeding ? '2px solid #ef4444' : '1.5px solid #cbd5e1',
+                      fontSize: '16px',
+                      fontWeight: 800,
+                      color: isExceeding ? '#dc2626' : '#1e293b',
+                      backgroundColor: isExceeding ? '#fef2f2' : '#ffffff',
+                      outline: 'none',
+                    }}
+                  />
+
+                  {/* Quick Preset Buttons */}
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputDiscount(discount5Pct);
+                        if (!inputReason) setInputReason('Promo Member 5%');
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px 8px',
+                        borderRadius: '8px',
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: inputDiscount === discount5Pct && discount5Pct > 0 ? '#fef3c7' : '#f8fafc',
+                        color: inputDiscount === discount5Pct && discount5Pct > 0 ? '#92400e' : '#475569',
+                        fontWeight: 700,
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      5% (Rp{discount5Pct.toLocaleString('id-ID')})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputDiscount(discount10Pct);
+                        if (!inputReason) setInputReason('Promo Spesial 10% (BR-06)');
+                      }}
+                      style={{
+                        flex: 1.2,
+                        padding: '6px 8px',
+                        borderRadius: '8px',
+                        border: '1px solid #f59e0b',
+                        backgroundColor: inputDiscount === discount10Pct && discount10Pct > 0 ? '#fef3c7' : '#fffbeb',
+                        color: '#92400e',
+                        fontWeight: 800,
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      ⭐ 10% Maks (Rp{discount10Pct.toLocaleString('id-ID')})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInputDiscount(0);
+                        setInputReason('');
+                      }}
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: '8px',
+                        border: '1px solid #e2e8f0',
+                        backgroundColor: '#f8fafc',
+                        color: '#64748b',
+                        fontWeight: 600,
+                        fontSize: '11px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Reset (0)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Alasan Diskon Input & Quick Chips */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                    Alasan Diskon <span style={{ color: '#dc2626' }}>*Wajib diisi bila diskon &gt; 0 (BR-06)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Promo Member, Pelanggan Setia, Kompensasi"
+                    value={inputReason}
+                    onChange={(e) => setInputReason(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '9px 12px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #cbd5e1',
+                      fontSize: '12px',
+                      outline: 'none',
+                    }}
+                  />
+
+                  {/* Quick Reason Chips */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '6px' }}>
+                    {[
+                      'Promo Member',
+                      'Pelanggan Setia',
+                      'Promo Pembukaan Toko',
+                      'Kompensasi Pelayanan',
+                    ].map((reason) => (
+                      <button
+                        key={reason}
+                        type="button"
+                        onClick={() => setInputReason(reason)}
+                        style={{
+                          fontSize: '10px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          border: inputReason === reason ? '1px solid #b45309' : '1px solid #e2e8f0',
+                          backgroundColor: inputReason === reason ? '#fef3c7' : '#f1f5f9',
+                          color: inputReason === reason ? '#92400e' : '#475569',
+                          fontWeight: inputReason === reason ? 700 : 500,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {reason}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '8px', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowDiscountModal(false)}
                   style={{
-                    width: '100%',
-                    padding: '8px 12px',
+                    flex: 1,
+                    padding: '10px',
                     borderRadius: '8px',
                     border: '1px solid #cbd5e1',
                     fontSize: '12px',
-                    outline: 'none',
+                    fontWeight: 600,
+                    color: '#475569',
+                    backgroundColor: '#ffffff',
+                    cursor: 'pointer',
                   }}
-                />
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApplyDiscount}
+                  disabled={isExceeding}
+                  style={{
+                    flex: 1.5,
+                    padding: '10px',
+                    borderRadius: '8px',
+                    backgroundColor: isExceeding ? '#94a3b8' : '#78350f',
+                    color: '#ffffff',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: isExceeding ? 'not-allowed' : 'pointer',
+                    boxShadow: isExceeding ? 'none' : '0 4px 10px rgba(120, 53, 15, 0.25)',
+                  }}
+                >
+                  Terapkan Diskon
+                </button>
               </div>
             </div>
-
-            <div style={{ display: 'flex', gap: '8px', marginTop: '18px' }}>
-              <button
-                type="button"
-                onClick={() => setShowDiscountModal(false)}
-                style={{
-                  flex: 1,
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #cbd5e1',
-                  fontSize: '12px',
-                  color: '#475569',
-                }}
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={handleApplyDiscount}
-                style={{
-                  flex: 1.5,
-                  padding: '8px',
-                  borderRadius: '6px',
-                  backgroundColor: '#78350f',
-                  color: '#ffffff',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                }}
-              >
-                Terapkan Diskon
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Mayar.id Dynamic QRIS Payment Modal */}
       {showMayarModal && (

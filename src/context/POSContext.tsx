@@ -346,11 +346,12 @@ export const POSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (cart.length === 0) {
       return { success: false, error: 'Keranjang belanja masih kosong' };
     }
-    if (diskon > subtotal) {
-      return { success: false, error: 'Diskon tidak boleh melebihi subtotal (BR-06)' };
+    const maxDiskonAllowed = Math.floor(subtotal * 0.1);
+    if (diskon > maxDiskonAllowed) {
+      return { success: false, error: `Diskon tidak boleh lebih dari 10% dari subtotal (Maksimal Rp${maxDiskonAllowed.toLocaleString('id-ID')}) (BR-06)` };
     }
     if (diskon > 0 && (!alasanDiskon || alasanDiskon.trim() === '')) {
-      return { success: false, error: 'Diskon memerlukan alasan yang jelas (BR-06)' };
+      return { success: false, error: 'Diskon wajib disertai alasan yang jelas (BR-06)' };
     }
     if (metodeBayar === 'tunai' && uangDiterima < total) {
       return { success: false, error: `Uang tunai diterima (Rp${uangDiterima.toLocaleString('id-ID')}) kurang dari total tagihan (Rp${total.toLocaleString('id-ID')}) (BR-07)` };
