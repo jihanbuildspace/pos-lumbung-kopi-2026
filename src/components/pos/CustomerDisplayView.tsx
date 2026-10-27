@@ -20,6 +20,12 @@ import {
   Flame,
   Check,
   Store,
+  Wifi,
+  Calendar,
+  Heart,
+  Tag,
+  Leaf,
+  Zap,
 } from 'lucide-react';
 
 export const CustomerDisplayView: React.FC = () => {
@@ -69,25 +75,25 @@ export const CustomerDisplayView: React.FC = () => {
       return {
         icon: '🌅',
         headline: 'Selamat Pagi!',
-        sub: 'Awali harimu dengan aroma seduhan kopi hangat & roti baru dipanggang.',
+        sub: 'Awali harimu dengan aroma kopi seduh segar & roti hangat yang baru keluar dari oven.',
       };
     } else if (hour >= 11 && hour < 15) {
       return {
         icon: '☀️',
         headline: 'Selamat Siang!',
-        sub: 'Segarkan semangat dengan racikan kopi pilihan & pastry renyah khas Lumbung.',
+        sub: 'Segarkan semangat istirahat siangmu dengan racikan espresso dingin & pastry lembut renyah.',
       };
     } else if (hour >= 15 && hour < 18) {
       return {
         icon: '☕',
         headline: 'Selamat Sore!',
-        sub: 'Waktu santai terbaik untuk menikmati secangkir artisan coffee & kue lembut.',
+        sub: 'Waktu santai terbaik untuk menikmati secangkir manual brew & kudapan manis khas Lumbung.',
       };
     } else {
       return {
         icon: '🌙',
         headline: 'Selamat Malam!',
-        sub: 'Nikmati suasana hangat, tenang, dan kelezatan hidangan penutup istimewa.',
+        sub: 'Nikmati suasana santai, tenang, dan kehangatan aneka sajian penutup istimewa kami.',
       };
     }
   }, []);
@@ -183,6 +189,70 @@ export const CustomerDisplayView: React.FC = () => {
 
   const hasItems = data.items && data.items.length > 0;
   const totalItemQty = hasItems ? data.items.reduce((acc, curr) => acc + curr.jumlah, 0) : 0;
+
+  // 6 Signature Menu items for Idle Showcase (Fills empty space beautifully)
+  const signatureItems = [
+    {
+      nama: 'Kopi Susu Gula Aren',
+      kategori: '☕ Kopi Racikan',
+      desc: 'Espresso blend Arabika, susu segar gurih, gula aren cair alami',
+      harga: 22000,
+      badge: '🔥 Best Seller',
+      accent: '#92400e',
+      bg: '#fffbeb',
+      border: '#fde68a',
+    },
+    {
+      nama: 'Butter Croissant Prancis',
+      kategori: '🥐 Fresh Pastry',
+      desc: '100% butter Prancis asli, berlapis renyah di luar, lembut di dalam',
+      harga: 24000,
+      badge: '🥐 Fresh Oven',
+      accent: '#9a3412',
+      bg: '#fff7ed',
+      border: '#fed7aa',
+    },
+    {
+      nama: 'Ceremonial Uji Matcha',
+      kategori: '🍵 Artisan Non-Kopi',
+      desc: 'Matcha hijau murni grade Uji Kyoto, susu lembut, aroma floral',
+      harga: 28000,
+      badge: '✨ Favorit Barista',
+      accent: '#065f46',
+      bg: '#ecfdf5',
+      border: '#a7f3d0',
+    },
+    {
+      nama: 'Roti Toast Srikaya Telur',
+      kategori: '🍞 Classic Bakery',
+      desc: 'Roti tebal panggang renyah isi selai srikaya buatan dapur sendiri',
+      harga: 20000,
+      badge: '🍞 Resep Klasik',
+      accent: '#b45309',
+      bg: '#fdfbf7',
+      border: '#fed7aa',
+    },
+    {
+      nama: 'Choco Chunk Melted Cookie',
+      kategori: '🍪 Kudapan Manis',
+      desc: 'Kue kering renyah dengan lelehan potongan cokelat Belgia murni',
+      harga: 18000,
+      badge: '🍪 Fresh Baked',
+      accent: '#86198f',
+      bg: '#fdf4ff',
+      border: '#f5d0fe',
+    },
+    {
+      nama: 'Manual Brew V60 Single Origin',
+      kategori: '☕ Manual Brew',
+      desc: 'Biji kopi pilihan Gayo / Toraja, seduhan bersih dengan rasa buah segar',
+      harga: 26000,
+      badge: '⭐ Single Origin',
+      accent: '#1e293b',
+      bg: '#f8fafc',
+      border: '#cbd5e1',
+    },
+  ];
 
   return (
     <div style={{
@@ -410,32 +480,33 @@ export const CustomerDisplayView: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {/* Main Content Area: Balanced 1.4fr : 1fr Split Screen Layout */}
       <main style={{
         flex: 1,
         display: 'grid',
-        gridTemplateColumns: hasItems ? '1.45fr 1fr' : '1fr',
+        gridTemplateColumns: '1.4fr 1fr',
         padding: '20px 24px',
         gap: '20px',
-        maxWidth: '1440px',
+        maxWidth: '1500px',
         width: '100%',
         margin: '0 auto',
         boxSizing: 'border-box',
         overflowY: 'auto',
       }}>
-        {/* ================= LEFT COLUMN: ORDER ITEMS OR IDLE WELCOME ================= */}
+        {/* ================= LEFT COLUMN (60%): ACTIVE ORDERS OR SIGNATURE SHOWCASE ================= */}
         <section style={{
           backgroundColor: '#ffffff',
           borderRadius: '24px',
           padding: '24px',
           boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 1px 1px rgba(0,0,0,0.03)',
-          border: '1px solid #e2e8f0',
+          border: '1.5px solid #e2e8f0',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          minHeight: '480px',
+          minHeight: '520px',
         }}>
           {hasItems ? (
+            /* ACTIVE CART ITEMS DISPLAY */
             <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               {/* Active Order Banner Header */}
               <div style={{
@@ -553,16 +624,6 @@ export const CustomerDisplayView: React.FC = () => {
                         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
                         transition: 'all 0.18s ease',
                       }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.borderColor = '#cbd5e1';
-                        e.currentTarget.style.backgroundColor = '#fafafa';
-                        e.currentTarget.style.transform = 'translateY(-1px)';
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.borderColor = '#e2e8f0';
-                        e.currentTarget.style.backgroundColor = '#ffffff';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
                     >
                       {/* Left: Quantity + Title + Category Pill */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -625,517 +686,586 @@ export const CustomerDisplayView: React.FC = () => {
                 })}
               </div>
 
-              {/* Bottom Notification on Order Screen */}
+              {/* Add-on Recommendation Box to gracefully occupy space */}
               <div style={{
                 marginTop: '12px',
-                padding: '10px 16px',
-                backgroundColor: '#f8fafc',
-                borderRadius: '12px',
-                border: '1px solid #e2e8f0',
+                padding: '14px 18px',
+                backgroundColor: '#fffbeb',
+                borderRadius: '16px',
+                border: '1.5px dashed #fde68a',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                fontSize: '12px',
-                color: '#64748b',
               }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Sparkles size={14} color="#b45309" />
-                  <span>Pastikan pesanan Anda sudah sesuai sebelum melakukan pembayaran.</span>
-                </span>
-                <span style={{ fontWeight: 700, color: '#78350f' }}>
-                  {data.cabangNama}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '24px' }}>🥐</span>
+                  <div>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#92400e', display: 'block' }}>
+                      Rekomendasi Pendamping Seduhan:
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#b45309' }}>
+                      Butter Croissant Hangat (+Rp24rb) • Cookie Cokelat Belgia (+Rp18rb)
+                    </span>
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  color: '#92400e',
+                  backgroundColor: '#ffffff',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid #fde68a',
+                }}>
+                  Tersedia di Meja
                 </span>
               </div>
             </div>
           ) : (
-            /* ================= IDLE STATE: ARTISAN LUXURY WELCOME SHOWCASE ================= */
-            <div className="anim-fade-in" style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              padding: '24px 20px',
-            }}>
-              {/* Glowing Hero Icon */}
+            /* IDLE STATE: ARTISAN SHOWCASE & SIGNATURE MENU BOARD (NO EMPTY SPACE!) */
+            <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '16px' }}>
+              {/* Header Showcase Banner */}
               <div style={{
-                width: '84px',
-                height: '84px',
-                borderRadius: '26px',
-                background: 'linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%)',
-                border: '2px solid #fde68a',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '16px',
-                boxShadow: '0 12px 28px rgba(180, 83, 9, 0.15)',
-                animation: 'subtleFloat 3.5s ease-in-out infinite',
-              }}>
-                <Coffee size={44} color="#78350f" />
-              </div>
-
-              {/* Greeting Badge */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 16px',
-                borderRadius: '9999px',
-                backgroundColor: '#fef3c7',
-                border: '1.5px solid #fde68a',
-                color: '#92400e',
-                fontSize: '12px',
-                fontWeight: 800,
-                marginBottom: '10px',
-                letterSpacing: '0.4px',
-              }}>
-                <span>{timeGreeting.icon}</span>
-                <span>{timeGreeting.headline}</span>
-              </div>
-
-              <h2 style={{
-                fontSize: '30px',
-                fontWeight: 900,
-                color: '#1e0d04',
-                margin: '0 0 8px 0',
-                letterSpacing: '-0.5px',
-              }}>
-                Selamat Datang di Lumbung Kopi
-              </h2>
-
-              <p style={{
-                fontSize: '14px',
-                color: '#64748b',
-                maxWidth: '520px',
-                margin: '0 auto 28px auto',
-                lineHeight: 1.6,
-                fontWeight: 500,
-              }}>
-                {timeGreeting.sub} Silakan sebutkan pesanan Anda kepada kasir kami, dan rincian transaksi Anda akan tampil di layar ini secara langsung.
-              </p>
-
-              {/* 4 Feature Value Pillars */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '14px',
-                width: '100%',
-                maxWidth: '960px',
-                marginBottom: '28px',
-              }}>
-                <div style={{
-                  padding: '16px 14px',
-                  backgroundColor: '#fffbeb',
-                  borderRadius: '16px',
-                  border: '1.5px solid #fef3c7',
-                  textAlign: 'left',
-                }}>
-                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>☕</div>
-                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#92400e' }}>
-                    100% Biji Arabika
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#b45309', marginTop: '2px', lineHeight: 1.4 }}>
-                    Disangrai fresh & diracik barista ahli
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px 14px',
-                  backgroundColor: '#fff7ed',
-                  borderRadius: '16px',
-                  border: '1.5px solid #ffedd5',
-                  textAlign: 'left',
-                }}>
-                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>🥐</div>
-                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#9a3412' }}>
-                    Fresh Oven-Baked
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#c2410c', marginTop: '2px', lineHeight: 1.4 }}>
-                    Dipanggang setiap pagi hangat & renyah
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px 14px',
-                  backgroundColor: '#f0fdf4',
-                  borderRadius: '16px',
-                  border: '1.5px solid #dcfce7',
-                  textAlign: 'left',
-                }}>
-                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>⚡</div>
-                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#166534' }}>
-                    QRIS & Tunai
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#15803d', marginTop: '2px', lineHeight: 1.4 }}>
-                    Mendukung semua bank & e-wallet
-                  </div>
-                </div>
-
-                <div style={{
-                  padding: '16px 14px',
-                  backgroundColor: '#eff6ff',
-                  borderRadius: '16px',
-                  border: '1.5px solid #dbeafe',
-                  textAlign: 'left',
-                }}>
-                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>✨</div>
-                  <div style={{ fontSize: '13px', fontWeight: 800, color: '#1e40af' }}>
-                    Bahan Pilihan
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#2563eb', marginTop: '2px', lineHeight: 1.4 }}>
-                    100% butter Prancis & bahan alami
-                  </div>
-                </div>
-              </div>
-
-              {/* Recommended Menu Showcase Row */}
-              <div style={{
-                width: '100%',
-                maxWidth: '960px',
-                padding: '18px 22px',
-                backgroundColor: '#f8fafc',
+                padding: '16px 20px',
                 borderRadius: '18px',
-                border: '1.5px dashed #cbd5e1',
+                background: 'linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%)',
+                border: '1.5px solid #fde68a',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Flame size={16} color="#ea580c" />
-                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#ea580c', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Rekomendasi Favorit Hari Ini
-                    </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '12px',
+                    backgroundColor: '#78350f',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    fontSize: '22px',
+                  }}>
+                    {timeGreeting.icon}
                   </div>
-                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#1e293b', marginTop: '4px' }}>
-                    Kopi Susu Gula Aren + Croissant Mentega Hangat
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '17px', fontWeight: 900, color: '#451a03' }}>
+                        {timeGreeting.headline} Selamat Datang di Lumbung
+                      </span>
+                      <span style={{
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        backgroundColor: '#78350f',
+                        color: '#ffffff',
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                      }}>
+                        MENU UTAMA
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#92400e', margin: '2px 0 0 0', fontWeight: 600 }}>
+                      {timeGreeting.sub}
+                    </p>
                   </div>
                 </div>
 
                 <div style={{
-                  padding: '6px 16px',
-                  backgroundColor: '#78350f',
-                  color: '#ffffff',
-                  borderRadius: '10px',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   fontWeight: 800,
-                  boxShadow: '0 2px 8px rgba(120, 53, 15, 0.25)',
+                  color: '#78350f',
+                  backgroundColor: '#ffffff',
+                  padding: '6px 14px',
+                  borderRadius: '10px',
+                  border: '1px solid #fde68a',
+                  whiteSpace: 'nowrap',
                 }}>
-                  Spesial Kedai
+                  Sampaikan Pesanan Anda 🗣️
                 </div>
+              </div>
+
+              {/* 6 Signature Items Grid (Fills the entire left column richly!) */}
+              <div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  marginBottom: '10px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Flame size={16} color="#ea580c" />
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      Pilihan Favorit &amp; Signature Hari Ini
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
+                    Koleksi Menu Terlaris Lumbung
+                  </span>
+                </div>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '12px',
+                }}>
+                  {signatureItems.map((item, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        padding: '14px 16px',
+                        borderRadius: '16px',
+                        backgroundColor: item.bg,
+                        border: `1.5px solid ${item.border}`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '6px',
+                        transition: 'transform 0.18s ease',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          backgroundColor: '#ffffff',
+                          color: item.accent,
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          border: `1px solid ${item.border}`,
+                        }}>
+                          {item.badge}
+                        </span>
+                        <span style={{ fontSize: '14px', fontWeight: 900, color: item.accent }}>
+                          Rp{item.harga.toLocaleString('id-ID')}
+                        </span>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>
+                          {item.nama}
+                        </div>
+                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>
+                          {item.desc}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Special Breakfast / Bundle Promo Banner */}
+              <div style={{
+                marginTop: 'auto',
+                padding: '12px 18px',
+                backgroundColor: '#f0fdf4',
+                borderRadius: '16px',
+                border: '1.5px solid #bbf7d0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Tag size={16} color="#16a34a" />
+                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534' }}>
+                    Promo Hemat: Paket Kopi Susu + Croissant hanya Rp38.000 (Hemat Rp8.000)
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  backgroundColor: '#16a34a',
+                  color: '#ffffff',
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                }}>
+                  SETIAP HARI
+                </span>
               </div>
             </div>
           )}
         </section>
 
-        {/* ================= RIGHT COLUMN: BILLING & PAYMENT SPOTLIGHT ================= */}
-        {hasItems && (
-          <section className="anim-fade-in" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '18px',
-          }}>
-            {/* 1. Ultra-Luxurious Billing Card */}
-            <div style={{
-              background: 'linear-gradient(145deg, #1f0c03 0%, #3a1603 50%, #451a03 100%)',
-              color: '#ffffff',
-              borderRadius: '24px',
-              padding: '24px 26px',
-              boxShadow: '0 12px 30px rgba(31, 12, 3, 0.35)',
-              border: '2px solid #b45309',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '14px',
-              position: 'relative',
-              overflow: 'hidden',
-            }}>
-              {/* Subtle background glow effect */}
+        {/* ================= RIGHT COLUMN (40%): BILLING & PAYMENT OR STORE AMBIANCE ================= */}
+        <section style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}>
+          {hasItems ? (
+            /* ACTIVE BILLING & PAYMENT METHOD PRESENTATION */
+            <>
+              {/* Total Billing Luxury Card */}
               <div style={{
-                position: 'absolute',
-                top: '-30px',
-                right: '-30px',
-                width: '120px',
-                height: '120px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }} />
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  color: '#fde68a',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                }}>
-                  Ringkasan Pembayaran
-                </span>
-                <span style={{
-                  fontSize: '11px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                  padding: '3px 10px',
-                  borderRadius: '9999px',
-                  color: '#f8fafc',
-                  fontWeight: 600,
-                }}>
-                  Resmi • Struk Tercatat
-                </span>
-              </div>
-
-              {/* Subtotal */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#fed7aa' }}>
-                <span>Subtotal ({totalItemQty} item)</span>
-                <span style={{ fontWeight: 800, color: '#ffffff' }}>
-                  Rp{data.subtotal.toLocaleString('id-ID')}
-                </span>
-              </div>
-
-              {/* Discount (if applicable) */}
-              {data.diskon > 0 && (
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  fontSize: '14px',
-                  backgroundColor: 'rgba(239, 68, 68, 0.2)',
-                  border: '1px solid rgba(239, 68, 68, 0.35)',
-                  padding: '8px 12px',
-                  borderRadius: '10px',
-                  color: '#fca5a5',
-                }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
-                    <Sparkles size={14} color="#fca5a5" />
-                    <span>Potongan Diskon (Maks. 10%)</span>
-                  </span>
-                  <span style={{ fontWeight: 900, color: '#fef2f2' }}>
-                    -Rp{data.diskon.toLocaleString('id-ID')}
-                  </span>
-                </div>
-              )}
-
-              {/* Big Grand Total */}
-              <div style={{
-                marginTop: '4px',
-                paddingTop: '16px',
-                borderTop: '1px dashed rgba(253, 230, 138, 0.3)',
+                background: 'linear-gradient(145deg, #1f0c03 0%, #3a1603 50%, #451a03 100%)',
+                color: '#ffffff',
+                borderRadius: '24px',
+                padding: '24px 26px',
+                boxShadow: '0 12px 30px rgba(31, 12, 3, 0.35)',
+                border: '2px solid #b45309',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '4px',
+                gap: '12px',
+                position: 'relative',
+                overflow: 'hidden',
               }}>
-                <span style={{ fontSize: '13px', fontWeight: 700, color: '#cbd5e1', textTransform: 'uppercase' }}>
-                  Total yang Harus Dibayar:
-                </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    color: '#fde68a',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px',
+                  }}>
+                    Ringkasan Pembayaran
+                  </span>
+                  <span style={{
+                    fontSize: '11px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    padding: '3px 10px',
+                    borderRadius: '9999px',
+                    color: '#f8fafc',
+                    fontWeight: 600,
+                  }}>
+                    Struk Resmi BR-04
+                  </span>
+                </div>
+
+                {/* Subtotal */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#fed7aa' }}>
+                  <span>Subtotal ({totalItemQty} item)</span>
+                  <span style={{ fontWeight: 800, color: '#ffffff' }}>
+                    Rp{data.subtotal.toLocaleString('id-ID')}
+                  </span>
+                </div>
+
+                {/* Discount (if applicable) */}
+                {data.diskon > 0 && (
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    fontSize: '13px',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    border: '1px solid rgba(239, 68, 68, 0.35)',
+                    padding: '8px 12px',
+                    borderRadius: '10px',
+                    color: '#fca5a5',
+                  }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
+                      <Sparkles size={14} color="#fca5a5" />
+                      <span>Potongan Diskon (Maks. 10%)</span>
+                    </span>
+                    <span style={{ fontWeight: 900, color: '#fef2f2' }}>
+                      -Rp{data.diskon.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                )}
+
+                {/* Big Grand Total */}
                 <div style={{
-                  fontSize: '36px',
-                  fontWeight: 900,
-                  color: '#fde68a',
-                  letterSpacing: '-1px',
-                  lineHeight: 1.1,
-                  textShadow: '0 2px 10px rgba(253, 230, 138, 0.2)',
+                  marginTop: '4px',
+                  paddingTop: '14px',
+                  borderTop: '1px dashed rgba(253, 230, 138, 0.3)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
                 }}>
-                  Rp{data.total.toLocaleString('id-ID')}
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#cbd5e1', textTransform: 'uppercase' }}>
+                    Total yang Harus Dibayar:
+                  </span>
+                  <div style={{
+                    fontSize: '36px',
+                    fontWeight: 900,
+                    color: '#fde68a',
+                    letterSpacing: '-1px',
+                    lineHeight: 1.1,
+                    textShadow: '0 2px 10px rgba(253, 230, 138, 0.2)',
+                  }}>
+                    Rp{data.total.toLocaleString('id-ID')}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* 2. Payment Method Presentation Card */}
-            <div style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '24px',
-              padding: '24px',
-              boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 1px 1px rgba(0,0,0,0.03)',
-              border: '1.5px solid #e2e8f0',
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              minHeight: '340px',
-            }}>
-              {data.metodeBayar === 'qris' ? (
-                /* ================= AUTHENTIC INDONESIAN QRIS PRESENTATION ================= */
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                  {/* National QRIS Standard Card Frame */}
-                  <div style={{
-                    backgroundColor: '#ffffff',
-                    borderRadius: '20px',
-                    border: '2px solid #dc2626',
-                    boxShadow: '0 12px 28px rgba(220, 38, 38, 0.12)',
-                    overflow: 'hidden',
-                    width: '100%',
-                    maxWidth: '300px',
-                  }}>
-                    {/* QRIS Red & White Header */}
+              {/* Payment Presentation: QRIS vs Cash */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '24px',
+                padding: '22px',
+                boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
+                border: '1.5px solid #e2e8f0',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                minHeight: '340px',
+              }}>
+                {data.metodeBayar === 'qris' ? (
+                  /* QRIS DISPLAY */
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                    {/* National QRIS Standard Card Frame */}
                     <div style={{
-                      backgroundColor: '#dc2626',
-                      color: '#ffffff',
-                      padding: '10px 16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
+                      backgroundColor: '#ffffff',
+                      borderRadius: '20px',
+                      border: '2px solid #dc2626',
+                      boxShadow: '0 12px 28px rgba(220, 38, 38, 0.12)',
+                      overflow: 'hidden',
+                      width: '100%',
+                      maxWidth: '280px',
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '16px', fontWeight: 900, letterSpacing: '2px' }}>QRIS</span>
-                      </div>
-                      <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-                        Standar Nasional
-                      </span>
-                    </div>
-
-                    {/* Merchant Info */}
-                    <div style={{ padding: '10px 14px 6px 14px', backgroundColor: '#fef2f2', borderBottom: '1px solid #fee2e2' }}>
-                      <div style={{ fontSize: '13px', fontWeight: 900, color: '#991b1b' }}>
-                        LUMBUNG KOPI DAN ROTI
-                      </div>
-                      <div style={{ fontSize: '10px', color: '#b91c1c', fontWeight: 600 }}>
-                        {data.cabangNama} • NMID: ID102458921820
-                      </div>
-                    </div>
-
-                    {/* High-Resolution QR Code */}
-                    <div style={{ padding: '16px', display: 'flex', justifyContent: 'center', backgroundColor: '#ffffff' }}>
+                      {/* QRIS Red & White Header */}
                       <div style={{
-                        padding: '10px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid #e2e8f0',
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                        backgroundColor: '#dc2626',
+                        color: '#ffffff',
+                        padding: '8px 14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}>
+                        <span style={{ fontSize: '15px', fontWeight: 900, letterSpacing: '2px' }}>QRIS</span>
+                        <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px' }}>STANDAR NASIONAL</span>
+                      </div>
+
+                      {/* Merchant Info */}
+                      <div style={{ padding: '8px 12px', backgroundColor: '#fef2f2', borderBottom: '1px solid #fee2e2' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 900, color: '#991b1b' }}>
+                          LUMBUNG KOPI DAN ROTI
+                        </div>
+                        <div style={{ fontSize: '10px', color: '#b91c1c' }}>
+                          {data.cabangNama} • NMID: ID102458921820
+                        </div>
+                      </div>
+
+                      {/* QR Code */}
+                      <div style={{ padding: '14px', display: 'flex', justifyContent: 'center', backgroundColor: '#ffffff' }}>
                         <img
-                          src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
-                          alt="QRIS Dinamis Lumbung Kopi"
-                          style={{ width: '180px', height: '180px', display: 'block', borderRadius: '4px' }}
+                          src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
+                          alt="QRIS Dinamis"
+                          style={{ width: '160px', height: '160px', display: 'block', borderRadius: '4px' }}
                         />
                       </div>
+
+                      {/* Exact Nominal Display */}
+                      <div style={{
+                        backgroundColor: '#f8fafc',
+                        padding: '8px 12px',
+                        borderTop: '1px solid #e2e8f0',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
+                        <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>Nominal Pas:</span>
+                        <span style={{ fontSize: '14px', fontWeight: 900, color: '#dc2626' }}>
+                          Rp{data.total.toLocaleString('id-ID')}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Exact Nominal Display */}
                     <div style={{
-                      backgroundColor: '#f8fafc',
-                      padding: '10px 14px',
-                      borderTop: '1px solid #e2e8f0',
+                      marginTop: '12px',
                       display: 'flex',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px',
+                      flexWrap: 'wrap',
                     }}>
-                      <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>Nominal Tagihan:</span>
-                      <span style={{ fontSize: '15px', fontWeight: 900, color: '#dc2626' }}>
-                        Rp{data.total.toLocaleString('id-ID')}
-                      </span>
+                      {['BCA', 'Mandiri', 'GoPay', 'OVO', 'ShopeePay', 'DANA'].map((app, i) => (
+                        <span key={i} style={{ fontSize: '9px', fontWeight: 800, backgroundColor: '#f1f5f9', color: '#475569', padding: '2px 7px', borderRadius: '4px' }}>
+                          {app}
+                        </span>
+                      ))}
                     </div>
                   </div>
+                ) : (
+                  /* CASH DISPLAY */
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                    <div style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '18px',
+                      background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
+                      border: '2px solid #a7f3d0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#059669',
+                      marginBottom: '14px',
+                      boxShadow: '0 8px 18px rgba(5, 150, 105, 0.15)',
+                    }}>
+                      <Banknote size={34} />
+                    </div>
 
-                  {/* Supported Payment Logos */}
-                  <div style={{
-                    marginTop: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                    flexWrap: 'wrap',
-                  }}>
-                    {['BCA', 'Mandiri', 'GoPay', 'OVO', 'ShopeePay', 'DANA'].map((app, i) => (
-                      <span
-                        key={i}
-                        style={{
-                          fontSize: '10px',
-                          fontWeight: 800,
-                          backgroundColor: '#f1f5f9',
-                          color: '#475569',
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          border: '1px solid #e2e8f0',
-                        }}
-                      >
+                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#1e293b', margin: 0 }}>
+                      Pembayaran Tunai di Kasir
+                    </h3>
+
+                    {data.uangDiterima > 0 ? (
+                      <div style={{
+                        marginTop: '14px',
+                        padding: '14px 18px',
+                        backgroundColor: '#f8fafc',
+                        borderRadius: '14px',
+                        border: '1.5px solid #e2e8f0',
+                        width: '100%',
+                        maxWidth: '300px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px',
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
+                          <span style={{ color: '#64748b', fontWeight: 600 }}>Uang Tunai Diterima:</span>
+                          <span style={{ fontWeight: 800, color: '#1e293b' }}>
+                            Rp{data.uangDiterima.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px dashed #cbd5e1' }}>
+                          <span style={{ color: '#059669', fontWeight: 800, fontSize: '13px' }}>Kembalian:</span>
+                          <span style={{ fontSize: '20px', fontWeight: 900, color: '#059669' }}>
+                            Rp{data.kembalian.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ marginTop: '14px', padding: '12px 16px', backgroundColor: '#fdfbf7', border: '1.5px dashed #fde68a', borderRadius: '12px' }}>
+                        <p style={{ fontSize: '12px', color: '#92400e', margin: 0, fontWeight: 600 }}>
+                          💵 Silakan serahkan uang tunai Rp{data.total.toLocaleString('id-ID')} kepada kasir.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            /* IDLE STATE: ARTISAN STORE INFO & GUEST SERVICES (RICHLY OCCUPIES RIGHT COLUMN!) */
+            <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px', height: '100%' }}>
+              {/* Card 1: Free High-Speed WiFi Badge */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '20px',
+                padding: '20px',
+                border: '1.5px solid #e2e8f0',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+              }}>
+                <div style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '16px',
+                  backgroundColor: '#eff6ff',
+                  border: '1.5px solid #bfdbfe',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#2563eb',
+                  flexShrink: 0,
+                }}>
+                  <Wifi size={28} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      Koneksi Tamu Gratis
+                    </span>
+                    <span style={{ fontSize: '10px', backgroundColor: '#dbeafe', color: '#1e40af', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                      100 Mbps
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '15px', fontWeight: 900, color: '#1e293b', marginTop: '2px' }}>
+                    WiFi: Lumbung-Guest
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '1px' }}>
+                    Kata Sandi: <strong style={{ color: '#78350f', fontFamily: 'monospace' }}>kopihangat2026</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Store Operating Hours & Bakery Schedule */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '20px',
+                padding: '20px',
+                border: '1.5px solid #e2e8f0',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Clock size={16} color="#78350f" />
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                    Jadwal Operasional &amp; Dapur
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                  <span style={{ color: '#64748b' }}>Kedai Buka:</span>
+                  <span style={{ fontWeight: 800, color: '#0f172a' }}>07:00 – 22:00 WIB</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
+                  <span style={{ color: '#64748b' }}>Fresh Bread Oven:</span>
+                  <span style={{ fontWeight: 800, color: '#ea580c' }}>07:30 &amp; 14:00 WIB</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0' }}>
+                  <span style={{ color: '#64748b' }}>Layanan Pesanan:</span>
+                  <span style={{ fontWeight: 800, color: '#16a34a' }}>Dine-In &amp; Takeaway</span>
+                </div>
+              </div>
+
+              {/* Card 3: Quality Commitment & Payment Methods */}
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '20px',
+                padding: '20px',
+                border: '1.5px solid #e2e8f0',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                    <ShieldCheck size={16} color="#16a34a" />
+                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                      Metode Pembayaran Resmi
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5, margin: '0 0 12px 0' }}>
+                    Kami menerima seluruh jenis pembayaran non-tunai (QRIS Dinamis semua Bank &amp; E-Wallet) serta pembayaran tunai pas di kasir.
+                  </p>
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {['BCA Mobile', 'Mandiri Livin', 'BRImo', 'GoPay', 'OVO', 'ShopeePay', 'DANA', 'Tunai'].map((app, i) => (
+                      <span key={i} style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#f1f5f9', color: '#334155', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
                         {app}
                       </span>
                     ))}
                   </div>
-
-                  <p style={{ fontSize: '11px', color: '#64748b', marginTop: '10px', lineHeight: 1.4, maxWidth: '280px' }}>
-                    Arahkan kamera aplikasi bank atau e-wallet ke kode QRIS di atas untuk menyelesaikan transaksi secara instan.
-                  </p>
                 </div>
-              ) : (
-                /* ================= CASH PAYMENT PRESENTATION ================= */
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                  <div style={{
-                    width: '68px',
-                    height: '68px',
-                    borderRadius: '20px',
-                    background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-                    border: '2px solid #a7f3d0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#059669',
-                    marginBottom: '16px',
-                    boxShadow: '0 8px 18px rgba(5, 150, 105, 0.15)',
-                  }}>
-                    <Banknote size={36} />
-                  </div>
 
-                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1e293b', margin: 0 }}>
-                    Pembayaran Tunai di Kasir
-                  </h3>
-
-                  {data.uangDiterima > 0 ? (
-                    <div style={{
-                      marginTop: '16px',
-                      padding: '16px 20px',
-                      backgroundColor: '#f8fafc',
-                      borderRadius: '16px',
-                      border: '1.5px solid #e2e8f0',
-                      width: '100%',
-                      maxWidth: '320px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px',
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                        <span style={{ color: '#64748b', fontWeight: 600 }}>Uang Tunai Diterima:</span>
-                        <span style={{ fontWeight: 800, color: '#1e293b' }}>
-                          Rp{data.uangDiterima.toLocaleString('id-ID')}
-                        </span>
-                      </div>
-
-                      <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'baseline',
-                        paddingTop: '8px',
-                        borderTop: '1px dashed #cbd5e1',
-                      }}>
-                        <span style={{ color: '#059669', fontWeight: 800, fontSize: '14px' }}>
-                          Kembalian:
-                        </span>
-                        <span style={{ fontSize: '22px', fontWeight: 900, color: '#059669' }}>
-                          Rp{data.kembalian.toLocaleString('id-ID')}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{
-                      marginTop: '16px',
-                      padding: '14px 18px',
-                      backgroundColor: '#fdfbf7',
-                      border: '1.5px dashed #fde68a',
-                      borderRadius: '14px',
-                      maxWidth: '300px',
-                    }}>
-                      <p style={{ fontSize: '13px', color: '#92400e', margin: 0, lineHeight: 1.5, fontWeight: 600 }}>
-                        💵 Silakan serahkan uang tunai sebesar <strong>Rp{data.total.toLocaleString('id-ID')}</strong> kepada kasir kami.
-                      </p>
-                    </div>
-                  )}
+                <div style={{
+                  marginTop: '14px',
+                  padding: '10px 14px',
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '12px',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '11px',
+                  color: '#475569',
+                }}>
+                  <Leaf size={14} color="#16a34a" />
+                  <span>100% Bahan Halal, Kopi Petani Lokal, Tanpa Pengawet</span>
                 </div>
-              )}
+              </div>
             </div>
-          </section>
-        )}
+          )}
+        </section>
       </main>
 
       {/* Ticker Marquee Bottom Bar */}
@@ -1159,7 +1289,7 @@ export const CustomerDisplayView: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Branding */}
+      {/* Footer Branding Bar */}
       <footer style={{
         padding: '12px 28px',
         backgroundColor: '#ffffff',
