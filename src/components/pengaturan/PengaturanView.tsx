@@ -1003,8 +1003,8 @@ export const PengaturanView: React.FC = () => {
                         customerName: 'Mentor Test Account',
                         branchName: 'Lumbung Tebet',
                         items: [
-                          { nama: 'Kopi Susu Lumbung', qty: 1, harga: 22000 },
-                          { nama: 'Roti Srikaya Panggang', qty: 1, harga: 10000 },
+                          { nama: 'Americano', qty: 1, harga: 22000 },
+                          { nama: 'Donat Gula Halus', qty: 1, harga: 10000 },
                         ],
                       });
                       setTestQrisResult(res);

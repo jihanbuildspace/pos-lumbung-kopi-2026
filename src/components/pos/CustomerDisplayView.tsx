@@ -3,6 +3,7 @@ import {
   subscribeCustomerDisplay,
   type CustomerDisplayPayload,
 } from '../../lib/customerDisplayService';
+import { SEED_PRODUCTS } from '../../lib/seedData';
 import {
   Coffee,
   QrCode,
@@ -49,9 +50,6 @@ export const CustomerDisplayView: React.FC = () => {
   const [showThankYouMode, setShowThankYouMode] = useState<boolean>(false);
   const [selectedRating, setSelectedRating] = useState<'sangat_puas' | 'baik' | 'sedang' | 'buruk' | null>(null);
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
-
-  // Active Category Filter for Idle Menu Board
-  const [activeMenuTab, setActiveMenuTab] = useState<'semua' | 'kopi' | 'roti' | 'non_kopi'>('semua');
 
   // Real-time clock & formatted date
   useEffect(() => {
@@ -190,61 +188,102 @@ export const CustomerDisplayView: React.FC = () => {
   const hasItems = data.items && data.items.length > 0;
   const totalItemQty = hasItems ? data.items.reduce((acc, curr) => acc + curr.jumlah, 0) : 0;
 
-  // Curated Signature Menu for Idle Screen
-  const menuCatalog = [
-    {
-      kategori: 'kopi',
-      tag: '☕ Kopi Racikan',
-      nama: 'Kopi Susu Gula Aren',
-      desc: 'Espresso Arabika, susu segar gurih, gula aren cair murni',
-      harga: 22000,
-      highlight: '🔥 Best Seller Kedai',
-    },
-    {
-      kategori: 'kopi',
-      tag: '☕ Kopi Racikan',
-      nama: 'Manual Brew V60 Gayo',
-      desc: 'Single origin Arabika Aceh Gayo, seduhan bersih fruity & sweet',
-      harga: 26000,
-      highlight: '⭐ Pilihan Barista',
-    },
-    {
-      kategori: 'roti',
-      tag: '🥐 Fresh Pastry',
-      nama: 'Butter Croissant Prancis',
-      desc: '100% butter Prancis asli, tekstur berlapis renyah & wangi',
-      harga: 24000,
-      highlight: '🥐 Fresh dari Oven',
-    },
-    {
-      kategori: 'roti',
-      tag: '🍞 Classic Bakery',
-      nama: 'Roti Toast Srikaya Telur',
-      desc: 'Roti gandum tebal panggang renyah isi selai srikaya resep kuno',
-      harga: 20000,
-      highlight: '🍞 Favorit Sarapan',
-    },
-    {
-      kategori: 'non_kopi',
-      tag: '🍵 Artisan Non-Kopi',
-      nama: 'Ceremonial Uji Matcha Latte',
-      desc: 'Bubuk matcha murni grade Uji Kyoto dengan susu segar lembut',
-      harga: 28000,
-      highlight: '🍵 100% Asli Uji',
-    },
-    {
-      kategori: 'non_kopi',
-      tag: '🍪 Kudapan Manis',
-      nama: 'Choco Chunk Melted Cookie',
-      desc: 'Kue kering renyah dengan lelehan cokelat hitam Belgia',
-      harga: 18000,
-      highlight: '🍪 Renyah & Leleh',
-    },
-  ];
+  // Active Category Filter for Idle Menu Board
+  const [activeMenuTab, setActiveMenuTab] = useState<'semua' | 'kopi' | 'roti' | 'non_kopi' | 'snack' | 'kemasan'>('semua');
+
+  // Official Products from Lumbung Kopi dan Roti (100% Sesuai PRD & Database)
+  const officialProducts = useMemo(() => {
+    return SEED_PRODUCTS.filter((p) => p.aktif).map((p) => {
+      let highlight = 'Menu Pilihan';
+      let desc = 'Sajian resmi Lumbung Kopi dan Roti';
+      let icon = '☕';
+
+      if (p.sku === 'KOP-003') {
+        highlight = '🔥 Best Seller';
+        desc = 'Espresso racikan khas Lumbung dengan susu segar';
+        icon = '☕';
+      } else if (p.sku === 'KOP-001') {
+        highlight = '☕ Single Shot';
+        desc = 'Ekstraksi murni biji kopi Arabika pilihan';
+        icon = '☕';
+      } else if (p.sku === 'KOP-002') {
+        highlight = '☕ Seduhan Hitam';
+        desc = 'Espresso dengan air panas cita rasa bersih';
+        icon = '☕';
+      } else if (p.sku === 'KOP-004') {
+        highlight = '☕ Foam Tebal';
+        desc = 'Espresso dengan steamed milk dan busa lembut';
+        icon = '☕';
+      } else if (p.sku === 'KOP-005') {
+        highlight = '⭐ Pilihan Barista';
+        desc = 'Paduan lembut espresso dan susu segar hangat/dingin';
+        icon = '☕';
+      } else if (p.sku === 'NKP-001') {
+        highlight = '🍵 Favorit Non-Kopi';
+        desc = 'Matcha murni berkualitas tinggi dengan susu segar';
+        icon = '🍵';
+      } else if (p.sku === 'NKP-002') {
+        highlight = '🍫 Hangat Menenangkan';
+        desc = 'Cokelat premium pekat diseduh lembut';
+        icon = '🍫';
+      } else if (p.sku === 'NKP-003') {
+        highlight = '🫖 Racikan Khas';
+        desc = 'Seduhan teh tarik harum berbusa nikmat';
+        icon = '🫖';
+      } else if (p.sku === 'ROT-001') {
+        highlight = '🥐 Fresh Oven';
+        desc = 'Pastry renyah berlapis dengan mentega gurih';
+        icon = '🥐';
+      } else if (p.sku === 'ROT-002') {
+        highlight = '🍌 Roti Favorit';
+        desc = 'Roti manis empuk isi pisang manis dan cokelat lumer';
+        icon = '🍞';
+      } else if (p.sku === 'ROT-003') {
+        highlight = '🧀 Gurih Lembut';
+        desc = 'Roti sobek lembut dengan taburan keju melimpah';
+        icon = '🍞';
+      } else if (p.sku === 'ROT-004') {
+        highlight = '🍩 Klasik Manis';
+        desc = 'Donat empuk bertabur gula halus salju';
+        icon = '🍩';
+      } else if (p.sku === 'SNK-001') {
+        highlight = '🍪 Camilan Renyah';
+        desc = 'Kue kering oat gandum madu sehat isi 6 pcs';
+        icon = '🍪';
+      } else if (p.sku === 'SNK-002') {
+        highlight = '🍰 Lembut Harum';
+        desc = 'Potongan bolu pisang manis dan legit';
+        icon = '🍰';
+      } else if (p.sku === 'KMS-001') {
+        highlight = '📦 Kemasan 1 Liter';
+        desc = 'Kopi susu kemasan botol siap simpan di kulkas';
+        icon = '📦';
+      } else if (p.sku === 'KMS-002') {
+        highlight = '☕ Biji Kopi Sangrai';
+        desc = 'Biji kopi pilihan kemasan 250 gram siap giling';
+        icon = '📦';
+      } else if (p.sku === 'KMS-003') {
+        highlight = '🎁 Merchandise Resmi';
+        desc = 'Tumbler stainless tahan panas & dingin 450 ml';
+        icon = '🎁';
+      }
+
+      return {
+        id: p.id,
+        sku: p.sku,
+        nama: p.nama,
+        kategori: p.kategori,
+        harga: p.harga_jual,
+        highlight,
+        desc,
+        icon,
+      };
+    });
+  }, []);
 
   const filteredMenuCatalog = activeMenuTab === 'semua'
-    ? menuCatalog
-    : menuCatalog.filter(m => m.kategori === activeMenuTab);
+    ? officialProducts
+    : officialProducts.filter((m) => m.kategori === activeMenuTab);
 
   return (
     <div style={{
@@ -697,7 +736,7 @@ export const CustomerDisplayView: React.FC = () => {
                       Rekomendasi Tambahan Hangat:
                     </span>
                     <span style={{ fontSize: '11px', color: '#cbd5e1' }}>
-                      Butter Croissant Hangat (+Rp24.000) • Choco Chunk Cookie (+Rp18.000)
+                      Croissant Mentega (+Rp24.000) • Donat Gula Halus (+Rp10.000) • Roti Pisang Cokelat (+Rp18.000)
                     </span>
                   </div>
                 </div>
@@ -787,12 +826,14 @@ export const CustomerDisplayView: React.FC = () => {
                 </div>
 
                 {/* Filter Pills */}
-                <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                   {[
                     { key: 'semua', label: 'Semua Menu' },
                     { key: 'kopi', label: '☕ Kopi' },
-                    { key: 'roti', label: '🥐 Bakery' },
+                    { key: 'roti', label: '🥐 Roti' },
                     { key: 'non_kopi', label: '🍵 Non Kopi' },
+                    { key: 'snack', label: '🍪 Snack' },
+                    { key: 'kemasan', label: '📦 Kemasan' },
                   ].map((tab) => (
                     <button
                       key={tab.key}
@@ -815,20 +856,26 @@ export const CustomerDisplayView: React.FC = () => {
                 </div>
               </div>
 
-              {/* 6 Curated Items Grid */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '14px',
-                flex: 1,
-              }}>
+              {/* Official Lumbung Menu Catalog Grid (Scrollable) */}
+              <div
+                className="custom-scroll"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '12px',
+                  flex: 1,
+                  maxHeight: '430px',
+                  overflowY: 'auto',
+                  paddingRight: '6px',
+                }}
+              >
                 {filteredMenuCatalog.map((item, i) => (
                   <div
                     key={i}
                     className="glass-card-item"
                     style={{
-                      padding: '16px 18px',
-                      borderRadius: '18px',
+                      padding: '14px 16px',
+                      borderRadius: '16px',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
@@ -836,27 +883,40 @@ export const CustomerDisplayView: React.FC = () => {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{
-                        fontSize: '11px',
-                        fontWeight: 800,
-                        backgroundColor: 'rgba(217, 119, 6, 0.25)',
-                        color: '#fde68a',
-                        padding: '3px 9px',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(253, 230, 138, 0.3)',
-                      }}>
-                        {item.highlight}
-                      </span>
-                      <span style={{ fontSize: '16px', fontWeight: 900, color: '#fde68a' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '15px' }}>{item.icon}</span>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          backgroundColor: 'rgba(217, 119, 6, 0.25)',
+                          color: '#fde68a',
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(253, 230, 138, 0.3)',
+                        }}>
+                          {item.highlight}
+                        </span>
+                        <span style={{
+                          fontSize: '9px',
+                          fontFamily: 'monospace',
+                          color: '#94a3b8',
+                          backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                          padding: '2px 5px',
+                          borderRadius: '4px',
+                        }}>
+                          {item.sku}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '15px', fontWeight: 900, color: '#fde68a' }}>
                         Rp{item.harga.toLocaleString('id-ID')}
                       </span>
                     </div>
 
                     <div>
-                      <div style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
+                      <div style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff' }}>
                         {item.nama}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px', lineHeight: 1.4 }}>
+                      <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px', lineHeight: 1.4 }}>
                         {item.desc}
                       </div>
                     </div>
@@ -877,7 +937,7 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Tag size={18} color="#34d399" />
                   <span style={{ fontSize: '13px', fontWeight: 800, color: '#a7f3d0' }}>
-                    Paket Sarapan Hemat: Kopi Susu Aren + Butter Croissant hanya Rp38.000 (Hemat Rp8.000)
+                    Paket Spesial Lumbung: Kopi Susu Lumbung + Croissant Mentega hanya Rp42.000 (Hemat Rp7.000)
                   </span>
                 </div>
                 <span style={{
