@@ -15,17 +15,15 @@ import {
   Utensils,
   Maximize2,
   Minimize,
-  Star,
-  Award,
   Flame,
   Check,
   Store,
   Wifi,
-  Calendar,
-  Heart,
   Tag,
   Leaf,
-  Zap,
+  ChevronRight,
+  Smile,
+  Heart,
 } from 'lucide-react';
 
 export const CustomerDisplayView: React.FC = () => {
@@ -52,6 +50,9 @@ export const CustomerDisplayView: React.FC = () => {
   const [selectedRating, setSelectedRating] = useState<'sangat_puas' | 'baik' | 'sedang' | 'buruk' | null>(null);
   const [ratingSubmitted, setRatingSubmitted] = useState<boolean>(false);
 
+  // Active Category Filter for Idle Menu Board
+  const [activeMenuTab, setActiveMenuTab] = useState<'semua' | 'kopi' | 'roti' | 'non_kopi'>('semua');
+
   // Real-time clock & formatted date
   useEffect(() => {
     const updateTime = () => {
@@ -75,25 +76,25 @@ export const CustomerDisplayView: React.FC = () => {
       return {
         icon: '🌅',
         headline: 'Selamat Pagi!',
-        sub: 'Awali harimu dengan aroma kopi seduh segar & roti hangat yang baru keluar dari oven.',
+        sub: 'Awali pagimu dengan seduhan kopi hangat & roti mentega baru keluar dari oven.',
       };
     } else if (hour >= 11 && hour < 15) {
       return {
         icon: '☀️',
         headline: 'Selamat Siang!',
-        sub: 'Segarkan semangat istirahat siangmu dengan racikan espresso dingin & pastry lembut renyah.',
+        sub: 'Segarkan harimu dengan es kopi susu racikan barista & pastry renyah.',
       };
     } else if (hour >= 15 && hour < 18) {
       return {
         icon: '☕',
         headline: 'Selamat Sore!',
-        sub: 'Waktu santai terbaik untuk menikmati secangkir manual brew & kudapan manis khas Lumbung.',
+        sub: 'Waktu santai terbaik menikmati secangkir manual brew & kudapan manis.',
       };
     } else {
       return {
         icon: '🌙',
         headline: 'Selamat Malam!',
-        sub: 'Nikmati suasana santai, tenang, dan kehangatan aneka sajian penutup istimewa kami.',
+        sub: 'Nikmati suasana hangat, tenang, dan aneka hidangan penutup istimewa kami.',
       };
     }
   }, []);
@@ -161,7 +162,6 @@ export const CustomerDisplayView: React.FC = () => {
       console.warn('Failed to save rating:', e);
     }
 
-    // Auto-return to idle welcome screen after 1.8 seconds
     setTimeout(() => {
       setShowThankYouMode(false);
       setRatingSubmitted(false);
@@ -173,178 +173,190 @@ export const CustomerDisplayView: React.FC = () => {
   const getItemBadge = (nama: string) => {
     const lower = (nama || '').toLowerCase();
     if (lower.includes('kopi') || lower.includes('espresso') || lower.includes('latte') || lower.includes('americano') || lower.includes('cappuccino') || lower.includes('brew')) {
-      return { tag: 'Kopi Racikan', icon: '☕', bg: '#fef3c7', text: '#92400e', border: '#fde68a' };
+      return { tag: 'Kopi Racikan', icon: '☕', bg: 'rgba(217, 119, 6, 0.2)', text: '#fde68a', border: 'rgba(253, 230, 138, 0.35)' };
     }
     if (lower.includes('teh') || lower.includes('tea') || lower.includes('matcha') || lower.includes('cokelat') || lower.includes('chocolate') || lower.includes('red velvet')) {
-      return { tag: 'Non Kopi', icon: '🍵', bg: '#ecfdf5', text: '#065f46', border: '#a7f3d0' };
+      return { tag: 'Non Kopi', icon: '🍵', bg: 'rgba(16, 185, 129, 0.2)', text: '#a7f3d0', border: 'rgba(167, 243, 208, 0.35)' };
     }
     if (lower.includes('roti') || lower.includes('croissant') || lower.includes('danish') || lower.includes('toast') || lower.includes('pastry')) {
-      return { tag: 'Fresh Bakery', icon: '🥐', bg: '#fff7ed', text: '#9a3412', border: '#fed7aa' };
+      return { tag: 'Fresh Bakery', icon: '🥐', bg: 'rgba(234, 88, 12, 0.2)', text: '#fed7aa', border: 'rgba(254, 215, 170, 0.35)' };
     }
     if (lower.includes('cookie') || lower.includes('snack') || lower.includes('donat') || lower.includes('cake') || lower.includes('brownie')) {
-      return { tag: 'Kudapan', icon: '🍪', bg: '#fdf4ff', text: '#86198f', border: '#f5d0fe' };
+      return { tag: 'Kudapan', icon: '🍪', bg: 'rgba(217, 70, 239, 0.2)', text: '#f5d0fe', border: 'rgba(245, 208, 254, 0.35)' };
     }
-    return { tag: 'Produk Retail', icon: '📦', bg: '#f1f5f9', text: '#334155', border: '#cbd5e1' };
+    return { tag: 'Produk Retail', icon: '📦', bg: 'rgba(148, 163, 184, 0.2)', text: '#e2e8f0', border: 'rgba(226, 232, 240, 0.3)' };
   };
 
   const hasItems = data.items && data.items.length > 0;
   const totalItemQty = hasItems ? data.items.reduce((acc, curr) => acc + curr.jumlah, 0) : 0;
 
-  // 6 Signature Menu items for Idle Showcase (Fills empty space beautifully)
-  const signatureItems = [
+  // Curated Signature Menu for Idle Screen
+  const menuCatalog = [
     {
+      kategori: 'kopi',
+      tag: '☕ Kopi Racikan',
       nama: 'Kopi Susu Gula Aren',
-      kategori: '☕ Kopi Racikan',
-      desc: 'Espresso blend Arabika, susu segar gurih, gula aren cair alami',
+      desc: 'Espresso Arabika, susu segar gurih, gula aren cair murni',
       harga: 22000,
-      badge: '🔥 Best Seller',
-      accent: '#92400e',
-      bg: '#fffbeb',
-      border: '#fde68a',
+      highlight: '🔥 Best Seller Kedai',
     },
     {
-      nama: 'Butter Croissant Prancis',
-      kategori: '🥐 Fresh Pastry',
-      desc: '100% butter Prancis asli, berlapis renyah di luar, lembut di dalam',
-      harga: 24000,
-      badge: '🥐 Fresh Oven',
-      accent: '#9a3412',
-      bg: '#fff7ed',
-      border: '#fed7aa',
-    },
-    {
-      nama: 'Ceremonial Uji Matcha',
-      kategori: '🍵 Artisan Non-Kopi',
-      desc: 'Matcha hijau murni grade Uji Kyoto, susu lembut, aroma floral',
-      harga: 28000,
-      badge: '✨ Favorit Barista',
-      accent: '#065f46',
-      bg: '#ecfdf5',
-      border: '#a7f3d0',
-    },
-    {
-      nama: 'Roti Toast Srikaya Telur',
-      kategori: '🍞 Classic Bakery',
-      desc: 'Roti tebal panggang renyah isi selai srikaya buatan dapur sendiri',
-      harga: 20000,
-      badge: '🍞 Resep Klasik',
-      accent: '#b45309',
-      bg: '#fdfbf7',
-      border: '#fed7aa',
-    },
-    {
-      nama: 'Choco Chunk Melted Cookie',
-      kategori: '🍪 Kudapan Manis',
-      desc: 'Kue kering renyah dengan lelehan potongan cokelat Belgia murni',
-      harga: 18000,
-      badge: '🍪 Fresh Baked',
-      accent: '#86198f',
-      bg: '#fdf4ff',
-      border: '#f5d0fe',
-    },
-    {
-      nama: 'Manual Brew V60 Single Origin',
-      kategori: '☕ Manual Brew',
-      desc: 'Biji kopi pilihan Gayo / Toraja, seduhan bersih dengan rasa buah segar',
+      kategori: 'kopi',
+      tag: '☕ Kopi Racikan',
+      nama: 'Manual Brew V60 Gayo',
+      desc: 'Single origin Arabika Aceh Gayo, seduhan bersih fruity & sweet',
       harga: 26000,
-      badge: '⭐ Single Origin',
-      accent: '#1e293b',
-      bg: '#f8fafc',
-      border: '#cbd5e1',
+      highlight: '⭐ Pilihan Barista',
+    },
+    {
+      kategori: 'roti',
+      tag: '🥐 Fresh Pastry',
+      nama: 'Butter Croissant Prancis',
+      desc: '100% butter Prancis asli, tekstur berlapis renyah & wangi',
+      harga: 24000,
+      highlight: '🥐 Fresh dari Oven',
+    },
+    {
+      kategori: 'roti',
+      tag: '🍞 Classic Bakery',
+      nama: 'Roti Toast Srikaya Telur',
+      desc: 'Roti gandum tebal panggang renyah isi selai srikaya resep kuno',
+      harga: 20000,
+      highlight: '🍞 Favorit Sarapan',
+    },
+    {
+      kategori: 'non_kopi',
+      tag: '🍵 Artisan Non-Kopi',
+      nama: 'Ceremonial Uji Matcha Latte',
+      desc: 'Bubuk matcha murni grade Uji Kyoto dengan susu segar lembut',
+      harga: 28000,
+      highlight: '🍵 100% Asli Uji',
+    },
+    {
+      kategori: 'non_kopi',
+      tag: '🍪 Kudapan Manis',
+      nama: 'Choco Chunk Melted Cookie',
+      desc: 'Kue kering renyah dengan lelehan cokelat hitam Belgia',
+      harga: 18000,
+      highlight: '🍪 Renyah & Leleh',
     },
   ];
+
+  const filteredMenuCatalog = activeMenuTab === 'semua'
+    ? menuCatalog
+    : menuCatalog.filter(m => m.kategori === activeMenuTab);
 
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#f8fafc',
-      color: '#0f172a',
+      backgroundColor: '#0c0704',
+      backgroundImage: `
+        radial-gradient(circle at 15% 20%, rgba(180, 83, 9, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(217, 119, 6, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(69, 26, 3, 0.25) 0%, transparent 60%)
+      `,
+      color: '#f8fafc',
       display: 'flex',
       flexDirection: 'column',
-      fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      fontFamily: '"Plus Jakarta Sans", "Outfit", -apple-system, sans-serif',
       position: 'relative',
       overflowX: 'hidden',
     }}>
-      {/* Component Styles & Animations */}
+      {/* Dynamic Keyframe Animations */}
       <style>{`
         @keyframes pulseGlow {
           0%, 100% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.05); opacity: 0.85; }
         }
-        @keyframes subtleFloat {
+        @keyframes floatSubtle {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-4px); }
+          50% { transform: translateY(-5px); }
         }
         @keyframes marqueeScroll {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
         @keyframes fadeInScale {
-          from { opacity: 0; transform: scale(0.96) translateY(6px); }
+          from { opacity: 0; transform: scale(0.97) translateY(8px); }
           to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .anim-fade-in {
-          animation: fadeInScale 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .anim-fade {
+          animation: fadeInScale 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .custom-scrollbar::-webkit-scrollbar {
+        .glass-panel {
+          background: rgba(26, 14, 7, 0.65);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(253, 230, 138, 0.15);
+        }
+        .glass-card-item {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-item:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(253, 230, 138, 0.3);
+          transform: translateY(-2px);
+        }
+        .custom-scroll::-webkit-scrollbar {
           width: 6px;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f5f9;
+        .custom-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.04);
           border-radius: 9999px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #cbd5e1;
+        .custom-scroll::-webkit-scrollbar-thumb {
+          background: rgba(253, 230, 138, 0.25);
           border-radius: 9999px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8;
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(253, 230, 138, 0.45);
         }
       `}</style>
 
-      {/* Top Artisan Coffee Bar Header */}
+      {/* ================= TOP NAVIGATION BAR ================= */}
       <header style={{
-        background: 'linear-gradient(135deg, #1f0c03 0%, #3a1603 50%, #451a03 100%)',
-        color: '#ffffff',
+        background: 'rgba(15, 8, 4, 0.85)',
+        backdropFilter: 'blur(20px)',
         padding: '14px 28px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        boxShadow: '0 4px 24px rgba(31, 12, 3, 0.45)',
-        borderBottom: '2px solid #b45309',
+        borderBottom: '1px solid rgba(253, 230, 138, 0.2)',
         position: 'sticky',
         top: 0,
         zIndex: 50,
       }}>
-        {/* Brand & Cabang Badge */}
+        {/* Brand Logo & Branch Info */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{
             width: '46px',
             height: '46px',
             borderRadius: '14px',
-            background: 'linear-gradient(135deg, #78350f 0%, #b45309 100%)',
+            background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+            border: '1.5px solid rgba(253, 230, 138, 0.4)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 14px rgba(180, 83, 9, 0.45), inset 0 1px 1px rgba(255,255,255,0.3)',
-            animation: 'subtleFloat 3s ease-in-out infinite',
+            boxShadow: '0 8px 20px rgba(180, 83, 9, 0.35)',
+            animation: 'floatSubtle 3s ease-in-out infinite',
             flexShrink: 0,
           }}>
-            <Coffee size={26} color="#fde68a" />
+            <Coffee size={24} color="#fde68a" />
           </div>
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 style={{
-                fontSize: '19px',
+              <span style={{
+                fontSize: '18px',
                 fontWeight: 900,
-                letterSpacing: '0.8px',
-                margin: 0,
+                letterSpacing: '1px',
                 color: '#ffffff',
                 textTransform: 'uppercase',
               }}>
                 LUMBUNG KOPI DAN ROTI
-              </h1>
+              </span>
               <span style={{
                 fontSize: '10px',
                 fontWeight: 800,
@@ -353,13 +365,13 @@ export const CustomerDisplayView: React.FC = () => {
                 padding: '2px 8px',
                 borderRadius: '9999px',
                 border: '1px solid rgba(253, 230, 138, 0.3)',
-                letterSpacing: '0.5px',
+                letterSpacing: '0.6px',
               }}>
                 CUSTOMER DISPLAY
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '3px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '3px' }}>
               <span style={{
                 fontSize: '12px',
                 color: '#fed7aa',
@@ -371,17 +383,17 @@ export const CustomerDisplayView: React.FC = () => {
                 <Store size={13} color="#fde68a" />
                 {data.cabangNama || 'Kedai Kopi & Toko Roti'}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '11px' }}>•</span>
-              <span style={{ fontSize: '11px', color: '#cbd5e1', fontWeight: 500 }}>
+              <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '11px' }}>•</span>
+              <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 500 }}>
                 {currentDate}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Live Status, Clock & Fullscreen Control */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Quick Test Demo Button for Pembayaran Berhasil */}
+        {/* Status, Time, Test Button & Fullscreen */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Quick Demo Preview Button for Pembayaran Berhasil */}
           <button
             type="button"
             onClick={() => {
@@ -389,37 +401,34 @@ export const CustomerDisplayView: React.FC = () => {
               setRatingSubmitted(false);
               setSelectedRating(null);
             }}
-            title="Klik untuk melihat simulasi layar Pembayaran Berhasil"
+            title="Klik untuk melihat animasi Pembayaran Berhasil!"
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              backgroundColor: '#10b981',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               color: '#ffffff',
-              padding: '6px 13px',
+              padding: '7px 14px',
               borderRadius: '9999px',
               fontSize: '11px',
               fontWeight: 800,
-              border: 'none',
+              border: '1px solid #34d399',
               cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)',
-              transition: 'transform 0.15s ease',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
             }}
-            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
-            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
           >
-            <CheckCircle2 size={14} />
-            <span>Tes Simulasi Berhasil ✅</span>
+            <CheckCircle2 size={15} />
+            <span>Tes Pembayaran Berhasil ✅</span>
           </button>
 
-          {/* Synchronized Live Pill */}
+          {/* Real-time cashier sync status */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            backgroundColor: 'rgba(16, 185, 129, 0.15)',
-            border: '1px solid rgba(16, 185, 129, 0.35)',
-            padding: '6px 14px',
+            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            padding: '7px 14px',
             borderRadius: '9999px',
             fontSize: '12px',
             fontWeight: 700,
@@ -432,7 +441,7 @@ export const CustomerDisplayView: React.FC = () => {
               backgroundColor: '#10b981',
               boxShadow: '0 0 10px #10b981',
               display: 'inline-block',
-              animation: 'pulseGlow 1.8s infinite',
+              animation: 'pulseGlow 2s infinite',
             }} />
             <span>Kasir Terhubung</span>
           </div>
@@ -445,9 +454,9 @@ export const CustomerDisplayView: React.FC = () => {
             fontSize: '13px',
             color: '#fde68a',
             fontWeight: 800,
-            backgroundColor: 'rgba(0, 0, 0, 0.25)',
-            padding: '6px 12px',
-            borderRadius: '10px',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            padding: '7px 14px',
+            borderRadius: '12px',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             fontFamily: 'monospace',
           }}>
@@ -462,68 +471,62 @@ export const CustomerDisplayView: React.FC = () => {
             style={{
               width: '38px',
               height: '38px',
-              borderRadius: '10px',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.06)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)')}
           >
             {isFullscreen ? <Minimize size={17} /> : <Maximize2 size={17} />}
           </button>
         </div>
       </header>
 
-      {/* Main Content Area: Balanced 1.4fr : 1fr Split Screen Layout */}
+      {/* ================= MAIN BALANCED TWO-COLUMN STAGE ================= */}
       <main style={{
         flex: 1,
         display: 'grid',
-        gridTemplateColumns: '1.4fr 1fr',
-        padding: '20px 24px',
-        gap: '20px',
-        maxWidth: '1500px',
+        gridTemplateColumns: '1.45fr 1fr',
+        padding: '24px 28px',
+        gap: '24px',
+        maxWidth: '1600px',
         width: '100%',
         margin: '0 auto',
         boxSizing: 'border-box',
         overflowY: 'auto',
       }}>
-        {/* ================= LEFT COLUMN (60%): ACTIVE ORDERS OR SIGNATURE SHOWCASE ================= */}
-        <section style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '24px',
-          padding: '24px',
-          boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 1px 1px rgba(0,0,0,0.03)',
-          border: '1.5px solid #e2e8f0',
+        {/* ---------------- LEFT STAGE (60%): ORDERS OR ARTISAN MENU SHOWCASE ---------------- */}
+        <section className="glass-panel" style={{
+          borderRadius: '28px',
+          padding: '26px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.45)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minHeight: '520px',
         }}>
           {hasItems ? (
-            /* ACTIVE CART ITEMS DISPLAY */
-            <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              {/* Active Order Banner Header */}
+            /* ACTIVE CART ORDER VIEW */
+            <div className="anim-fade" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              {/* Active Order Header */}
               <div style={{
                 paddingBottom: '16px',
-                borderBottom: '2px solid #f1f5f9',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    {/* Order Type Badge */}
                     <span style={{
-                      backgroundColor: data.tipePesanan === 'takeaway' ? '#fff7ed' : '#ecfdf5',
-                      color: data.tipePesanan === 'takeaway' ? '#c2410c' : '#047857',
-                      border: `1.5px solid ${data.tipePesanan === 'takeaway' ? '#fed7aa' : '#a7f3d0'}`,
-                      fontSize: '12px',
+                      backgroundColor: data.tipePesanan === 'takeaway' ? 'rgba(234, 88, 12, 0.2)' : 'rgba(16, 185, 129, 0.2)',
+                      color: data.tipePesanan === 'takeaway' ? '#fed7aa' : '#a7f3d0',
+                      border: `1px solid ${data.tipePesanan === 'takeaway' ? 'rgba(234, 88, 12, 0.4)' : 'rgba(16, 185, 129, 0.4)'}`,
+                      fontSize: '11px',
                       fontWeight: 800,
                       padding: '4px 12px',
                       borderRadius: '8px',
@@ -531,7 +534,7 @@ export const CustomerDisplayView: React.FC = () => {
                       alignItems: 'center',
                       gap: '5px',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.4px',
+                      letterSpacing: '0.5px',
                     }}>
                       {data.tipePesanan === 'takeaway' ? (
                         <>
@@ -546,30 +549,25 @@ export const CustomerDisplayView: React.FC = () => {
                       )}
                     </span>
 
-                    {/* Customer Name */}
                     {data.namaPelanggan ? (
                       <span style={{
-                        fontSize: '13px',
+                        fontSize: '12px',
                         fontWeight: 800,
-                        color: '#78350f',
-                        backgroundColor: '#fef3c7',
-                        border: '1.5px solid #fde68a',
+                        color: '#fde68a',
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                        border: '1px solid rgba(253, 230, 138, 0.3)',
                         padding: '4px 12px',
                         borderRadius: '8px',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
                       }}>
-                        <span>🏷️ Pelanggan:</span>
-                        <strong>{data.namaPelanggan}</strong>
+                        🏷️ Pelanggan: <strong>{data.namaPelanggan}</strong>
                       </span>
                     ) : null}
                   </div>
 
                   <h2 style={{
-                    fontSize: '22px',
+                    fontSize: '24px',
                     fontWeight: 900,
-                    color: '#0f172a',
+                    color: '#ffffff',
                     margin: '4px 0 0 0',
                     letterSpacing: '-0.3px',
                   }}>
@@ -580,32 +578,32 @@ export const CustomerDisplayView: React.FC = () => {
                 <div style={{
                   fontSize: '13px',
                   fontWeight: 800,
-                  color: '#78350f',
-                  backgroundColor: '#fef3c7',
-                  border: '1px solid #fde68a',
+                  color: '#fde68a',
+                  backgroundColor: 'rgba(253, 230, 138, 0.1)',
+                  border: '1px solid rgba(253, 230, 138, 0.25)',
                   padding: '8px 16px',
-                  borderRadius: '12px',
+                  borderRadius: '14px',
                   textAlign: 'right',
                 }}>
-                  <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: '#92400e', fontWeight: 700 }}>
-                    Total Item
+                  <span style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: '#cbd5e1', fontWeight: 600 }}>
+                    Total Menu
                   </span>
-                  <span style={{ fontSize: '16px', fontWeight: 900 }}>
+                  <span style={{ fontSize: '18px', fontWeight: 900 }}>
                     {totalItemQty} Porsi
                   </span>
                 </div>
               </div>
 
-              {/* Items List with Artisan Badges */}
+              {/* Items List */}
               <div
-                className="custom-scrollbar"
+                className="custom-scroll"
                 style={{
                   flex: 1,
                   overflowY: 'auto',
                   padding: '16px 4px 10px 0',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '10px',
+                  gap: '12px',
                 }}
               >
                 {data.items.map((item, idx) => {
@@ -613,40 +611,36 @@ export const CustomerDisplayView: React.FC = () => {
                   return (
                     <div
                       key={idx}
+                      className="glass-card-item"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '14px 18px',
-                        backgroundColor: '#ffffff',
-                        borderRadius: '16px',
-                        border: '1.5px solid #e2e8f0',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
-                        transition: 'all 0.18s ease',
+                        padding: '16px 20px',
+                        borderRadius: '18px',
                       }}
                     >
-                      {/* Left: Quantity + Title + Category Pill */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <div style={{
-                          width: '42px',
-                          height: '42px',
+                          width: '44px',
+                          height: '44px',
                           borderRadius: '12px',
-                          background: 'linear-gradient(135deg, #78350f 0%, #92400e 100%)',
+                          background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
                           color: '#ffffff',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontSize: '15px',
+                          fontSize: '16px',
                           fontWeight: 900,
                           flexShrink: 0,
-                          boxShadow: '0 4px 10px rgba(120, 53, 15, 0.25)',
+                          boxShadow: '0 4px 12px rgba(180, 83, 9, 0.4)',
                         }}>
                           {item.jumlah}x
                         </div>
 
                         <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '17px', fontWeight: 800, color: '#ffffff' }}>
                               {item.nama}
                             </span>
                             <span style={{
@@ -666,18 +660,17 @@ export const CustomerDisplayView: React.FC = () => {
                             </span>
                           </div>
 
-                          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
+                          <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px', fontWeight: 600 }}>
                             Rp{item.harga_satuan.toLocaleString('id-ID')} / porsi
                           </div>
                         </div>
                       </div>
 
-                      {/* Right: Subtotal */}
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '18px', fontWeight: 900, color: '#78350f', letterSpacing: '-0.3px' }}>
+                        <div style={{ fontSize: '20px', fontWeight: 900, color: '#fde68a', letterSpacing: '-0.3px' }}>
                           Rp{item.subtotal.toLocaleString('id-ID')}
                         </div>
-                        <div style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>
+                        <div style={{ fontSize: '11px', color: '#64748b' }}>
                           Subtotal item
                         </div>
                       </div>
@@ -686,77 +679,77 @@ export const CustomerDisplayView: React.FC = () => {
                 })}
               </div>
 
-              {/* Add-on Recommendation Box to gracefully occupy space */}
+              {/* Add-on Pairing Advice at Bottom */}
               <div style={{
                 marginTop: '12px',
                 padding: '14px 18px',
-                backgroundColor: '#fffbeb',
                 borderRadius: '16px',
-                border: '1.5px dashed #fde68a',
+                backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                border: '1px dashed rgba(253, 230, 138, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '24px' }}>🥐</span>
+                  <span style={{ fontSize: '22px' }}>🥐</span>
                   <div>
-                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#92400e', display: 'block' }}>
-                      Rekomendasi Pendamping Seduhan:
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#fde68a', display: 'block' }}>
+                      Rekomendasi Tambahan Hangat:
                     </span>
-                    <span style={{ fontSize: '11px', color: '#b45309' }}>
-                      Butter Croissant Hangat (+Rp24rb) • Cookie Cokelat Belgia (+Rp18rb)
+                    <span style={{ fontSize: '11px', color: '#cbd5e1' }}>
+                      Butter Croissant Hangat (+Rp24.000) • Choco Chunk Cookie (+Rp18.000)
                     </span>
                   </div>
                 </div>
                 <span style={{
                   fontSize: '11px',
                   fontWeight: 800,
-                  color: '#92400e',
-                  backgroundColor: '#ffffff',
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  border: '1px solid #fde68a',
+                  color: '#fde68a',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  padding: '4px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(253, 230, 138, 0.2)',
                 }}>
-                  Tersedia di Meja
+                  Tersedia di Meja Kasir
                 </span>
               </div>
             </div>
           ) : (
-            /* IDLE STATE: ARTISAN SHOWCASE & SIGNATURE MENU BOARD (NO EMPTY SPACE!) */
-            <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '16px' }}>
-              {/* Header Showcase Banner */}
+            /* IDLE SCREEN: ARTISAN CAFE SHOWCASE (NO EMPTY SPACE!) */
+            <div className="anim-fade" style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '18px' }}>
+              {/* Dynamic Time Greeting Banner */}
               <div style={{
-                padding: '16px 20px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%)',
-                border: '1.5px solid #fde68a',
+                padding: '18px 22px',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, rgba(180, 83, 9, 0.35) 0%, rgba(69, 26, 3, 0.25) 100%)',
+                border: '1px solid rgba(253, 230, 138, 0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                   <div style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '12px',
-                    backgroundColor: '#78350f',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '14px',
+                    background: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#ffffff',
-                    fontSize: '22px',
+                    fontSize: '24px',
+                    boxShadow: '0 6px 16px rgba(180, 83, 9, 0.3)',
                   }}>
                     {timeGreeting.icon}
                   </div>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '17px', fontWeight: 900, color: '#451a03' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '18px', fontWeight: 900, color: '#ffffff' }}>
                         {timeGreeting.headline} Selamat Datang di Lumbung
                       </span>
                       <span style={{
                         fontSize: '10px',
                         fontWeight: 800,
-                        backgroundColor: '#78350f',
+                        backgroundColor: '#d97706',
                         color: '#ffffff',
                         padding: '2px 8px',
                         borderRadius: '6px',
@@ -764,118 +757,135 @@ export const CustomerDisplayView: React.FC = () => {
                         MENU UTAMA
                       </span>
                     </div>
-                    <p style={{ fontSize: '12px', color: '#92400e', margin: '2px 0 0 0', fontWeight: 600 }}>
+                    <p style={{ fontSize: '13px', color: '#fed7aa', margin: '3px 0 0 0', fontWeight: 500 }}>
                       {timeGreeting.sub}
                     </p>
                   </div>
                 </div>
 
                 <div style={{
-                  fontSize: '11px',
+                  fontSize: '12px',
                   fontWeight: 800,
-                  color: '#78350f',
-                  backgroundColor: '#ffffff',
-                  padding: '6px 14px',
-                  borderRadius: '10px',
-                  border: '1px solid #fde68a',
+                  color: '#fde68a',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  padding: '8px 16px',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(253, 230, 138, 0.2)',
                   whiteSpace: 'nowrap',
                 }}>
                   Sampaikan Pesanan Anda 🗣️
                 </div>
               </div>
 
-              {/* 6 Signature Items Grid (Fills the entire left column richly!) */}
-              <div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '10px',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Flame size={16} color="#ea580c" />
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Pilihan Favorit &amp; Signature Hari Ini
-                    </span>
-                  </div>
-                  <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
-                    Koleksi Menu Terlaris Lumbung
+              {/* Category Filter Pills for Menu Board */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Flame size={18} color="#f59e0b" />
+                  <span style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Koleksi Menu Pilihan &amp; Signature
                   </span>
                 </div>
 
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '12px',
-                }}>
-                  {signatureItems.map((item, i) => (
-                    <div
-                      key={i}
+                {/* Filter Pills */}
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  {[
+                    { key: 'semua', label: 'Semua Menu' },
+                    { key: 'kopi', label: '☕ Kopi' },
+                    { key: 'roti', label: '🥐 Bakery' },
+                    { key: 'non_kopi', label: '🍵 Non Kopi' },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveMenuTab(tab.key as any)}
                       style={{
-                        padding: '14px 16px',
-                        borderRadius: '16px',
-                        backgroundColor: item.bg,
-                        border: `1.5px solid ${item.border}`,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        gap: '6px',
-                        transition: 'transform 0.18s ease',
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        backgroundColor: activeMenuTab === tab.key ? '#b45309' : 'rgba(255, 255, 255, 0.05)',
+                        color: activeMenuTab === tab.key ? '#ffffff' : '#94a3b8',
+                        border: `1px solid ${activeMenuTab === tab.key ? '#fde68a' : 'rgba(255, 255, 255, 0.08)'}`,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{
-                          fontSize: '10px',
-                          fontWeight: 800,
-                          backgroundColor: '#ffffff',
-                          color: item.accent,
-                          padding: '2px 8px',
-                          borderRadius: '6px',
-                          border: `1px solid ${item.border}`,
-                        }}>
-                          {item.badge}
-                        </span>
-                        <span style={{ fontSize: '14px', fontWeight: 900, color: item.accent }}>
-                          Rp{item.harga.toLocaleString('id-ID')}
-                        </span>
-                      </div>
-
-                      <div>
-                        <div style={{ fontSize: '14px', fontWeight: 800, color: '#1e293b' }}>
-                          {item.nama}
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px', lineHeight: 1.4 }}>
-                          {item.desc}
-                        </div>
-                      </div>
-                    </div>
+                      {tab.label}
+                    </button>
                   ))}
                 </div>
               </div>
 
-              {/* Special Breakfast / Bundle Promo Banner */}
+              {/* 6 Curated Items Grid */}
               <div style={{
-                marginTop: 'auto',
-                padding: '12px 18px',
-                backgroundColor: '#f0fdf4',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '14px',
+                flex: 1,
+              }}>
+                {filteredMenuCatalog.map((item, i) => (
+                  <div
+                    key={i}
+                    className="glass-card-item"
+                    style={{
+                      padding: '16px 18px',
+                      borderRadius: '18px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        backgroundColor: 'rgba(217, 119, 6, 0.25)',
+                        color: '#fde68a',
+                        padding: '3px 9px',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(253, 230, 138, 0.3)',
+                      }}>
+                        {item.highlight}
+                      </span>
+                      <span style={{ fontSize: '16px', fontWeight: 900, color: '#fde68a' }}>
+                        Rp{item.harga.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
+                        {item.nama}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '3px', lineHeight: 1.4 }}>
+                        {item.desc}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Special Bundle Promo Strip */}
+              <div style={{
+                padding: '14px 20px',
                 borderRadius: '16px',
-                border: '1.5px solid #bbf7d0',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.08) 100%)',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Tag size={16} color="#16a34a" />
-                  <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534' }}>
-                    Promo Hemat: Paket Kopi Susu + Croissant hanya Rp38.000 (Hemat Rp8.000)
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Tag size={18} color="#34d399" />
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#a7f3d0' }}>
+                    Paket Sarapan Hemat: Kopi Susu Aren + Butter Croissant hanya Rp38.000 (Hemat Rp8.000)
                   </span>
                 </div>
                 <span style={{
-                  fontSize: '10px',
+                  fontSize: '11px',
                   fontWeight: 800,
-                  backgroundColor: '#16a34a',
+                  backgroundColor: '#059669',
                   color: '#ffffff',
-                  padding: '3px 8px',
+                  padding: '3px 10px',
                   borderRadius: '6px',
                 }}>
                   SETIAP HARI
@@ -885,26 +895,25 @@ export const CustomerDisplayView: React.FC = () => {
           )}
         </section>
 
-        {/* ================= RIGHT COLUMN (40%): BILLING & PAYMENT OR STORE AMBIANCE ================= */}
+        {/* ---------------- RIGHT STAGE (40%): BILLING & PAYMENT OR GUEST SERVICES ---------------- */}
         <section style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px',
+          gap: '20px',
         }}>
           {hasItems ? (
-            /* ACTIVE BILLING & PAYMENT METHOD PRESENTATION */
+            /* ACTIVE BILLING & QRIS TERMINAL */
             <>
-              {/* Total Billing Luxury Card */}
+              {/* Grand Total Luxury Card */}
               <div style={{
-                background: 'linear-gradient(145deg, #1f0c03 0%, #3a1603 50%, #451a03 100%)',
-                color: '#ffffff',
-                borderRadius: '24px',
-                padding: '24px 26px',
-                boxShadow: '0 12px 30px rgba(31, 12, 3, 0.35)',
+                background: 'linear-gradient(135deg, #1f0c03 0%, #3a1603 60%, #451a03 100%)',
+                borderRadius: '28px',
+                padding: '26px',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.5)',
                 border: '2px solid #b45309',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
+                gap: '14px',
                 position: 'relative',
                 overflow: 'hidden',
               }}>
@@ -916,17 +925,17 @@ export const CustomerDisplayView: React.FC = () => {
                     textTransform: 'uppercase',
                     letterSpacing: '1px',
                   }}>
-                    Ringkasan Pembayaran
+                    Ringkasan Tagihan
                   </span>
                   <span style={{
                     fontSize: '11px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
                     padding: '3px 10px',
                     borderRadius: '9999px',
-                    color: '#f8fafc',
+                    color: '#cbd5e1',
                     fontWeight: 600,
                   }}>
-                    Struk Resmi BR-04
+                    Struk Terstandarisasi BR-04
                   </span>
                 </div>
 
@@ -938,7 +947,7 @@ export const CustomerDisplayView: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Discount (if applicable) */}
+                {/* Diskon */}
                 {data.diskon > 0 && (
                   <div style={{
                     display: 'flex',
@@ -961,10 +970,10 @@ export const CustomerDisplayView: React.FC = () => {
                   </div>
                 )}
 
-                {/* Big Grand Total */}
+                {/* Big Total */}
                 <div style={{
                   marginTop: '4px',
-                  paddingTop: '14px',
+                  paddingTop: '16px',
                   borderTop: '1px dashed rgba(253, 230, 138, 0.3)',
                   display: 'flex',
                   flexDirection: 'column',
@@ -974,25 +983,23 @@ export const CustomerDisplayView: React.FC = () => {
                     Total yang Harus Dibayar:
                   </span>
                   <div style={{
-                    fontSize: '36px',
+                    fontSize: '38px',
                     fontWeight: 900,
                     color: '#fde68a',
                     letterSpacing: '-1px',
                     lineHeight: 1.1,
-                    textShadow: '0 2px 10px rgba(253, 230, 138, 0.2)',
+                    textShadow: '0 2px 14px rgba(253, 230, 138, 0.25)',
                   }}>
                     Rp{data.total.toLocaleString('id-ID')}
                   </div>
                 </div>
               </div>
 
-              {/* Payment Presentation: QRIS vs Cash */}
-              <div style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '24px',
-                padding: '22px',
-                boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
-                border: '1.5px solid #e2e8f0',
+              {/* Payment Presentation (QRIS vs Tunai) */}
+              <div className="glass-panel" style={{
+                borderRadius: '28px',
+                padding: '24px',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.35)',
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -1007,28 +1014,28 @@ export const CustomerDisplayView: React.FC = () => {
                     {/* National QRIS Standard Card Frame */}
                     <div style={{
                       backgroundColor: '#ffffff',
-                      borderRadius: '20px',
+                      borderRadius: '22px',
                       border: '2px solid #dc2626',
-                      boxShadow: '0 12px 28px rgba(220, 38, 38, 0.12)',
+                      boxShadow: '0 12px 30px rgba(220, 38, 38, 0.2)',
                       overflow: 'hidden',
                       width: '100%',
-                      maxWidth: '280px',
+                      maxWidth: '290px',
                     }}>
-                      {/* QRIS Red & White Header */}
+                      {/* Header */}
                       <div style={{
                         backgroundColor: '#dc2626',
                         color: '#ffffff',
-                        padding: '8px 14px',
+                        padding: '10px 16px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                       }}>
-                        <span style={{ fontSize: '15px', fontWeight: 900, letterSpacing: '2px' }}>QRIS</span>
+                        <span style={{ fontSize: '16px', fontWeight: 900, letterSpacing: '2px' }}>QRIS</span>
                         <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.5px' }}>STANDAR NASIONAL</span>
                       </div>
 
-                      {/* Merchant Info */}
-                      <div style={{ padding: '8px 12px', backgroundColor: '#fef2f2', borderBottom: '1px solid #fee2e2' }}>
+                      {/* Merchant */}
+                      <div style={{ padding: '8px 14px', backgroundColor: '#fef2f2', borderBottom: '1px solid #fee2e2' }}>
                         <div style={{ fontSize: '12px', fontWeight: 900, color: '#991b1b' }}>
                           LUMBUNG KOPI DAN ROTI
                         </div>
@@ -1042,21 +1049,21 @@ export const CustomerDisplayView: React.FC = () => {
                         <img
                           src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=2&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
                           alt="QRIS Dinamis"
-                          style={{ width: '160px', height: '160px', display: 'block', borderRadius: '4px' }}
+                          style={{ width: '170px', height: '170px', display: 'block', borderRadius: '4px' }}
                         />
                       </div>
 
-                      {/* Exact Nominal Display */}
+                      {/* Nominal */}
                       <div style={{
                         backgroundColor: '#f8fafc',
-                        padding: '8px 12px',
+                        padding: '10px 14px',
                         borderTop: '1px solid #e2e8f0',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                       }}>
                         <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>Nominal Pas:</span>
-                        <span style={{ fontSize: '14px', fontWeight: 900, color: '#dc2626' }}>
+                        <span style={{ fontSize: '15px', fontWeight: 900, color: '#dc2626' }}>
                           Rp{data.total.toLocaleString('id-ID')}
                         </span>
                       </div>
@@ -1071,7 +1078,7 @@ export const CustomerDisplayView: React.FC = () => {
                       flexWrap: 'wrap',
                     }}>
                       {['BCA', 'Mandiri', 'GoPay', 'OVO', 'ShopeePay', 'DANA'].map((app, i) => (
-                        <span key={i} style={{ fontSize: '9px', fontWeight: 800, backgroundColor: '#f1f5f9', color: '#475569', padding: '2px 7px', borderRadius: '4px' }}>
+                        <span key={i} style={{ fontSize: '9px', fontWeight: 800, backgroundColor: 'rgba(255,255,255,0.08)', color: '#f8fafc', padding: '3px 8px', borderRadius: '4px' }}>
                           {app}
                         </span>
                       ))}
@@ -1081,55 +1088,55 @@ export const CustomerDisplayView: React.FC = () => {
                   /* CASH DISPLAY */
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                     <div style={{
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: '18px',
-                      background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-                      border: '2px solid #a7f3d0',
+                      width: '68px',
+                      height: '68px',
+                      borderRadius: '20px',
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                      border: '1.5px solid rgba(52, 211, 153, 0.4)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#059669',
-                      marginBottom: '14px',
-                      boxShadow: '0 8px 18px rgba(5, 150, 105, 0.15)',
+                      color: '#34d399',
+                      marginBottom: '16px',
+                      boxShadow: '0 10px 24px rgba(16, 185, 129, 0.25)',
                     }}>
-                      <Banknote size={34} />
+                      <Banknote size={36} />
                     </div>
 
-                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#1e293b', margin: 0 }}>
-                      Pembayaran Tunai di Kasir
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                      Pembayaran Tunai di Meja Kasir
                     </h3>
 
                     {data.uangDiterima > 0 ? (
                       <div style={{
-                        marginTop: '14px',
-                        padding: '14px 18px',
-                        backgroundColor: '#f8fafc',
-                        borderRadius: '14px',
-                        border: '1.5px solid #e2e8f0',
+                        marginTop: '16px',
+                        padding: '16px 20px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                        borderRadius: '16px',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
                         width: '100%',
-                        maxWidth: '300px',
+                        maxWidth: '320px',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '8px',
                       }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                          <span style={{ color: '#64748b', fontWeight: 600 }}>Uang Tunai Diterima:</span>
-                          <span style={{ fontWeight: 800, color: '#1e293b' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+                          <span style={{ color: '#94a3b8' }}>Uang Tunai Diterima:</span>
+                          <span style={{ fontWeight: 800, color: '#ffffff' }}>
                             Rp{data.uangDiterima.toLocaleString('id-ID')}
                           </span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px dashed #cbd5e1' }}>
-                          <span style={{ color: '#059669', fontWeight: 800, fontSize: '13px' }}>Kembalian:</span>
-                          <span style={{ fontSize: '20px', fontWeight: 900, color: '#059669' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px dashed rgba(255,255,255,0.15)' }}>
+                          <span style={{ color: '#34d399', fontWeight: 800, fontSize: '14px' }}>Kembalian:</span>
+                          <span style={{ fontSize: '22px', fontWeight: 900, color: '#34d399' }}>
                             Rp{data.kembalian.toLocaleString('id-ID')}
                           </span>
                         </div>
                       </div>
                     ) : (
-                      <div style={{ marginTop: '14px', padding: '12px 16px', backgroundColor: '#fdfbf7', border: '1.5px dashed #fde68a', borderRadius: '12px' }}>
-                        <p style={{ fontSize: '12px', color: '#92400e', margin: 0, fontWeight: 600 }}>
-                          💵 Silakan serahkan uang tunai Rp{data.total.toLocaleString('id-ID')} kepada kasir.
+                      <div style={{ marginTop: '16px', padding: '14px 18px', backgroundColor: 'rgba(217, 119, 6, 0.15)', border: '1px dashed rgba(253, 230, 138, 0.3)', borderRadius: '14px' }}>
+                        <p style={{ fontSize: '13px', color: '#fde68a', margin: 0, fontWeight: 600 }}>
+                          💵 Silakan serahkan uang tunai Rp{data.total.toLocaleString('id-ID')} kepada kasir kami.
                         </p>
                       </div>
                     )}
@@ -1138,109 +1145,100 @@ export const CustomerDisplayView: React.FC = () => {
               </div>
             </>
           ) : (
-            /* IDLE STATE: ARTISAN STORE INFO & GUEST SERVICES (RICHLY OCCUPIES RIGHT COLUMN!) */
-            <div className="anim-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px', height: '100%' }}>
-              {/* Card 1: Free High-Speed WiFi Badge */}
-              <div style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '20px',
-                padding: '20px',
-                border: '1.5px solid #e2e8f0',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+            /* IDLE SCREEN: GUEST SERVICES & AMBIANCE (Fills the right 40% with high-end cards!) */
+            <div className="anim-fade" style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%' }}>
+              {/* Card 1: Free Guest WiFi Card */}
+              <div className="glass-panel" style={{
+                borderRadius: '24px',
+                padding: '22px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '16px',
               }}>
                 <div style={{
-                  width: '52px',
-                  height: '52px',
+                  width: '54px',
+                  height: '54px',
                   borderRadius: '16px',
-                  backgroundColor: '#eff6ff',
-                  border: '1.5px solid #bfdbfe',
+                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                  border: '1.5px solid rgba(96, 165, 250, 0.35)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#2563eb',
+                  color: '#60a5fa',
                   flexShrink: 0,
                 }}>
                   <Wifi size={28} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       Koneksi Tamu Gratis
                     </span>
-                    <span style={{ fontSize: '10px', backgroundColor: '#dbeafe', color: '#1e40af', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                    <span style={{ fontSize: '10px', backgroundColor: 'rgba(59, 130, 246, 0.25)', color: '#93c5fd', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
                       100 Mbps
                     </span>
                   </div>
-                  <div style={{ fontSize: '15px', fontWeight: 900, color: '#1e293b', marginTop: '2px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 900, color: '#ffffff', marginTop: '2px' }}>
                     WiFi: Lumbung-Guest
                   </div>
-                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '1px' }}>
-                    Kata Sandi: <strong style={{ color: '#78350f', fontFamily: 'monospace' }}>kopihangat2026</strong>
+                  <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                    Kata Sandi: <strong style={{ color: '#fde68a', fontFamily: 'monospace' }}>kopihangat2026</strong>
                   </div>
                 </div>
               </div>
 
-              {/* Card 2: Store Operating Hours & Bakery Schedule */}
-              <div style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '20px',
-                padding: '20px',
-                border: '1.5px solid #e2e8f0',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+              {/* Card 2: Operating Schedule & Fresh Oven Hours */}
+              <div className="glass-panel" style={{
+                borderRadius: '24px',
+                padding: '22px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
+                gap: '12px',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Clock size={16} color="#78350f" />
-                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
-                    Jadwal Operasional &amp; Dapur
+                  <Clock size={18} color="#fde68a" />
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Jadwal Operasional Kedai
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-                  <span style={{ color: '#64748b' }}>Kedai Buka:</span>
-                  <span style={{ fontWeight: 800, color: '#0f172a' }}>07:00 – 22:00 WIB</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <span style={{ color: '#94a3b8' }}>Jam Buka:</span>
+                  <span style={{ fontWeight: 800, color: '#ffffff' }}>07:00 – 22:00 WIB</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid #f1f5f9' }}>
-                  <span style={{ color: '#64748b' }}>Fresh Bread Oven:</span>
-                  <span style={{ fontWeight: 800, color: '#ea580c' }}>07:30 &amp; 14:00 WIB</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <span style={{ color: '#94a3b8' }}>Fresh Oven Bake:</span>
+                  <span style={{ fontWeight: 800, color: '#fb923c' }}>07:30 &amp; 14:00 WIB</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '6px 0' }}>
-                  <span style={{ color: '#64748b' }}>Layanan Pesanan:</span>
-                  <span style={{ fontWeight: 800, color: '#16a34a' }}>Dine-In &amp; Takeaway</span>
+                  <span style={{ color: '#94a3b8' }}>Penyajian:</span>
+                  <span style={{ fontWeight: 800, color: '#34d399' }}>Dine-In &amp; Takeaway</span>
                 </div>
               </div>
 
-              {/* Card 3: Quality Commitment & Payment Methods */}
-              <div style={{
-                backgroundColor: '#ffffff',
-                borderRadius: '20px',
-                padding: '20px',
-                border: '1.5px solid #e2e8f0',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+              {/* Card 3: Payment Acceptance & Quality Statement */}
+              <div className="glass-panel" style={{
+                borderRadius: '24px',
+                padding: '22px',
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
               }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                    <ShieldCheck size={16} color="#16a34a" />
-                    <span style={{ fontSize: '13px', fontWeight: 800, color: '#1e293b', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <ShieldCheck size={18} color="#34d399" />
+                    <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       Metode Pembayaran Resmi
                     </span>
                   </div>
-                  <p style={{ fontSize: '12px', color: '#64748b', lineHeight: 1.5, margin: '0 0 12px 0' }}>
-                    Kami menerima seluruh jenis pembayaran non-tunai (QRIS Dinamis semua Bank &amp; E-Wallet) serta pembayaran tunai pas di kasir.
+                  <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: 1.5, margin: '0 0 14px 0' }}>
+                    Menerima seluruh pembayaran QRIS (semua Bank &amp; E-Wallet nasional) serta pembayaran tunai pas di kasir.
                   </p>
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {['BCA Mobile', 'Mandiri Livin', 'BRImo', 'GoPay', 'OVO', 'ShopeePay', 'DANA', 'Tunai'].map((app, i) => (
-                      <span key={i} style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#f1f5f9', color: '#334155', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                      <span key={i} style={{ fontSize: '10px', fontWeight: 800, backgroundColor: 'rgba(255,255,255,0.06)', color: '#f8fafc', padding: '4px 9px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
                         {app}
                       </span>
                     ))}
@@ -1248,18 +1246,18 @@ export const CustomerDisplayView: React.FC = () => {
                 </div>
 
                 <div style={{
-                  marginTop: '14px',
-                  padding: '10px 14px',
-                  backgroundColor: '#f8fafc',
-                  borderRadius: '12px',
-                  border: '1px solid #e2e8f0',
+                  marginTop: '16px',
+                  padding: '12px 16px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  borderRadius: '14px',
+                  border: '1px solid rgba(52, 211, 153, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '11px',
-                  color: '#475569',
+                  gap: '10px',
+                  fontSize: '12px',
+                  color: '#a7f3d0',
                 }}>
-                  <Leaf size={14} color="#16a34a" />
+                  <Leaf size={16} color="#34d399" />
                   <span>100% Bahan Halal, Kopi Petani Lokal, Tanpa Pengawet</span>
                 </div>
               </div>
@@ -1270,15 +1268,15 @@ export const CustomerDisplayView: React.FC = () => {
 
       {/* Ticker Marquee Bottom Bar */}
       <div style={{
-        backgroundColor: '#451a03',
+        backgroundColor: '#1a0e07',
         color: '#fde68a',
-        padding: '8px 0',
+        padding: '10px 0',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
-        borderTop: '1px solid #78350f',
+        borderTop: '1px solid rgba(253, 230, 138, 0.2)',
         fontSize: '12px',
         fontWeight: 700,
-        letterSpacing: '0.5px',
+        letterSpacing: '0.6px',
       }}>
         <div style={{
           display: 'inline-block',
@@ -1289,34 +1287,34 @@ export const CustomerDisplayView: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Branding Bar */}
+      {/* Footer Branding */}
       <footer style={{
         padding: '12px 28px',
-        backgroundColor: '#ffffff',
-        borderTop: '1px solid #e2e8f0',
+        backgroundColor: '#0f0804',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         fontSize: '12px',
-        color: '#64748b',
+        color: '#94a3b8',
         fontWeight: 600,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ShieldCheck size={16} color="#10b981" />
           <span>Sistem Kasir Pintar Lumbung POS • Struk Terstandarisasi BR-04</span>
         </div>
-        <div style={{ color: '#78350f', fontWeight: 700 }}>
+        <div style={{ color: '#fde68a', fontWeight: 700 }}>
           Semoga Hari Anda Menyenangkan! ☕🥐
         </div>
       </footer>
 
-      {/* ================= FULL-SCREEN CELEBRATORY CSAT RATING MODAL OVERLAY ================= */}
+      {/* ================= CELEBRATION MODAL: PEMBAYARAN BERHASIL ================= */}
       {showThankYouMode && (
         <div style={{
           position: 'fixed',
           inset: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.85)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(5, 3, 2, 0.88)',
+          backdropFilter: 'blur(12px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -1325,18 +1323,18 @@ export const CustomerDisplayView: React.FC = () => {
           animation: 'fadeInScale 0.25s ease',
         }}>
           <div style={{
-            backgroundColor: '#ffffff',
+            backgroundColor: '#1a0e07',
             borderRadius: '28px',
             maxWidth: '580px',
             width: '100%',
             padding: '40px 36px',
             textAlign: 'center',
-            boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.5)',
+            boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.75)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '14px',
-            border: '2px solid #fde68a',
+            border: '2px solid rgba(253, 230, 138, 0.4)',
             position: 'relative',
           }}>
             {/* Dismiss Button */}
@@ -1350,9 +1348,9 @@ export const CustomerDisplayView: React.FC = () => {
                 width: '32px',
                 height: '32px',
                 borderRadius: '50%',
-                backgroundColor: '#f1f5f9',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
                 border: 'none',
-                color: '#64748b',
+                color: '#94a3b8',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1365,32 +1363,32 @@ export const CustomerDisplayView: React.FC = () => {
               ✕
             </button>
 
-            {/* Success Glowing Checkmark Icon */}
+            {/* Glowing Big Checkmark */}
             <div style={{
-              width: '88px',
-              height: '88px',
+              width: '90px',
+              height: '90px',
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              boxShadow: '0 12px 32px rgba(16, 185, 129, 0.45)',
+              boxShadow: '0 12px 35px rgba(16, 185, 129, 0.5)',
               animation: 'pulseGlow 2s infinite',
             }}>
-              <CheckCircle2 size={54} strokeWidth={2.5} />
+              <CheckCircle2 size={56} strokeWidth={2.5} />
             </div>
 
-            {/* Status Lunas Pill */}
+            {/* Status Pill */}
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '5px 16px',
+              padding: '6px 16px',
               borderRadius: '9999px',
-              backgroundColor: '#ecfdf5',
-              border: '1.5px solid #a7f3d0',
-              color: '#065f46',
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              border: '1.5px solid rgba(52, 211, 153, 0.4)',
+              color: '#6ee7b7',
               fontSize: '12px',
               fontWeight: 800,
               letterSpacing: '0.5px',
@@ -1403,19 +1401,19 @@ export const CustomerDisplayView: React.FC = () => {
             <h2 style={{
               fontSize: '32px',
               fontWeight: 900,
-              color: '#0f172a',
+              color: '#ffffff',
               margin: '2px 0 0 0',
               letterSpacing: '-0.5px',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '10px',
             }}>
               <span>Pembayaran Berhasil!</span>
-              <span style={{ color: '#10b981' }}>✅</span>
+              <span style={{ color: '#34d399' }}>✅</span>
             </h2>
 
-            <p style={{ fontSize: '14px', color: '#64748b', margin: 0, lineHeight: 1.5, maxWidth: '440px' }}>
-              Terima kasih telah berkunjung ke <strong style={{ color: '#78350f' }}>{data.cabangNama}</strong>. Pesanan Anda segera disiapkan dengan sepenuh hati.
+            <p style={{ fontSize: '14px', color: '#cbd5e1', margin: 0, lineHeight: 1.5, maxWidth: '440px' }}>
+              Terima kasih telah berkunjung ke <strong style={{ color: '#fde68a' }}>{data.cabangNama}</strong>. Pesanan Anda segera disiapkan dengan sepenuh hati.
             </p>
 
             {/* Transaction Details Pill */}
@@ -1430,9 +1428,9 @@ export const CustomerDisplayView: React.FC = () => {
               <span style={{
                 fontSize: '13px',
                 fontWeight: 800,
-                color: '#78350f',
-                backgroundColor: '#fef3c7',
-                border: '1px solid #fde68a',
+                color: '#fde68a',
+                backgroundColor: 'rgba(217, 119, 6, 0.25)',
+                border: '1px solid rgba(253, 230, 138, 0.3)',
                 padding: '4px 14px',
                 borderRadius: '8px',
               }}>
@@ -1442,9 +1440,9 @@ export const CustomerDisplayView: React.FC = () => {
               <span style={{
                 fontSize: '12px',
                 fontWeight: 800,
-                color: '#334155',
-                backgroundColor: '#f1f5f9',
-                border: '1px solid #e2e8f0',
+                color: '#cbd5e1',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
                 padding: '4px 14px',
                 borderRadius: '8px',
                 fontFamily: 'monospace',
@@ -1457,15 +1455,15 @@ export const CustomerDisplayView: React.FC = () => {
             <div style={{
               marginTop: '12px',
               padding: '22px',
-              backgroundColor: '#fdfbf7',
-              border: '1.5px solid #f3ece4',
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(253, 230, 138, 0.2)',
               borderRadius: '20px',
               width: '100%',
               boxSizing: 'border-box',
             }}>
               {!ratingSubmitted ? (
                 <>
-                  <p style={{ fontSize: '15px', fontWeight: 800, color: '#451a03', margin: '0 0 16px 0' }}>
+                  <p style={{ fontSize: '15px', fontWeight: 800, color: '#fde68a', margin: '0 0 16px 0' }}>
                     Bagaimana pengalaman pelayanan kami hari ini?
                   </p>
 
@@ -1476,25 +1474,24 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('sangat_puas')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid #bbf7d0',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1.5px solid rgba(52, 211, 153, 0.35)',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.1)',
                         transition: 'all 0.15s ease',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>🤩</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#6ee7b7' }}>
                         Istimewa
                       </span>
-                      <span style={{ fontSize: '9px', color: '#15803d', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: '#a7f3d0' }}>
                         Sangat Puas
                       </span>
                     </button>
@@ -1505,25 +1502,24 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('baik')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid #bbf7d0',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1.5px solid rgba(52, 211, 153, 0.35)',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.1)',
                         transition: 'all 0.15s ease',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😊</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#15803d' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#6ee7b7' }}>
                         Puas
                       </span>
-                      <span style={{ fontSize: '9px', color: '#166534', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: '#a7f3d0' }}>
                         Pelayanan Baik
                       </span>
                     </button>
@@ -1534,25 +1530,24 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('sedang')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid #fde68a',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1.5px solid rgba(251, 191, 36, 0.35)',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 2px 8px rgba(245, 158, 11, 0.1)',
                         transition: 'all 0.15s ease',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😐</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#92400e' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#fde68a' }}>
                         Cukup
                       </span>
-                      <span style={{ fontSize: '9px', color: '#b45309', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: '#fed7aa' }}>
                         Biasa Saja
                       </span>
                     </button>
@@ -1563,32 +1558,30 @@ export const CustomerDisplayView: React.FC = () => {
                       onClick={() => handleSelectRating('buruk')}
                       style={{
                         padding: '14px 6px',
-                        backgroundColor: '#ffffff',
-                        border: '2px solid #fecaca',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: '1.5px solid rgba(248, 113, 113, 0.35)',
                         borderRadius: '16px',
                         cursor: 'pointer',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 2px 8px rgba(239, 68, 68, 0.1)',
                         transition: 'all 0.15s ease',
                       }}
                       onMouseOver={(e) => (e.currentTarget.style.transform = 'translateY(-3px)')}
                       onMouseOut={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
                     >
                       <span style={{ fontSize: '36px' }}>😞</span>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#991b1b' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#fca5a5' }}>
                         Kurang
                       </span>
-                      <span style={{ fontSize: '9px', color: '#dc2626', fontWeight: 600 }}>
+                      <span style={{ fontSize: '9px', color: '#fecaca' }}>
                         Perlu Evaluasi
                       </span>
                     </button>
                   </div>
                 </>
               ) : (
-                /* Post-rating acknowledgment */
                 <div style={{
                   padding: '16px',
                   display: 'flex',
@@ -1596,157 +1589,17 @@ export const CustomerDisplayView: React.FC = () => {
                   alignItems: 'center',
                   gap: '8px',
                 }}>
-                  <div style={{ fontSize: '42px', animation: 'subtleFloat 1s infinite' }}>
+                  <div style={{ fontSize: '42px', animation: 'floatSubtle 1s infinite' }}>
                     {selectedRating === 'sangat_puas' ? '🎉' : selectedRating === 'baik' ? '🌟' : selectedRating === 'sedang' ? '👍' : '🙏'}
                   </div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#0f172a' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#ffffff' }}>
                     Terima Kasih atas Penilaian Anda!
                   </div>
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#cbd5e1', margin: 0 }}>
                     Masukan Anda sangat berharga untuk terus menyempurnakan kehangatan layanan Lumbung Kopi dan Roti.
                   </p>
                 </div>
               )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ================= MAYAR.ID DYNAMIC QRIS SPOTLIGHT MODAL ================= */}
-      {data.mayarModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 150,
-          padding: '24px',
-          animation: 'fadeInScale 0.25s ease',
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '26px',
-            width: '100%',
-            maxWidth: '480px',
-            padding: '30px',
-            boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.45)',
-            border: '2px solid #e0f2fe',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            position: 'relative',
-          }}>
-            {/* Header Badge */}
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '5px 16px',
-              borderRadius: '20px',
-              backgroundColor: '#e0f2fe',
-              color: '#0369a1',
-              fontSize: '11px',
-              fontWeight: 800,
-              marginBottom: '12px',
-              border: '1px solid #bae6fd',
-              letterSpacing: '0.5px',
-            }}>
-              <ShieldCheck size={14} />
-              <span>MAYAR.ID PAYMENT GATEWAY</span>
-            </div>
-
-            <h3 style={{ fontSize: '22px', fontWeight: 900, color: '#0f172a', textAlign: 'center', margin: '0 0 6px 0' }}>
-              QRIS Dinamis Terverifikasi
-            </h3>
-            <p style={{ fontSize: '13px', color: '#64748b', textAlign: 'center', margin: '0 0 20px 0', lineHeight: 1.4 }}>
-              Buka aplikasi BCA Mobile, Mandiri Livin, GoPay, OVO, ShopeePay, DANA atau mobile banking Anda
-            </p>
-
-            {/* Total Amount Box */}
-            <div style={{
-              width: '100%',
-              backgroundColor: '#f8fafc',
-              border: '1.5px solid #e2e8f0',
-              borderRadius: '16px',
-              padding: '16px 20px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '20px',
-            }}>
-              <div>
-                <span style={{ fontSize: '11px', color: '#64748b', display: 'block', fontWeight: 600 }}>Total Tagihan</span>
-                <span style={{ fontSize: '26px', fontWeight: 900, color: '#0284c7' }}>
-                  Rp{(data.mayarAmount || data.total).toLocaleString('id-ID')}
-                </span>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>ID Transaksi</span>
-                <span style={{ fontSize: '12px', fontFamily: 'monospace', fontWeight: 800, color: '#334155' }}>
-                  {data.mayarPaymentId || 'Menghubungkan...'}
-                </span>
-              </div>
-            </div>
-
-            {/* Dynamic QR Display */}
-            <div style={{
-              padding: '16px',
-              backgroundColor: '#ffffff',
-              borderRadius: '20px',
-              border: '2px dashed #0284c7',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(2, 132, 199, 0.12)',
-            }}>
-              <img
-                src={data.mayarQrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(`00020101021226680016ID.MAYAR.WWW01189360091100200000020215MYR-LUMBUNG520458125303360540${data.total}5802ID5918LUMBUNG+KOPI+ROTI6007JAKARTA6304ABCD`)}`}
-                alt="QRIS Mayar.id Dinamis"
-                style={{ width: '220px', height: '220px', display: 'block', borderRadius: '12px' }}
-              />
-            </div>
-
-            {/* Realtime Status */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              marginTop: '16px',
-              fontSize: '12px',
-              color: '#64748b',
-              fontWeight: 600,
-            }}>
-              <Clock size={15} color="#0284c7" />
-              <span>Berlaku 15:00 menit • Deteksi Otomatis Real-time</span>
-            </div>
-
-            {/* Pulsing Status Indicator */}
-            <div style={{
-              marginTop: '18px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 18px',
-              backgroundColor: '#f0fdf4',
-              border: '1px solid #bbf7d0',
-              borderRadius: '30px',
-              color: '#166534',
-              fontSize: '12px',
-              fontWeight: 700,
-            }}>
-              <span style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: '#22c55e',
-                display: 'inline-block',
-                boxShadow: '0 0 10px #22c55e',
-              }} />
-              <span>Menunggu pembayaran pelanggan...</span>
             </div>
           </div>
         </div>
