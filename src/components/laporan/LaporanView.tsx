@@ -35,6 +35,7 @@ export const LaporanView: React.FC = () => {
   const [selectedCabangId, setSelectedCabangId] = useState<string>(
     isOwner ? 'semua' : profile?.cabang_id || ''
   );
+  const [isExporting, setIsExporting] = useState<boolean>(false);
 
   const userGreetingName = profile?.nama_lengkap || 'Owner';
 
@@ -220,18 +221,29 @@ export const LaporanView: React.FC = () => {
     return found ? `${found.nama} (${found.kode})` : cabang?.nama || 'Cabang';
   }, [selectedCabangId, allCabang, cabang]);
 
-  // Export Excel handler (Fitur Biasa)
-  const handleExportExcel = () => {
-    exportReportToExcel(lunasTrx, shifts, {
-      omzet,
-      countLunas,
-      avgTrx,
-      countVoid,
-      labaKotor: profitStats.labaKotor,
-      margin: profitStats.margin,
-      isOwner,
-      branchName: activeBranchName,
-    });
+  // Export Excel handler (Fitur Biasa - Format Tabel Rapi)
+  const handleExportExcel = async () => {
+    if (isExporting) return;
+    setIsExporting(true);
+    try {
+      await exportReportToExcel(transaksi, shifts, {
+        omzet,
+        countLunas,
+        avgTrx,
+        countVoid,
+        labaKotor: profitStats.labaKotor,
+        margin: profitStats.margin,
+        totalHPP: profitStats.totalHPP,
+        isOwner,
+        branchName: activeBranchName,
+        paymentStats,
+        topProducts,
+      });
+    } catch (err) {
+      console.error('Gagal mengunduh Excel:', err);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   // Cetak PDF handler dengan penamaan dokumen otomatis dan styling cetak A4
@@ -338,6 +350,7 @@ export const LaporanView: React.FC = () => {
           {/* Export Excel Button (Fitur Biasa) */}
           <button
             onClick={handleExportExcel}
+            disabled={isExporting}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -349,10 +362,12 @@ export const LaporanView: React.FC = () => {
               fontSize: '12px',
               fontWeight: 700,
               boxShadow: '0 2px 6px rgba(5, 150, 105, 0.25)',
+              opacity: isExporting ? 0.7 : 1,
+              cursor: isExporting ? 'not-allowed' : 'pointer',
             }}
           >
             <Download size={15} />
-            <span>Unduh Excel (.xlsx)</span>
+            <span>{isExporting ? 'Menyiapkan Excel...' : 'Unduh Excel (.xlsx)'}</span>
           </button>
 
           {/* Print PDF Button */}
